@@ -16,7 +16,7 @@ public class Client {
         System.exit(0);
     }
 
-    public static void main(String[] args) throws IOException, UnknownHostException {
+    public static void main(String[] args) throws IOException {
 
         //----------------------------------------------------------------
         //init
@@ -25,7 +25,7 @@ public class Client {
         InetAddress mailHost = InetAddress.getByName(mailServerAddress);
         InetAddress localHost = InetAddress.getLocalHost();
 
-        smtpSocket = new Socket(mailServerAddress, 25);
+        smtpSocket = new Socket(mailHost, 25);
 
         br = new BufferedReader(new InputStreamReader(smtpSocket.getInputStream()));
         pr = new PrintWriter(smtpSocket.getOutputStream(), true);  //no need to call flush
@@ -34,6 +34,7 @@ public class Client {
         Scanner in = new Scanner(System.in);
 
         ArrayList<String> recipients = new ArrayList<>();
+        ArrayList<String> errs = new ArrayList<>();
         //----------------------------------------------------------------
 
 
@@ -47,6 +48,15 @@ public class Client {
             System.out.println("error!!! " + initialID + " - sent by the server");
             closing();
         }
+        //----------------------------------------------------------------
+
+
+        //----------------------------------------------------------------
+        //say hello to the server
+        sendToServer="HELO "+localHost.getHostName();
+        pr.println(sendToServer);
+        receivedFromServer=br.readLine();
+        System.out.println("we said HELO, server said -"+receivedFromServer+"\n");
         //----------------------------------------------------------------
 
 
@@ -91,19 +101,26 @@ public class Client {
         }*/
         recipientMailID = "1505107.whk@ugrad.buet.ac.bd.ad";
         recipients.add(recipientMailID);
+        recipientMailID = "1505101.tbh@ugrad.buet.ac.bd.ad";
+        recipients.add(recipientMailID);
 
-        for(String s : recipients){
-            recipientMailID="RCPT TO:<"+s+">";
+        for (String s : recipients) {
+            recipientMailID = "RCPT TO:<" + s + ">";
 
             pr.println(recipientMailID);
-            receivedFromServer=br.readLine();
+            receivedFromServer = br.readLine();
 
-            if(receivedFromServer.equals("250 Ok"))
-                System.out.println("recipient mail address: "+s+" is ok. message from server : "+receivedFromServer);
+            if (receivedFromServer.equals("250 Ok"))
+                System.out.println("recipient mail address: " + s + " is ok. message from server : " + receivedFromServer);
 
-            else
-                System.out.println("error in recipient mail address: "+s+" message from server : "+receivedFromServer);
+            else {
+                System.out.println("error in recipient mail address: " + s + " message from server : " + receivedFromServer);
+                errs.add(s);
+            }
         }
+
+        for (String s : errs)
+            recipients.remove(errs);
         //----------------------------------------------------------------
 
 
@@ -115,8 +132,49 @@ public class Client {
          * of mail data indicator confirms the transaction. When the end of text
          * is received and stored the SMTP-receiver sends a 250 OK reply.
          */
+        sendToServer = "DATA";
+        pr.println(sendToServer);
+        receivedFromServer = br.readLine();
+
+        if (!receivedFromServer.equals("354 End data with <CR><LF>.<CR><LF>")) {
+            System.out.println("can't send mail. message from server : " + receivedFromServer);
+            closing();
+        }
+
+        else
+            System.out.println("sending mail. message from server : "+receivedFromServer);
         //----------------------------------------------------------------
 
 
+        //----------------------------------------------------------------
+        String message = "testing smtp code";
+
+        pr.println(message);
+        pr.println(".");
+        receivedFromServer = br.readLine();
+        if (receivedFromServer.equals("250 Ok"))
+            System.out.println("mail sent!!!. message from server : " + receivedFromServer);
+
+        else {
+            System.out.println("error sending mail. message from server : " + receivedFromServer);
+            closing();
+        }
+        //----------------------------------------------------------------
+
+
+        //----------------------------------------------------------------
+        //quit
+        sendToServer = "QUIT";
+        pr.println(sendToServer);
+        receivedFromServer = br.readLine();
+
+        if(receivedFromServer.startsWith("221"))
+            System.out.println("successfully sent mail");
+        else
+            System.out.println("mail was not sent");
+
+        System.out.println("message from server : "+receivedFromServer);
+        closing();
+        //----------------------------------------------------------------
     }
 }
