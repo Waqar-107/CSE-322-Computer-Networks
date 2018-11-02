@@ -143,8 +143,10 @@ public class ClientThread implements Runnable {
 
         pr.println(new Date());
         pr.println("Server: localhost");
-        pr.println("Content-Length " + file.length());
-        pr.println(getFileType());
+        pr.println("Content-Length: " + file.length());
+        pr.println("Content-Type: "+getFileType());
+        
+        pr.println("\r\n");
 
         in.read(fileData);
         System.out.println("sending data out");
