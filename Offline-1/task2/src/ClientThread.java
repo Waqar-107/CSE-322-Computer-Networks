@@ -15,7 +15,6 @@ public class ClientThread implements Runnable {
     private Socket socket;
 
     private File file;
-    private File not_found_404;
 
     private boolean fileNotFound;
 
@@ -29,7 +28,7 @@ public class ClientThread implements Runnable {
         outputStream = socket.getOutputStream();
 
         pathToFiles = "C:\\programming\\CSE-322-Computer-Networks\\Offline-1\\task2\\html_assets\\";
-        not_found_404 = new File(pathToFiles + "404_Not_Found.html");
+
     }
     //--------------------------------------------------------------------
 
@@ -105,18 +104,17 @@ public class ClientThread implements Runnable {
             }
         }
 
-        System.out.println("file name: "+requiredFileName);
-
         //if the string is empty then return index
         if (requiredFileName.length() == 0)
             requiredFileName = "index.html";
 
         requiredFileName = pathToFiles + requiredFileName;
 
-
         //now if the file is found then return it otherwise return 404 not found
         file = new File(requiredFileName);
-        sendFileData(file);
+
+        if(!requiredFileName.endsWith("favicon.ico"))
+            sendFileData(file);
     }
     //--------------------------------------------------------------------
 
@@ -124,34 +122,44 @@ public class ClientThread implements Runnable {
     //--------------------------------------------------------------------
     //send file to the browser with appropriate message of MIME
     void sendFileData(File file) throws IOException {
+
+        int fileLength= (int) file.length();
+
         FileInputStream in;
-        byte[] fileData = new byte[(int) file.length()];
+        byte[] fileData = new byte[fileLength];
 
         //404 error
-        if (file.length() == 0) {
-            in = new FileInputStream(not_found_404);
+        if (fileLength == 0)
+        {
+            requiredFileName=pathToFiles+"Not_Found.html";
+            file=new File(requiredFileName);
+            in = new FileInputStream(file);
 
-            //the required file is missing so we are returning a html regardless of its type
-            requiredFileName="html";
-
+            System.out.println("404 not f dicchi");
             pr.println("HTTP/1.1 404 NOT FOUND");
-        } else {
+        }
+
+        else
+        {
             in = new FileInputStream(file);
             pr.println("HTTP/1.1 200 OK");
         }
 
+        System.out.println("2 file name: "+requiredFileName);
+        System.out.println("2 file type: "+getFileType());
 
-        pr.println(new Date());
-        pr.println("Server: localhost");
-        pr.println("Content-Length: " + file.length());
+        pr.println("Server: localhost:8080");
+        pr.println("Date: "+new Date());
         pr.println("Content-Type: "+getFileType());
-        
-        pr.println("\r\n");
+        pr.println("Content-Length: " + fileLength);
+
+        pr.println(); pr.flush();
 
         in.read(fileData);
-        System.out.println("sending data out");
 
-        outputStream.write(fileData, 0, (int) file.length());
+        outputStream.write(fileData, 0, fileLength);
+        outputStream.flush();
+
         socket.close();
     }
     //--------------------------------------------------------------------
