@@ -192,7 +192,7 @@ public class Client {
             if(message.equals("_end_"))
                 break;
             else
-                pr.println(message);
+                pr.println(message+"\r\n");
         }
 
         //indicate the end
@@ -224,6 +224,6 @@ public class Client {
 
 /*
 * waqar.hassan866@gmail.com
-* anfuad@yahoo.com
+* anfuad96@yahoo.com
 * tameem.bin.haider.101@gmail.com
 */
