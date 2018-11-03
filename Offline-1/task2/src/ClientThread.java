@@ -16,6 +16,7 @@ public class ClientThread implements Runnable {
     private File file;
 
     private int clientId;
+    private File backUp;
 
     //--------------------------------------------------------------------
     //init
