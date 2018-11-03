@@ -6,6 +6,7 @@ public class Server {
 
     public static final int port = 8080;
     public static int cntClient;
+    public static String fileBackUp;
 
     public static void main(String[] args) throws IOException {
         ServerSocket serverSocket = new ServerSocket(port);

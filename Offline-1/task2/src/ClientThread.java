@@ -16,20 +16,18 @@ public class ClientThread implements Runnable {
     private File file;
 
     private int clientId;
-    private File backUp;
 
     //--------------------------------------------------------------------
     //init
     public ClientThread(Socket socket, int clientId) throws IOException {
         this.socket = socket;
-        this.clientId=clientId;
+        this.clientId = clientId;
 
         br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         pr = new PrintWriter(socket.getOutputStream());
         outputStream = socket.getOutputStream();
 
         pathToFiles = "C:\\programming\\CSE-322-Computer-Networks\\Offline-1\\task2\\html_assets\\";
-
     }
     //--------------------------------------------------------------------
 
@@ -56,11 +54,17 @@ public class ClientThread implements Runnable {
             e.printStackTrace();
         }
 
-        System.out.println("client-"+clientId+" said: " + receive);
+        System.out.println("client-" + clientId + " said: " + receive);
 
-        if (receive!=null && receive.startsWith("GET")) {
+        if (receive != null && receive.startsWith("GET")) {
             try {
                 processGet();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else if (receive != null && receive.startsWith("POST")) {
+            try {
+                processPOST();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -98,16 +102,14 @@ public class ClientThread implements Runnable {
     void processGet() throws IOException {
         //after a "GET /" the name of the required file is given
         requiredFileName = "";
-        for (int i = 5; ;) {
+        for (int i = 5; ; ) {
             if (receive.charAt(i) == ' ') break;
 
             //if the web page has space in its name then the browser would send it as %20
-            if(receive.charAt(i)=='%') {
-                i+=3;
-                requiredFileName+=" ";
-            }
-
-            else {
+            if (receive.charAt(i) == '%') {
+                i += 3;
+                requiredFileName += " ";
+            } else {
                 requiredFileName += receive.charAt(i);
                 i++;
             }
@@ -122,7 +124,7 @@ public class ClientThread implements Runnable {
         //now if the file is found then return it otherwise return 404 not found
         file = new File(requiredFileName);
 
-        if(!requiredFileName.contains("favicon.ico"))
+        if (!requiredFileName.contains("favicon.ico"))
             sendFileData(file);
     }
     //--------------------------------------------------------------------
@@ -132,42 +134,99 @@ public class ClientThread implements Runnable {
     //send file to the browser with appropriate message of MIME
     void sendFileData(File file) throws IOException {
 
-        int fileLength= (int) file.length();
+        int fileLength = (int) file.length();
 
         FileInputStream in;
 
         //404 error
-        if (fileLength == 0)
-        {
-            requiredFileName=pathToFiles+"not_found_404.html";
-            file=new File(requiredFileName);
+        if (fileLength == 0) {
+            requiredFileName = pathToFiles + "not_found_404.html";
+            file = new File(requiredFileName);
             in = new FileInputStream(file);
-            fileLength= (int) file.length();    //as we are opening a new file
+            fileLength = (int) file.length();    //as we are opening a new file
 
             pr.println("HTTP/1.1 404 NOT FOUND");
-        }
-
-        else
-        {
+        } else {
             in = new FileInputStream(file);
             pr.println("HTTP/1.1 200 OK");
         }
 
-        System.out.println("file name: "+requiredFileName);
-        System.out.println("file type: "+getFileType());
+        System.out.println("file name: " + requiredFileName);
+        System.out.println("file type: " + getFileType());
 
         pr.println("Server: localhost:8080");
-        pr.println("Date: "+new Date());
-        pr.println("Content-Type: "+getFileType());
+        pr.println("Date: " + new Date());
+        pr.println("Content-Type: " + getFileType());
         pr.println("Content-Length: " + fileLength);
 
-        pr.println(); pr.flush();
+        pr.println();
+        pr.flush();
 
         byte[] fileData = new byte[fileLength];
         in.read(fileData);
 
         outputStream.write(fileData, 0, fileLength);
         outputStream.flush();
+
+        //read the whole file if it is a html so that we can process
+        //further POST requests
+        if (requiredFileName.endsWith("html")) {
+            BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
+
+            Server.fileBackUp = "";
+            String temp;
+            while (true) {
+                temp=bufferedReader.readLine();
+
+                if(temp==null) break;
+
+                Server.fileBackUp += temp;
+                Server.fileBackUp+="\r\n";
+            }
+        }
     }
     //--------------------------------------------------------------------
+
+
+    //--------------------------------------------------------------------
+    void processPOST() throws IOException {
+        Server.fileBackUp.replaceFirst("Post->", "Post->1505107");
+        System.out.println("in");
+        System.out.println("----------------------------------------------\nPOST logs\n");
+
+        pr.println("HTTP/1.1 200 OK");
+        System.out.println("server wrote: HTTP/1.1 200 OK");
+        System.out.println("client replied: "+br.readLine()+"\n");
+
+        pr.println("Server: localhost:8080");
+        System.out.println("server wrote: Server: localhost:8080");
+        System.out.println("client replied: "+br.readLine()+"\n");
+
+        pr.println("Date: " + new Date());
+        System.out.println("server wrote: the date");
+        System.out.println("client replied: "+br.readLine()+"\n");
+
+        pr.println("Content-Type: text\\html");
+        System.out.println("server wrote: content-type");
+        System.out.println("client replied: "+br.readLine()+"\n");
+
+        pr.println("Content-Length: " + Server.fileBackUp.length());
+        System.out.println("server wrote: content-length");
+        System.out.println("client replied: "+br.readLine()+"\n");
+
+        pr.println();
+        pr.flush();
+
+        byte[] fileData=Server.fileBackUp.getBytes();
+
+        outputStream.write(fileData,0,Server.fileBackUp.length());
+        System.out.println("server wrote: data");
+        System.out.println("client replied: "+br.readLine()+"\n");
+
+        outputStream.flush();
+
+        System.out.println("----------------------------------------------\nPOST logs\n");
+    }
+    //--------------------------------------------------------------------
+
 }
