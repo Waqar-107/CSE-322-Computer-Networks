@@ -138,7 +138,7 @@ public class ClientThread implements Runnable {
         //404 error
         if (fileLength == 0)
         {
-            requiredFileName=pathToFiles+"Not_Found.html";
+            requiredFileName=pathToFiles+"not_found_404.html";
             file=new File(requiredFileName);
             in = new FileInputStream(file);
             fileLength= (int) file.length();    //as we are opening a new file
