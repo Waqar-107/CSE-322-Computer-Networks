@@ -251,7 +251,6 @@ public class ClientThread implements Runnable {
 
         pr.flush();
 
-        System.out.println(Server.fileBackUp);
         byte[] fileData=Server.fileBackUp.getBytes();
 
         outputStream.write(fileData,0,Server.fileBackUp.length());
