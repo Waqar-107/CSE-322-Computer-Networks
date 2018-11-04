@@ -54,6 +54,7 @@ public class ClientThread implements Runnable {
             e.printStackTrace();
         }
 
+        System.out.println("\nserver accepted client no. "+clientId);
         System.out.println("client-" + clientId + " said: " + receive);
 
         if (receive != null && receive.startsWith("GET")) {
@@ -101,6 +102,8 @@ public class ClientThread implements Runnable {
     //process a GET request
     void processGet() throws IOException {
         //after a "GET /" the name of the required file is given
+        System.out.println("----------------------------------------------\nGET logs\n");
+
         requiredFileName = "";
         for (int i = 5; ; ) {
             if (receive.charAt(i) == ' ') break;
@@ -139,33 +142,59 @@ public class ClientThread implements Runnable {
         FileInputStream in;
 
         //404 error
-        if (fileLength == 0) {
+        if (fileLength == 0)
+        {
             requiredFileName = pathToFiles + "not_found_404.html";
             file = new File(requiredFileName);
             in = new FileInputStream(file);
             fileLength = (int) file.length();    //as we are opening a new file
 
             pr.println("HTTP/1.1 404 NOT FOUND");
-        } else {
-            in = new FileInputStream(file);
-            pr.println("HTTP/1.1 200 OK");
+            System.out.println("server wrote : HTTP/1.1 404 NOT FOUND");
+            System.out.println("client-"+clientId+" said: "+br.readLine());
+
         }
 
-        System.out.println("file name: " + requiredFileName);
-        System.out.println("file type: " + getFileType());
+        else
+        {
+            in = new FileInputStream(file);
+
+            pr.println("HTTP/1.1 200 OK");
+            System.out.println("server wrote : HTTP/1.1 200 OK");
+            System.out.println("client-"+clientId+" said: "+br.readLine());
+        }
+
+        //System.out.println("file name: " + requiredFileName);
+        //System.out.println("file type: " + getFileType());
 
         pr.println("Server: localhost:8080");
+        System.out.println("server wrote : Server: localhost:8080");
+        System.out.println("client-"+clientId+" said: "+br.readLine());
+
         pr.println("Date: " + new Date());
+        System.out.println("server wrote : Date");
+        System.out.println("client-"+clientId+" said: "+br.readLine());
+
         pr.println("Content-Type: " + getFileType());
+        System.out.println("server wrote : Content-Type");
+        System.out.println("client-"+clientId+" said: "+br.readLine());
+
         pr.println("Content-Length: " + fileLength);
+        System.out.println("server wrote : Content-Length:");
+        System.out.println("client-"+clientId+" said: "+br.readLine());
 
         pr.println();
+        System.out.println("server wrote: empty line, ready to write bytes");
+        System.out.println("client replied: "+br.readLine()+"\n");
+
         pr.flush();
 
         byte[] fileData = new byte[fileLength];
         in.read(fileData);
 
         outputStream.write(fileData, 0, fileLength);
+        System.out.println("server wrote data");
+        System.out.println("client-"+clientId+" said: "+br.readLine());
         outputStream.flush();
 
         //read the whole file if it is a html so that we can process
@@ -190,7 +219,7 @@ public class ClientThread implements Runnable {
 
     //--------------------------------------------------------------------
     void processPOST() throws IOException {
-        Server.fileBackUp.replaceFirst("Post->", "Post->1505107");
+        Server.fileBackUp=Server.fileBackUp.replace("Post->", "Post->1505107");
         System.out.println("in");
         System.out.println("----------------------------------------------\nPOST logs\n");
 
@@ -215,8 +244,12 @@ public class ClientThread implements Runnable {
         System.out.println("client replied: "+br.readLine()+"\n");
 
         pr.println();
+        System.out.println("server wrote: empty line, ready to write bytes");
+        System.out.println("client replied: "+br.readLine()+"\n");
+
         pr.flush();
 
+        System.out.println(Server.fileBackUp);
         byte[] fileData=Server.fileBackUp.getBytes();
 
         outputStream.write(fileData,0,Server.fileBackUp.length());
@@ -225,7 +258,7 @@ public class ClientThread implements Runnable {
 
         outputStream.flush();
 
-        System.out.println("----------------------------------------------\nPOST logs\n");
+        System.out.println("----------------------------------------------\n");
     }
     //--------------------------------------------------------------------
 
