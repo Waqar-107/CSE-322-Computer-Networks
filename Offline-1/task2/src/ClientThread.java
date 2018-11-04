@@ -138,7 +138,6 @@ public class ClientThread implements Runnable {
     void sendFileData(File file) throws IOException {
 
         int fileLength = (int) file.length();
-
         FileInputStream in;
 
         //404 error
@@ -151,7 +150,7 @@ public class ClientThread implements Runnable {
 
             pr.println("HTTP/1.1 404 NOT FOUND");
             System.out.println("server wrote : HTTP/1.1 404 NOT FOUND");
-            System.out.println("client-"+clientId+" said: "+br.readLine());
+            System.out.println("client-"+clientId+" said: "+br.readLine()+"\n");
 
         }
 
@@ -161,7 +160,7 @@ public class ClientThread implements Runnable {
 
             pr.println("HTTP/1.1 200 OK");
             System.out.println("server wrote : HTTP/1.1 200 OK");
-            System.out.println("client-"+clientId+" said: "+br.readLine());
+            System.out.println("client-"+clientId+" said: "+br.readLine()+"\n");
         }
 
         //System.out.println("file name: " + requiredFileName);
@@ -169,19 +168,19 @@ public class ClientThread implements Runnable {
 
         pr.println("Server: localhost:8080");
         System.out.println("server wrote : Server: localhost:8080");
-        System.out.println("client-"+clientId+" said: "+br.readLine());
+        System.out.println("client-"+clientId+" said: "+br.readLine()+"\n");
 
         pr.println("Date: " + new Date());
         System.out.println("server wrote : Date");
-        System.out.println("client-"+clientId+" said: "+br.readLine());
+        System.out.println("client-"+clientId+" said: "+br.readLine()+"\n");
 
         pr.println("Content-Type: " + getFileType());
         System.out.println("server wrote : Content-Type");
-        System.out.println("client-"+clientId+" said: "+br.readLine());
+        System.out.println("client-"+clientId+" said: "+br.readLine()+"\n");
 
         pr.println("Content-Length: " + fileLength);
         System.out.println("server wrote : Content-Length:");
-        System.out.println("client-"+clientId+" said: "+br.readLine());
+        System.out.println("client-"+clientId+" said: "+br.readLine()+"\n");
 
         pr.println();
         System.out.println("server wrote: empty line, ready to write bytes");
@@ -194,7 +193,7 @@ public class ClientThread implements Runnable {
 
         outputStream.write(fileData, 0, fileLength);
         System.out.println("server wrote data");
-        System.out.println("client-"+clientId+" said: "+br.readLine());
+        System.out.println("client-"+clientId+" said: "+br.readLine()+"\n");
         outputStream.flush();
 
         //read the whole file if it is a html so that we can process
@@ -219,7 +218,10 @@ public class ClientThread implements Runnable {
 
     //--------------------------------------------------------------------
     void processPOST() throws IOException {
-        Server.fileBackUp=Server.fileBackUp.replace("Post->", "Post->1505107");
+
+        if(!Server.fileBackUp.contains("Post->1505107"))
+            Server.fileBackUp=Server.fileBackUp.replace("Post->", "Post->1505107");
+
         System.out.println("in");
         System.out.println("----------------------------------------------\nPOST logs\n");
 

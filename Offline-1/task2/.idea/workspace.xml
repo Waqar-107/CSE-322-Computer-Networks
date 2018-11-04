@@ -24,14 +24,13 @@
       <file leaf-file-name="ClientThread.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/ClientThread.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="83">
-              <caret line="221" column="26" selection-start-line="221" selection-start-column="26" selection-end-line="221" selection-end-column="26" />
+            <state relative-caret-position="-1371">
+              <caret line="195" column="74" selection-start-line="195" selection-start-column="74" selection-end-line="195" selection-end-column="74" />
               <folding>
                 <element signature="method#ClientThread#0;class#ClientThread#0" />
                 <element signature="method#closeEverything#0;class#ClientThread#0" />
                 <element signature="method#getFileType#0;class#ClientThread#0" />
                 <element signature="method#processGet#0;class#ClientThread#0" />
-                <element signature="method#sendFileData#0;class#ClientThread#0" />
               </folding>
             </state>
           </provider>
@@ -153,12 +152,12 @@
       <workItem from="1541242390503" duration="9000" />
       <workItem from="1541242403422" duration="8173000" />
       <workItem from="1541322488667" duration="728000" />
-      <workItem from="1541337794149" duration="2466000" />
+      <workItem from="1541337794149" duration="3060000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="25865000" />
+    <option name="totallyTimeSpent" value="26459000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
@@ -174,7 +173,7 @@
       <window_info anchor="right" id="Maven Projects" order="3" />
       <window_info anchor="bottom" id="Database Changes" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="7" show_stripe_button="false" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.87091506" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.09803922" />
       <window_info anchor="bottom" id="Terminal" order="7" />
       <window_info id="Capture Tool" order="2" />
       <window_info id="Designer" order="2" />
@@ -222,7 +221,6 @@
             <element signature="method#closeEverything#0;class#ClientThread#0" />
             <element signature="method#getFileType#0;class#ClientThread#0" />
             <element signature="method#processGet#0;class#ClientThread#0" />
-            <element signature="method#sendFileData#0;class#ClientThread#0" />
           </folding>
         </state>
       </provider>
@@ -243,7 +241,6 @@
             <element signature="method#closeEverything#0;class#ClientThread#0" />
             <element signature="method#getFileType#0;class#ClientThread#0" />
             <element signature="method#processGet#0;class#ClientThread#0" />
-            <element signature="method#sendFileData#0;class#ClientThread#0" />
           </folding>
         </state>
       </provider>
@@ -310,14 +307,13 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/ClientThread.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="83">
-          <caret line="221" column="26" selection-start-line="221" selection-start-column="26" selection-end-line="221" selection-end-column="26" />
+        <state relative-caret-position="-1371">
+          <caret line="195" column="74" selection-start-line="195" selection-start-column="74" selection-end-line="195" selection-end-column="74" />
           <folding>
             <element signature="method#ClientThread#0;class#ClientThread#0" />
             <element signature="method#closeEverything#0;class#ClientThread#0" />
             <element signature="method#getFileType#0;class#ClientThread#0" />
             <element signature="method#processGet#0;class#ClientThread#0" />
-            <element signature="method#sendFileData#0;class#ClientThread#0" />
           </folding>
         </state>
       </provider>
