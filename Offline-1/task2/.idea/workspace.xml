@@ -24,11 +24,12 @@
       <file leaf-file-name="ClientThread.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/ClientThread.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="104">
-              <caret line="267" column="13" lean-forward="true" selection-start-line="267" selection-start-column="13" selection-end-line="267" selection-end-column="13" />
+            <state relative-caret-position="129">
+              <caret line="296" selection-start-line="296" selection-end-line="296" />
               <folding>
                 <element signature="method#ClientThread#0;class#ClientThread#0" />
                 <element signature="method#closeEverything#0;class#ClientThread#0" />
+                <element signature="method#run#0;class#ClientThread#0" />
                 <element signature="method#getFileType#0;class#ClientThread#0" />
                 <element signature="method#processGet#0;class#ClientThread#0" />
               </folding>
@@ -71,9 +72,9 @@
   <component name="NodePackageJsonFileManager">
     <packageJsonPaths />
   </component>
-  <component name="ProjectFrameBounds">
-    <option name="x" value="553" />
-    <option name="width" value="820" />
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="-7" />
+    <option name="width" value="697" />
     <option name="height" value="735" />
   </component>
   <component name="ProjectView">
@@ -163,15 +164,15 @@
       <workItem from="1541525063325" duration="9551000" />
       <workItem from="1541583997581" duration="3386000" />
       <workItem from="1541588616555" duration="577000" />
-      <workItem from="1541589636756" duration="5893000" />
+      <workItem from="1541589636756" duration="10409000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="49066000" />
+    <option name="totallyTimeSpent" value="53582000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="553" y="0" width="820" height="735" extended-state="0" />
+    <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
     <layout>
       <window_info anchor="right" id="Palette" order="3" />
       <window_info anchor="bottom" id="TODO" order="6" />
@@ -183,11 +184,11 @@
       <window_info anchor="right" id="Maven Projects" order="3" />
       <window_info anchor="bottom" id="Database Changes" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="7" show_stripe_button="false" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.043117743" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.0" />
       <window_info anchor="bottom" id="Terminal" order="7" />
       <window_info id="Capture Tool" order="2" />
       <window_info id="Designer" order="2" />
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.023631841" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.013909224" />
       <window_info anchor="right" id="Database" order="3" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -229,6 +230,7 @@
           <folding>
             <element signature="method#ClientThread#0;class#ClientThread#0" />
             <element signature="method#closeEverything#0;class#ClientThread#0" />
+            <element signature="method#run#0;class#ClientThread#0" />
             <element signature="method#getFileType#0;class#ClientThread#0" />
             <element signature="method#processGet#0;class#ClientThread#0" />
           </folding>
@@ -249,6 +251,7 @@
           <folding>
             <element signature="method#ClientThread#0;class#ClientThread#0" />
             <element signature="method#closeEverything#0;class#ClientThread#0" />
+            <element signature="method#run#0;class#ClientThread#0" />
             <element signature="method#getFileType#0;class#ClientThread#0" />
             <element signature="method#processGet#0;class#ClientThread#0" />
           </folding>
@@ -269,6 +272,7 @@
           <folding>
             <element signature="method#ClientThread#0;class#ClientThread#0" />
             <element signature="method#closeEverything#0;class#ClientThread#0" />
+            <element signature="method#run#0;class#ClientThread#0" />
             <element signature="method#getFileType#0;class#ClientThread#0" />
             <element signature="method#processGet#0;class#ClientThread#0" />
           </folding>
@@ -289,6 +293,7 @@
           <folding>
             <element signature="method#ClientThread#0;class#ClientThread#0" />
             <element signature="method#closeEverything#0;class#ClientThread#0" />
+            <element signature="method#run#0;class#ClientThread#0" />
             <element signature="method#getFileType#0;class#ClientThread#0" />
             <element signature="method#processGet#0;class#ClientThread#0" />
           </folding>
@@ -309,6 +314,7 @@
           <folding>
             <element signature="method#ClientThread#0;class#ClientThread#0" />
             <element signature="method#closeEverything#0;class#ClientThread#0" />
+            <element signature="method#run#0;class#ClientThread#0" />
             <element signature="method#getFileType#0;class#ClientThread#0" />
             <element signature="method#processGet#0;class#ClientThread#0" />
           </folding>
@@ -329,6 +335,7 @@
           <folding>
             <element signature="method#ClientThread#0;class#ClientThread#0" />
             <element signature="method#closeEverything#0;class#ClientThread#0" />
+            <element signature="method#run#0;class#ClientThread#0" />
             <element signature="method#getFileType#0;class#ClientThread#0" />
             <element signature="method#processGet#0;class#ClientThread#0" />
           </folding>
@@ -349,6 +356,7 @@
           <folding>
             <element signature="method#ClientThread#0;class#ClientThread#0" />
             <element signature="method#closeEverything#0;class#ClientThread#0" />
+            <element signature="method#run#0;class#ClientThread#0" />
             <element signature="method#getFileType#0;class#ClientThread#0" />
             <element signature="method#processGet#0;class#ClientThread#0" />
           </folding>
@@ -369,6 +377,7 @@
           <folding>
             <element signature="method#ClientThread#0;class#ClientThread#0" />
             <element signature="method#closeEverything#0;class#ClientThread#0" />
+            <element signature="method#run#0;class#ClientThread#0" />
             <element signature="method#getFileType#0;class#ClientThread#0" />
             <element signature="method#processGet#0;class#ClientThread#0" />
           </folding>
@@ -389,6 +398,7 @@
           <folding>
             <element signature="method#ClientThread#0;class#ClientThread#0" />
             <element signature="method#closeEverything#0;class#ClientThread#0" />
+            <element signature="method#run#0;class#ClientThread#0" />
             <element signature="method#getFileType#0;class#ClientThread#0" />
             <element signature="method#processGet#0;class#ClientThread#0" />
           </folding>
@@ -409,6 +419,7 @@
           <folding>
             <element signature="method#ClientThread#0;class#ClientThread#0" />
             <element signature="method#closeEverything#0;class#ClientThread#0" />
+            <element signature="method#run#0;class#ClientThread#0" />
             <element signature="method#getFileType#0;class#ClientThread#0" />
             <element signature="method#processGet#0;class#ClientThread#0" />
           </folding>
@@ -472,11 +483,12 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/ClientThread.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="104">
-          <caret line="267" column="13" lean-forward="true" selection-start-line="267" selection-start-column="13" selection-end-line="267" selection-end-column="13" />
+        <state relative-caret-position="129">
+          <caret line="296" selection-start-line="296" selection-end-line="296" />
           <folding>
             <element signature="method#ClientThread#0;class#ClientThread#0" />
             <element signature="method#closeEverything#0;class#ClientThread#0" />
+            <element signature="method#run#0;class#ClientThread#0" />
             <element signature="method#getFileType#0;class#ClientThread#0" />
             <element signature="method#processGet#0;class#ClientThread#0" />
           </folding>

@@ -272,11 +272,32 @@ public class ClientThread implements Runnable {
             String[] sarr2 = sarr[0].split("=");
 
             fileToPost=fileToPost.replaceFirst("Post-> ", "Post-> " + sarr2[1]);
-            System.out.println(fileToPost);
 
             //now convert the string into byte array and write
             byte[] fs=fileToPost.getBytes();
-            outputStream.write(fs,0,fileToPost.length());
+
+            //send information about what you are sending
+            System.out.println("server wrote : HTTP/1.1 200 OK");
+            pr.println("HTTP/1.1 200 OK");
+
+            System.out.println("server wrote : Server: localhost:8080");
+            pr.println("Server: localhost:8080");
+
+            System.out.println("server wrote : Date");
+            pr.println("Date : "+new Date());
+
+            System.out.println("server wrote : Content-Type");
+            pr.println("Content-Type: text/html");
+
+            System.out.println("server wrote : Content-Length:");
+            pr.println("Content-Length: " + fileToPost.length());
+
+            System.out.println("server wrote: empty line, ready to write bytes");
+            pr.println();
+
+            pr.flush();
+
+            outputStream.write(fs);
             outputStream.flush();
 
             closeEverything();
