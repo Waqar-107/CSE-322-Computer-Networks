@@ -1,7 +1,4 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
 
@@ -10,11 +7,13 @@ public class Main {
     private static Socket smtpSocket;
     private static BufferedReader br;
     private static PrintWriter pr;
-    private static BufferedReader in;
+    private static BufferedReader readAddress, readMail, userInput;
     private static String receive, input;
 
+    private static File mailAdresses, mailBody;
 
     //------------------------------------------------------------------------------------
+    //close evrything and exit
     public static void closing() throws IOException {
         System.out.println("\nclosing down everything");
 
@@ -28,30 +27,84 @@ public class Main {
 
 
     //------------------------------------------------------------------------------------
+    //get response from the server
+    public static void getResponse() throws IOException {
+        receive = br.readLine();
+        System.out.println("server says: " + receive + "\n");
+
+        //if error then quit from here
+        if (receive.startsWith("2") || receive.startsWith("354") || receive.startsWith("334"))
+            return;
+
+        closing();
+    }
+    //------------------------------------------------------------------------------------
+
+
+    //------------------------------------------------------------------------------------
+    //send message to server
+    public static void sendResponse(String str) {
+        if (str.length() > 0)
+            pr.println(str);
+        else
+            pr.println();
+    }
+    //------------------------------------------------------------------------------------
+
+
+    //------------------------------------------------------------------------------------
     public static void sendCommand() throws IOException {
         while (true) {
-
             System.out.println("enter command to send to the smtp server-");
-            input = in.readLine();
 
-            pr.println(input);
-            receive = br.readLine();
-            System.out.println("message from server: " + receive + "\n");
+            input = userInput.readLine();
 
-            if (!receive.startsWith("250") && !receive.startsWith("354"))
+            if (input.equalsIgnoreCase("helo")) {
+                sendResponse("HELO");
+                getResponse();
+            } else if (input.equalsIgnoreCase("rset")) {
+                sendResponse("RSET");
+                getResponse();
+            } else if (input.equalsIgnoreCase("NOOP")) {
+                sendResponse("NOOP");
+                getResponse();
+            } else if (input.equalsIgnoreCase("mail")) {
+                receive = readAddress.readLine();
+                if (receive == null) {
+                    System.out.println("EOF");
+                    closing();
+                }
+
+                sendResponse("MAIL FROM:<" + receive + ">");
+                getResponse();
+            } else if (input.equalsIgnoreCase("rcpt")) {
+                receive = readAddress.readLine();
+                if (receive == null) {
+                    System.out.println("EOF");
+                    closing();
+                }
+
+                sendResponse("RCPT TO:<" + receive + ">");
+                getResponse();
+            } else if (input.equalsIgnoreCase("data")) {
+                sendResponse("DATA");
+                getResponse();
+
+                while (true) {
+                    receive = readMail.readLine();
+                    if (receive == null) break;
+                    //System.out.println(receive);
+                    sendResponse(receive);sendResponse(" ");
+                }
+
+                //System.out.println("mail sent");
+                sendResponse(".");
+                getResponse();
+            } else if (input.equalsIgnoreCase("quit")) {
+                sendResponse("QUIT");
+                getResponse();
                 closing();
-
-            if (input.equalsIgnoreCase("data")) {
-                sendData();
-
-                pr.println(".");
-                receive=br.readLine();
-                System.out.println("message from server: " + receive + "\n");
             }
-
-            else if (input.equalsIgnoreCase("quit"))
-                closing();
-
         }
     }
     //------------------------------------------------------------------------------------
@@ -59,25 +112,6 @@ public class Main {
 
     //------------------------------------------------------------------------------------
     public static void sendData() throws IOException {
-        System.out.println("entered in data input portion, writing a single '.' in a line will indicate end of your mail.");
-        System.out.println("enter subject, from, to, then an empty line and your message");
-
-        while (true) {
-            input = in.readLine();
-
-            if(input.length()==0){
-                //System.out.println("the emp");
-                pr.println();
-                continue;
-            }
-
-            if(input.equals(".")) {
-                return;
-            }
-
-            else
-                pr.println(input+"\r\n");
-        }
 
     }
     //------------------------------------------------------------------------------------
@@ -93,13 +127,19 @@ public class Main {
         smtpSocket = new Socket(mailHost, 587);
 
         br = new BufferedReader(new InputStreamReader(smtpSocket.getInputStream()));
-        pr = new PrintWriter(smtpSocket.getOutputStream(),true);
+        pr = new PrintWriter(smtpSocket.getOutputStream(), true);
 
-        in = new BufferedReader(new InputStreamReader(System.in));
+        userInput = new BufferedReader(new InputStreamReader(System.in));
+
+        mailAdresses = new File("C:\\programming\\CSE-322-Computer-Networks\\Offline-1\\task1\\src\\mail_addresses.txt");
+        mailBody = new File("C:\\programming\\CSE-322-Computer-Networks\\Offline-1\\task1\\src\\mail_body.txt");
+
+        readAddress = new BufferedReader(new FileReader(mailAdresses));
+        readMail = new BufferedReader(new FileReader(mailBody));
 
         //----------------------------------------------------------------
         //after connecting smtp server shall send 220 and some strings concatenated with it
-        receive = br.readLine();
+        getResponse();
 
         if (receive.startsWith("220"))
             System.out.println("connected. message from server : " + receive + "\n");
@@ -111,17 +151,16 @@ public class Main {
 
         //----------------------------------------------------------------
         //authenticate using username and api-key for authorization of sending mail
-        pr.println("AUTH LOGIN");
-        receive = br.readLine();
+        sendResponse("AUTH LOGIN");
+        getResponse();
 
         System.out.println("requested for authentication .message from server : " + receive);
         if (!receive.equals("334 VXNlcm5hbWU6"))
             closing();
 
-
         //send your username - base64 encoding of "apikey"
-        pr.println("YXBpa2V5");
-        receive = br.readLine();
+        sendResponse("YXBpa2V5");
+        getResponse();
 
         System.out.println("username sent. message from server : " + receive);
         if (!receive.equals("334 UGFzc3dvcmQ6"))
@@ -129,15 +168,15 @@ public class Main {
 
 
         //generate an api key and get its base64 encoding
-        pr.println("U0cuN1g1c04zaDNTeHFBeXJGSjZhS01fQS56SGNRdC1qaVMxd2pXZjAyanhPQzVod3NoeTlNYXZWZ01hb0JxdVMtWUl3");
-        receive = br.readLine();
+        sendResponse("U0cuN1g1c04zaDNTeHFBeXJGSjZhS01fQS56SGNRdC1qaVMxd2pXZjAyanhPQzVod3NoeTlNYXZWZ01hb0JxdVMtWUl3");
+        getResponse();
 
         System.out.println("api sent. message from server : " + receive + "\n");
         if (!receive.equals("235 Authentication successful"))
             closing();
         //----------------------------------------------------------------
 
-        //move to send command state
+        //connection and authentication done. move to send command state
         sendCommand();
     }
     //------------------------------------------------------------------------------------
