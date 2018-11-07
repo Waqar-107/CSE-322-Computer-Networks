@@ -8,7 +8,7 @@ public class ClientThread implements Runnable {
     private OutputStream outputStream;
     private PrintWriter pr;
 
-    private String receive, linkFromBrowser, postedValue;
+    private String receive, linkFromBrowser, fileToPost;
     private String requiredFileName;
     private String pathToFiles;
 
@@ -201,27 +201,86 @@ public class ClientThread implements Runnable {
     //--------------------------------------------------------------------
     void processPOST() throws IOException {
 
+        int contentLen = 0;
+        StringBuilder stringBuilder = new StringBuilder();
+        char ch;
+
         //-------------------------------------------------logs
         System.out.println("----------------------------------------------POST logs\n");
+
         while (true) {
             receive = br.readLine();
-
-            if(receive!=null && receive.startsWith("Referer:"))
-                linkFromBrowser=receive;
-
-            if (receive==null){
-                break;
-            }
+            if (receive.length() == 0) break;
 
             System.out.println("client-" + clientId + " said: " + receive);
+
+            if (receive.startsWith("Referer:"))
+                linkFromBrowser = receive;
+
+            if (receive.startsWith("Content-Length")) {
+                for (int i = receive.length() - 1; i >= 0; i--) {
+                    if (receive.charAt(i) == ' ') break;
+                    stringBuilder.append(receive.charAt(i));
+                }
+
+                contentLen = Integer.parseInt(stringBuilder.reverse().toString());
+            }
         }
 
-        //pr.println();
-        //System.out.println(br.readLine());
-        System.out.println("break");
-        //System.out.println(br.readLine());
-        //socket.close();
+        //now start reading char by char
+        stringBuilder = new StringBuilder();
+        for (int i = 0; i < contentLen; i++) {
+            ch = (char) br.read();
+            stringBuilder.append(ch);
+        }
+
+        System.out.println("client-" + clientId + " said: " + stringBuilder.toString());
+
+        String requestedValues = stringBuilder.toString();
         //-------------------------------------------------logs
+
+        //now we have the link of the webpage as well as the posted value
+        stringBuilder = new StringBuilder();
+        for (int i = linkFromBrowser.length() - 1; i >= 0; i--) {
+            if (linkFromBrowser.charAt(i) == '/')
+                break;
+
+            stringBuilder.append(linkFromBrowser.charAt(i));
+        }
+
+        linkFromBrowser = stringBuilder.reverse().toString();
+        linkFromBrowser = linkFromBrowser.replace("%20", " ");
+
+        //open the link
+        System.out.println("open: " + pathToFiles + linkFromBrowser);
+        file = new File(pathToFiles + linkFromBrowser);
+
+        if (file.length() == 0) {
+            sendFileData(new File(linkFromBrowser + "not_found_404.html"));
+        } else {
+            BufferedReader in = new BufferedReader(new FileReader(file));
+
+            fileToPost = "";
+            while (true) {
+                receive = in.readLine();
+                if (receive == null) break;
+                fileToPost += receive + "\r\n";
+            }
+
+            //now replace POST-> with POST->name where user=name
+            String[] sarr = requestedValues.split("&");
+            String[] sarr2 = sarr[0].split("=");
+
+            fileToPost=fileToPost.replaceFirst("Post-> ", "Post-> " + sarr2[1]);
+            System.out.println(fileToPost);
+
+            //now convert the string into byte array and write
+            byte[] fs=fileToPost.getBytes();
+            outputStream.write(fs,0,fileToPost.length());
+            outputStream.flush();
+
+            closeEverything();
+        }
     }
     //--------------------------------------------------------------------
 
