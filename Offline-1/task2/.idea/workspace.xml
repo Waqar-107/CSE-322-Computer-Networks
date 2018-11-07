@@ -12,25 +12,24 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="Server.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="Server.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Server.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="29">
-              <caret line="8" column="36" selection-start-line="8" selection-start-column="36" selection-end-line="8" selection-end-column="36" />
+            <state relative-caret-position="456">
+              <caret line="21" column="28" selection-start-line="21" selection-start-column="28" selection-end-line="21" selection-end-column="28" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ClientThread.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="ClientThread.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/ClientThread.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="4560">
-              <caret line="252" selection-start-line="252" selection-end-line="252" />
+            <state relative-caret-position="273">
+              <caret line="222" column="10" selection-start-line="222" selection-start-column="10" selection-end-line="222" selection-end-column="10" />
               <folding>
                 <element signature="method#ClientThread#0;class#ClientThread#0" />
                 <element signature="method#closeEverything#0;class#ClientThread#0" />
                 <element signature="method#getFileType#0;class#ClientThread#0" />
-                <element signature="method#processGet#0;class#ClientThread#0" />
               </folding>
             </state>
           </provider>
@@ -56,6 +55,8 @@
         <option value="$PROJECT_DIR$/../../../codeforces/java++/src/JavaHTTPServer.java" />
         <option value="$PROJECT_DIR$/html_assets/not_found_404.html" />
         <option value="$PROJECT_DIR$/src/Server.java" />
+        <option value="$PROJECT_DIR$/src/Client.java" />
+        <option value="$PROJECT_DIR$/src/ServerClient.java" />
         <option value="$PROJECT_DIR$/src/ClientThread.java" />
       </list>
     </option>
@@ -70,8 +71,8 @@
     <packageJsonPaths />
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="449" />
-    <option name="width" value="924" />
+    <option name="x" value="484" />
+    <option name="width" value="889" />
     <option name="height" value="735" />
   </component>
   <component name="ProjectView">
@@ -79,6 +80,8 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="PackagesPane" />
+      <pane id="AndroidView" />
       <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
@@ -96,8 +99,6 @@
           <select />
         </subPane>
       </pane>
-      <pane id="AndroidView" />
-      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -109,6 +110,7 @@
     <property name="project.structure.last.edited" value="Project" />
     <property name="project.structure.proportion" value="0.0" />
     <property name="project.structure.side.proportion" value="0.0" />
+    <property name="settings.editor.selected.configurable" value="preferences.sourceCode.Java" />
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -155,37 +157,41 @@
       <workItem from="1541337794149" duration="3471000" />
       <workItem from="1541349575201" duration="121000" />
       <workItem from="1541359034737" duration="597000" />
+      <workItem from="1541465719583" duration="396000" />
+      <workItem from="1541522550231" duration="1675000" />
+      <workItem from="1541525063325" duration="9551000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="27588000" />
+    <option name="totallyTimeSpent" value="39210000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info anchor="right" id="Palette" order="3" />
       <window_info anchor="bottom" id="TODO" order="6" />
-      <window_info anchor="bottom" id="Messages" order="7" />
+      <window_info anchor="bottom" id="Messages" order="7" weight="0.32843137" />
       <window_info anchor="right" id="Palette&#9;" order="3" />
       <window_info id="Image Layers" order="2" />
       <window_info anchor="right" id="Capture Analysis" order="3" />
       <window_info anchor="bottom" id="Event Log" order="7" side_tool="true" />
       <window_info anchor="right" id="Maven Projects" order="3" />
       <window_info anchor="bottom" id="Database Changes" order="7" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.77124184" />
       <window_info anchor="bottom" id="Version Control" order="7" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.8137255" />
       <window_info anchor="bottom" id="Terminal" order="7" />
       <window_info id="Capture Tool" order="2" />
       <window_info id="Designer" order="2" />
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.056368962" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.0" />
       <window_info anchor="right" id="Database" order="3" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info id="UI Designer" order="2" />
       <window_info anchor="right" id="Theme Preview" order="3" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info id="Favorites" order="2" side_tool="true" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="right" id="Commander" order="0" weight="0.4" />
@@ -208,6 +214,63 @@
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/src/Server.java">
       <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="456">
+          <caret line="21" column="28" selection-start-line="21" selection-start-column="28" selection-end-line="21" selection-end-column="28" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/ClientThread.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="288">
+          <caret line="14" column="26" lean-forward="true" selection-end-line="266" />
+          <folding>
+            <element signature="method#ClientThread#0;class#ClientThread#0" />
+            <element signature="method#closeEverything#0;class#ClientThread#0" />
+            <element signature="method#getFileType#0;class#ClientThread#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Server.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="192">
+          <caret line="8" column="36" selection-start-line="8" selection-start-column="36" selection-end-line="8" selection-end-column="36" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/ClientThread.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3936">
+          <caret line="164" column="34" selection-start-line="164" selection-start-column="34" selection-end-line="164" selection-end-column="34" />
+          <folding>
+            <element signature="method#ClientThread#0;class#ClientThread#0" />
+            <element signature="method#closeEverything#0;class#ClientThread#0" />
+            <element signature="method#getFileType#0;class#ClientThread#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Server.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="192">
+          <caret line="8" column="36" selection-start-line="8" selection-start-column="36" selection-end-line="8" selection-end-column="36" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/ClientThread.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="6048">
+          <caret line="252" selection-start-line="252" selection-end-line="252" />
+          <folding>
+            <element signature="method#ClientThread#0;class#ClientThread#0" />
+            <element signature="method#closeEverything#0;class#ClientThread#0" />
+            <element signature="method#getFileType#0;class#ClientThread#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Server.java">
+      <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="144">
           <caret line="8" column="36" selection-start-line="8" selection-start-column="36" selection-end-line="8" selection-end-column="36" />
         </state>
@@ -221,7 +284,6 @@
             <element signature="method#ClientThread#0;class#ClientThread#0" />
             <element signature="method#closeEverything#0;class#ClientThread#0" />
             <element signature="method#getFileType#0;class#ClientThread#0" />
-            <element signature="method#processGet#0;class#ClientThread#0" />
           </folding>
         </state>
       </provider>
@@ -241,7 +303,6 @@
             <element signature="method#ClientThread#0;class#ClientThread#0" />
             <element signature="method#closeEverything#0;class#ClientThread#0" />
             <element signature="method#getFileType#0;class#ClientThread#0" />
-            <element signature="method#processGet#0;class#ClientThread#0" />
           </folding>
         </state>
       </provider>
@@ -261,7 +322,6 @@
             <element signature="method#ClientThread#0;class#ClientThread#0" />
             <element signature="method#closeEverything#0;class#ClientThread#0" />
             <element signature="method#getFileType#0;class#ClientThread#0" />
-            <element signature="method#processGet#0;class#ClientThread#0" />
           </folding>
         </state>
       </provider>
@@ -281,7 +341,6 @@
             <element signature="method#ClientThread#0;class#ClientThread#0" />
             <element signature="method#closeEverything#0;class#ClientThread#0" />
             <element signature="method#getFileType#0;class#ClientThread#0" />
-            <element signature="method#processGet#0;class#ClientThread#0" />
           </folding>
         </state>
       </provider>
@@ -324,13 +383,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../../../codeforces/java++/src/JavaHTTPServer.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="282">
-          <caret line="202" column="30" selection-start-line="202" selection-start-column="30" selection-end-line="202" selection-end-column="30" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/../../../codeforces/java++/src/JavaHTTPServer.java" />
     <entry file="file://$PROJECT_DIR$/html_assets/css/style.css" />
     <entry file="file://$PROJECT_DIR$/html_assets/not_found_404.html">
       <provider selected="true" editor-type-id="text-editor">
@@ -339,23 +392,23 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/ServerClient.java" />
+    <entry file="file://$PROJECT_DIR$/src/Server.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="456">
+          <caret line="21" column="28" selection-start-line="21" selection-start-column="28" selection-end-line="21" selection-end-column="28" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/ClientThread.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="4560">
-          <caret line="252" selection-start-line="252" selection-end-line="252" />
+        <state relative-caret-position="273">
+          <caret line="222" column="10" selection-start-line="222" selection-start-column="10" selection-end-line="222" selection-end-column="10" />
           <folding>
             <element signature="method#ClientThread#0;class#ClientThread#0" />
             <element signature="method#closeEverything#0;class#ClientThread#0" />
             <element signature="method#getFileType#0;class#ClientThread#0" />
-            <element signature="method#processGet#0;class#ClientThread#0" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Server.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="29">
-          <caret line="8" column="36" selection-start-line="8" selection-start-column="36" selection-end-line="8" selection-end-column="36" />
         </state>
       </provider>
     </entry>

@@ -8,7 +8,7 @@ public class ClientThread implements Runnable {
     private OutputStream outputStream;
     private PrintWriter pr;
 
-    private String receive;
+    private String receive, linkFromBrowser, postedValue;
     private String requiredFileName;
     private String pathToFiles;
 
@@ -54,8 +54,11 @@ public class ClientThread implements Runnable {
             e.printStackTrace();
         }
 
-        System.out.println("\nserver accepted client no. "+clientId);
+        System.out.println("\nserver accepted client no. " + clientId);
         System.out.println("client-" + clientId + " said: " + receive);
+
+        //in a GET request, the first line will have the requested file name
+        linkFromBrowser = receive;
 
         if (receive != null && receive.startsWith("GET")) {
             try {
@@ -101,19 +104,26 @@ public class ClientThread implements Runnable {
     //--------------------------------------------------------------------
     //process a GET request
     void processGet() throws IOException {
-        //after a "GET /" the name of the required file is given
-        System.out.println("----------------------------------------------\nGET logs\n");
+
+        //-------------------------------------------------logs
+        System.out.println("----------------------------------------------GET logs\n");
+        while (true) {
+            receive = br.readLine();
+            if (receive.length() == 0) break;
+            System.out.println("client-" + clientId + " said: " + receive);
+        }
+        //-------------------------------------------------logs
 
         requiredFileName = "";
         for (int i = 5; ; ) {
-            if (receive.charAt(i) == ' ') break;
+            if (linkFromBrowser.charAt(i) == ' ') break;
 
             //if the web page has space in its name then the browser would send it as %20
-            if (receive.charAt(i) == '%') {
+            if (linkFromBrowser.charAt(i) == '%') {
                 i += 3;
                 requiredFileName += " ";
             } else {
-                requiredFileName += receive.charAt(i);
+                requiredFileName += linkFromBrowser.charAt(i);
                 i++;
             }
         }
@@ -138,29 +148,22 @@ public class ClientThread implements Runnable {
     void sendFileData(File file) throws IOException {
 
         int fileLength = (int) file.length();
-        FileInputStream in;
+        FileInputStream fileInputStream;
 
         //404 error
-        if (fileLength == 0)
-        {
+        if (fileLength == 0) {
             requiredFileName = pathToFiles + "not_found_404.html";
             file = new File(requiredFileName);
-            in = new FileInputStream(file);
+            fileInputStream = new FileInputStream(file);
             fileLength = (int) file.length();    //as we are opening a new file
 
             pr.println("HTTP/1.1 404 NOT FOUND");
             System.out.println("server wrote : HTTP/1.1 404 NOT FOUND");
-            System.out.println("client-"+clientId+" said: "+br.readLine()+"\n");
-
-        }
-
-        else
-        {
-            in = new FileInputStream(file);
+        } else {
+            fileInputStream = new FileInputStream(file);
 
             pr.println("HTTP/1.1 200 OK");
             System.out.println("server wrote : HTTP/1.1 200 OK");
-            System.out.println("client-"+clientId+" said: "+br.readLine()+"\n");
         }
 
         //System.out.println("file name: " + requiredFileName);
@@ -168,50 +171,29 @@ public class ClientThread implements Runnable {
 
         pr.println("Server: localhost:8080");
         System.out.println("server wrote : Server: localhost:8080");
-        System.out.println("client-"+clientId+" said: "+br.readLine()+"\n");
 
         pr.println("Date: " + new Date());
         System.out.println("server wrote : Date");
-        System.out.println("client-"+clientId+" said: "+br.readLine()+"\n");
 
         pr.println("Content-Type: " + getFileType());
         System.out.println("server wrote : Content-Type");
-        System.out.println("client-"+clientId+" said: "+br.readLine()+"\n");
 
         pr.println("Content-Length: " + fileLength);
         System.out.println("server wrote : Content-Length:");
-        System.out.println("client-"+clientId+" said: "+br.readLine()+"\n");
 
         pr.println();
         System.out.println("server wrote: empty line, ready to write bytes");
-        System.out.println("client replied: "+br.readLine()+"\n");
 
         pr.flush();
 
         byte[] fileData = new byte[fileLength];
-        in.read(fileData);
+        fileInputStream.read(fileData);
 
-        outputStream.write(fileData, 0, fileLength);
         System.out.println("server wrote data");
-        System.out.println("client-"+clientId+" said: "+br.readLine()+"\n");
+        outputStream.write(fileData, 0, fileLength);
         outputStream.flush();
 
-        //read the whole file if it is a html so that we can process
-        //further POST requests
-        if (requiredFileName.endsWith("html")) {
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
-
-            Server.fileBackUp = "";
-            String temp;
-            while (true) {
-                temp=bufferedReader.readLine();
-
-                if(temp==null) break;
-
-                Server.fileBackUp += temp;
-                Server.fileBackUp+="\r\n";
-            }
-        }
+        closeEverything();
     }
     //--------------------------------------------------------------------
 
@@ -219,47 +201,27 @@ public class ClientThread implements Runnable {
     //--------------------------------------------------------------------
     void processPOST() throws IOException {
 
-        if(!Server.fileBackUp.contains("Post->1505107"))
-            Server.fileBackUp=Server.fileBackUp.replace("Post->", "Post->1505107");
+        //-------------------------------------------------logs
+        System.out.println("----------------------------------------------POST logs\n");
+        while (true) {
+            receive = br.readLine();
 
-        System.out.println("in");
-        System.out.println("----------------------------------------------\nPOST logs\n");
+            if(receive!=null && receive.startsWith("Referer:"))
+                linkFromBrowser=receive;
 
-        pr.println("HTTP/1.1 200 OK");
-        System.out.println("server wrote: HTTP/1.1 200 OK");
-        System.out.println("client replied: "+br.readLine()+"\n");
+            if (receive==null){
+                break;
+            }
 
-        pr.println("Server: localhost:8080");
-        System.out.println("server wrote: Server: localhost:8080");
-        System.out.println("client replied: "+br.readLine()+"\n");
+            System.out.println("client-" + clientId + " said: " + receive);
+        }
 
-        pr.println("Date: " + new Date());
-        System.out.println("server wrote: the date");
-        System.out.println("client replied: "+br.readLine()+"\n");
-
-        pr.println("Content-Type: text\\html");
-        System.out.println("server wrote: content-type");
-        System.out.println("client replied: "+br.readLine()+"\n");
-
-        pr.println("Content-Length: " + Server.fileBackUp.length());
-        System.out.println("server wrote: content-length");
-        System.out.println("client replied: "+br.readLine()+"\n");
-
-        pr.println();
-        System.out.println("server wrote: empty line, ready to write bytes");
-        System.out.println("client replied: "+br.readLine()+"\n");
-
-        pr.flush();
-
-        byte[] fileData=Server.fileBackUp.getBytes();
-
-        outputStream.write(fileData,0,Server.fileBackUp.length());
-        System.out.println("server wrote: data");
-        System.out.println("client replied: "+br.readLine()+"\n");
-
-        outputStream.flush();
-
-        System.out.println("----------------------------------------------\n");
+        //pr.println();
+        //System.out.println(br.readLine());
+        System.out.println("break");
+        //System.out.println(br.readLine());
+        //socket.close();
+        //-------------------------------------------------logs
     }
     //--------------------------------------------------------------------
 
