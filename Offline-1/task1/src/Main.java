@@ -2,6 +2,7 @@ import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Base64;
 
 public class Main {
 
@@ -10,10 +11,10 @@ public class Main {
     private static Socket smtpSocket;
     private static BufferedReader br;
     private static PrintWriter pr;
-    private static BufferedReader readAddress, readMail, userInput;
+    private static BufferedReader readAddress, readMail, userInput, readAttachment;
     private static String receive, input;
 
-    private static File mailAdresses, mailBody;
+    private static File mailAdresses, mailBody, mailAttachcment;
 
     //------------------------------------------------------------------------------------
     //close evrything and exit
@@ -33,10 +34,11 @@ public class Main {
     //get response from the server
     public static void getResponse() throws IOException {
 
-        int idx=timerArray.size();
-        timerArray.add(false); new Thread(new timeOutThread(idx)).start();
+        int idx = timerArray.size();
+        timerArray.add(false);
+        new Thread(new timeOutThread(idx)).start();
         receive = br.readLine();
-        timerArray.set(idx,true);
+        timerArray.set(idx, true);
 
         System.out.println("server says: " + receive + "\n");
 
@@ -53,8 +55,9 @@ public class Main {
     //send message to server
     public static void sendResponse(String str) {
 
-        int idx=timerArray.size();
-        timerArray.add(false); new Thread(new timeOutThread(idx)).start();
+        int idx = timerArray.size();
+        timerArray.add(false);
+        new Thread(new timeOutThread(idx)).start();
 
         if (str.length() > 0)
             pr.println(str);
@@ -62,7 +65,7 @@ public class Main {
         else
             pr.println();
 
-        timerArray.set(idx,true);
+        timerArray.set(idx, true);
     }
     //------------------------------------------------------------------------------------
 
@@ -109,7 +112,8 @@ public class Main {
                     receive = readMail.readLine();
                     if (receive == null) break;
                     //System.out.println(receive);
-                    sendResponse(receive);sendResponse(" ");
+                    sendResponse(receive);
+                    sendResponse(" ");
                 }
 
                 //System.out.println("mail sent");
@@ -119,6 +123,38 @@ public class Main {
                 sendResponse("QUIT");
                 getResponse();
                 closing();
+            } else if (input.equalsIgnoreCase("attachment")) {
+                sendResponse("DATA");
+                getResponse();
+
+                //------------------------------------------------------------------
+                //message
+                while (true) {
+                    receive = readAttachment.readLine();
+                    if (receive == null) break;
+
+                    sendResponse(receive);
+                }
+                //------------------------------------------------------------------
+
+                sendResponse("");sendResponse("");
+
+                //------------------------------------------------------------------
+                //attachment
+                File file = new File("C:\\programming\\CSE-322-Computer-Networks\\Offline-1\\task1\\src\\image.jpg");
+                FileInputStream fis = new FileInputStream(file);
+
+                byte[] fileData = new byte[(int) file.length()];
+                fis.read(fileData);
+
+                String send = Base64.getEncoder().encodeToString(fileData);
+                sendResponse(send);
+                //------------------------------------------------------------------
+
+                sendResponse("...");
+                sendResponse("--myBoundary--");
+                sendResponse(".");
+                getResponse();
             }
         }
     }
@@ -141,11 +177,13 @@ public class Main {
 
         mailAdresses = new File("C:\\programming\\CSE-322-Computer-Networks\\Offline-1\\task1\\src\\mail_addresses.txt");
         mailBody = new File("C:\\programming\\CSE-322-Computer-Networks\\Offline-1\\task1\\src\\mail_body.txt");
+        mailAttachcment = new File("C:\\programming\\CSE-322-Computer-Networks\\Offline-1\\task1\\src\\attachment.txt");
 
         readAddress = new BufferedReader(new FileReader(mailAdresses));
         readMail = new BufferedReader(new FileReader(mailBody));
+        readAttachment = new BufferedReader(new FileReader(mailAttachcment));
 
-        timerArray=new ArrayList<>();
+        timerArray = new ArrayList<>();
         //----------------------------------------------------------------
         //after connecting smtp server shall send 220 and some strings concatenated with it
         getResponse();
