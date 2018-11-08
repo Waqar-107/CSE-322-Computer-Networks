@@ -221,9 +221,3 @@ public class Client {
         //----------------------------------------------------------------
     }
 }
-
-/*
-* waqar.hassan866@gmail.com
-* anfuad96@yahoo.com
-* tameem.bin.haider.101@gmail.com
-*/

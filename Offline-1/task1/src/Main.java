@@ -1,8 +1,11 @@
 import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.util.ArrayList;
 
 public class Main {
+
+    public static ArrayList<Boolean> timerArray;
 
     private static Socket smtpSocket;
     private static BufferedReader br;
@@ -29,7 +32,12 @@ public class Main {
     //------------------------------------------------------------------------------------
     //get response from the server
     public static void getResponse() throws IOException {
+
+        int idx=timerArray.size();
+        timerArray.add(false); new Thread(new timeOutThread(idx)).start();
         receive = br.readLine();
+        timerArray.set(idx,true);
+
         System.out.println("server says: " + receive + "\n");
 
         //if error then quit from here
@@ -44,10 +52,17 @@ public class Main {
     //------------------------------------------------------------------------------------
     //send message to server
     public static void sendResponse(String str) {
+
+        int idx=timerArray.size();
+        timerArray.add(false); new Thread(new timeOutThread(idx)).start();
+
         if (str.length() > 0)
             pr.println(str);
+
         else
             pr.println();
+
+        timerArray.set(idx,true);
     }
     //------------------------------------------------------------------------------------
 
@@ -111,13 +126,6 @@ public class Main {
 
 
     //------------------------------------------------------------------------------------
-    public static void sendData() throws IOException {
-
-    }
-    //------------------------------------------------------------------------------------
-
-
-    //------------------------------------------------------------------------------------
     public static void main(String[] args) throws IOException {
         String mailServerAddress = "smtp.sendgrid.net";
 
@@ -137,6 +145,7 @@ public class Main {
         readAddress = new BufferedReader(new FileReader(mailAdresses));
         readMail = new BufferedReader(new FileReader(mailBody));
 
+        timerArray=new ArrayList<>();
         //----------------------------------------------------------------
         //after connecting smtp server shall send 220 and some strings concatenated with it
         getResponse();
