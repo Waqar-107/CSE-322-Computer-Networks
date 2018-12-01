@@ -21,7 +21,7 @@ int main(int argc, char *argv[]){
 
 	server_address.sin_family = AF_INET;
 	server_address.sin_port = htons(4747);
-	server_address.sin_addr.s_addr = inet_addr("192.168.10.100");
+	server_address.sin_addr.s_addr = inet_addr("192.168.0.100");	//change inet here
 
 	client_address.sin_family = AF_INET;
 	client_address.sin_port = htons(4747);
@@ -31,7 +31,7 @@ int main(int argc, char *argv[]){
 	bind_flag = bind(sockfd, (struct sockaddr*) &client_address, sizeof(sockaddr_in));
 
 	while(true){
-		gets(buffer);
+		fgets(buffer, 1024, stdin);
 		if(!strcmp(buffer, "shutdown")) break;
 		sendto(sockfd, buffer, 1024, 0, (struct sockaddr*) &server_address, sizeof(sockaddr_in));
 	}

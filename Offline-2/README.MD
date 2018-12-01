@@ -37,4 +37,17 @@ with whatever you get
 
 8. then run the file, 'python driver.py topo.txt' -> you may have python3 installed on your device, so you better do-> 'sudo apt install puython'
 
+9. everytime you would need to run setup.sh to create virtual routers(the 4 ip addresses)
 
+10. change the inet address in the cpp-files to, the lines have appropriate comments to find'em
+
+11. there is also a setup file in the cpp, no need to change that
+
+# using the client and the server
+
+1. run the server
+
+2. run a client, give an available ip(the virtual ip you henerated through the ./setup.sh) and your message, the msg will reach the server
+
+that is the end of setup process, now we shall talk about the code.
+thanks to my friend spondon(https://github.com/ShanjinurIslam) for the tutorial -> https://www.youtube.com/watch?v=FOc-Ykf6rcY
