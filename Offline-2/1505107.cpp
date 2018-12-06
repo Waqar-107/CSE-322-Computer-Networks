@@ -40,13 +40,30 @@ void showRoutingTable()
     }
 }
 
+string toString(int n)
+{
+    string str = "";
+
+    if(!n) return "0";
+
+    while(n)
+    {
+        str.push_back(n % 10 + '0');
+        n /= 10;
+    }
+
+    reverse(str.begin(), str.end());
+    return str;
+}
+
 int main(int argc, char *argv[])
 {
     int i, j, k;
     int w;
 
-    string myIP, cmd;
+    string myIP;
     string u, v, line;
+    vector<int> vec;
 
     char *in = argv[1];
     for(i = 0; i< strlen(in); i++)
@@ -123,7 +140,35 @@ int main(int argc, char *argv[])
             //show the routing table
             if(cmd.find("show") != string::npos)
                 showRoutingTable();
+
+            //exchange routing table
+            else if(cmd.find("clk") != string::npos){}
+
+            else if(cmd.find("cost") != string::npos)
+            {
+                vec.clear();
+                for(i = 4; i < bytes_received; i++)
+                {
+                    k = buffer[i];
+                    if(k < 0)
+                        k += 256;
+
+                    vec.push_back(k);
+                }
+
+                u = toString(vec[0]) + "." + toString(vec[1]) + "." + toString(vec[2]) + "." + toString(vec[3]);
+                v = toString(vec[4]) + "." + toString(vec[5]) + "." + toString(vec[6]) + "." + toString(vec[7]);
+                w = vec[8];
+
+                if(u == myIP)
+                    routingTable[v].cost = w;
+                else
+                    routingTable[u].cost = w;
+            }
         }
+
+        else
+            cout << "-1 received : ", printf("%s\n", buffer);
     }
 
     //--------------------------------------------------------------------
