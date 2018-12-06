@@ -3,6 +3,9 @@
 #include <arpa/inet.h>
 #include <sys/socket.h>
 #include <unistd.h>
+#include<bits/stdc++.h>
+
+using namespace std;
 
 int main(){
 
@@ -21,9 +24,13 @@ int main(){
 	sockfd = socket(AF_INET, SOCK_DGRAM, 0);
 	bind_flag = bind(sockfd, (struct sockaddr*) &server_address, sizeof(sockaddr_in));
 
+	printf("server started\n");
+pair<int,int> p;
 	while(true){
 		bytes_received = recvfrom(sockfd, buffer, 1024, 0, (struct sockaddr*) &client_address, &addrlen);
-		printf("[%s:%d]: %s\n", inet_ntoa(client_address.sin_addr), ntohs(client_address.sin_port), buffer);
+		//printf("[%s:%d]: %s\n", inet_ntoa(client_address.sin_addr), ntohs(client_address.sin_port), buffer);
+memcpy(&p,&buffer,1024);	
+printf("receivedd: %d %d\n", p.first,p.second);
 	}
 
 	return 0;

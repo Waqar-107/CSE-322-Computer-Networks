@@ -1,4 +1,9 @@
+/*** from dust i have come, dust i will be ***/
+
 #include<bits/stdc++.h>
+#include <arpa/inet.h>
+#include <sys/socket.h>
+#include <unistd.h>
 
 #define dbg printf("in\n")
 #define nl printf("\n")
@@ -11,8 +16,9 @@ struct route
     string next_hop;
     int cost;
 
-    route(){}
-    route(string next_hop, int cost){
+    route() {}
+    route(string next_hop, int cost)
+    {
         this->next_hop = next_hop;
         this->cost = cost;
     }
@@ -39,7 +45,7 @@ int main(int argc, char *argv[])
     int i, j, k;
     int w;
 
-    string myIP;
+    string myIP, cmd;
     string u, v, line;
 
     char *in = argv[1];
@@ -47,7 +53,8 @@ int main(int argc, char *argv[])
         myIP.push_back(in[i]);
 
 
-
+    //--------------------------------------------------------------------
+    //read the file and update the routing table
     ifstream infile(argv[2]);
     set<string> adj;
 
@@ -62,11 +69,11 @@ int main(int argc, char *argv[])
 
         else
         {
-            if(adj.find(u) != adj.end()){}
+            if(adj.find(u) != adj.end()) {}
             else
                 routingTable[u] = route("     -     ", inf);
 
-            if(adj.find(v) != adj.end()){}
+            if(adj.find(v) != adj.end()) {}
             else
                 routingTable[v] = route("     -     ", inf);
         }
@@ -74,6 +81,52 @@ int main(int argc, char *argv[])
 
     //initial routing table
     showRoutingTable();
+    //--------------------------------------------------------------------
 
+
+    //--------------------------------------------------------------------
+    //initialize receive mode
+    int sockfd, bind_flag;
+    int bytes_received;
+	socklen_t addrlen;
+
+    struct sockaddr_in client_address;
+    struct sockaddr_in senders_address;
+
+    client_address.sin_family = AF_INET;
+    client_address.sin_port = htons(4747);
+    inet_pton(AF_INET, myIP.c_str(), &client_address.sin_addr);
+
+    sockfd = socket(AF_INET, SOCK_DGRAM, 0);
+    bind_flag = bind(sockfd, (struct sockaddr*) &client_address, sizeof(sockaddr_in));
+
+    cout << "\n---------------------------------------\n";
+    if(!bind_flag)
+        cout << "connected!!!\n";
+    else {
+        cout << "connection error\n";
+        exit(0);
+    }
+    cout << "---------------------------------------\n\n";
+
+    while(true)
+    {
+        char buffer[1024];
+        bytes_received = recvfrom(sockfd, buffer, 1024, 0, (struct sockaddr*) &senders_address, &addrlen);
+
+		//printf("[%s:%d]: %s\n", inet_ntoa(client_address.sin_addr), ntohs(client_address.sin_port), buffer);
+        if(bytes_received != -1)
+        {
+            string cmd(buffer);
+            cout<<cmd<<endl;
+
+            //show the routing table
+            if(cmd.find("show") != string::npos)
+                showRoutingTable();
+        }
+    }
+
+    //--------------------------------------------------------------------
+    //--------------------------------------------------------------------
     return 0;
 }

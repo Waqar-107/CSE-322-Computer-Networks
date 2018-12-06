@@ -6,6 +6,9 @@
 #include <sys/socket.h>
 #include <unistd.h>
 
+#include<bits/stdc++.h>
+using namespace std;
+
 int main(int argc, char *argv[]){
 
 	int sockfd;
@@ -30,9 +33,15 @@ int main(int argc, char *argv[]){
 	sockfd = socket(AF_INET, SOCK_DGRAM, 0);
 	bind_flag = bind(sockfd, (struct sockaddr*) &client_address, sizeof(sockaddr_in));
 
+
+	int x,y;pair<int,int> p;
 	while(true){
-		fgets(buffer, 1024, stdin);
-		if(!strcmp(buffer, "shutdown")) break;
+		printf("enter something client:\n");
+		//fgets(buffer, 1024, stdin);
+scanf("%d%d",&x,&y);
+p={x,y};
+memcpy(&buffer, &p, sizeof(p));
+		//if(!strcmp(buffer, "shutdown")) break;
 		sendto(sockfd, buffer, 1024, 0, (struct sockaddr*) &server_address, sizeof(sockaddr_in));
 	}
 

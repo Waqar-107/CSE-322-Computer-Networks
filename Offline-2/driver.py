@@ -105,6 +105,7 @@ class Driver(object):
 			router = map(int,segments[1].split('.'))
 			fmt = '4s4B';
 			buf = struct.pack(fmt, segments[0], router[0], router[1], router[2], router[3])
+			
 			print('sending to {0}'.format(segments[1]))
 			self.s.sendto(buf, (segments[1], self.port))
 
