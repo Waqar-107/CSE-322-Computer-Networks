@@ -25,9 +25,10 @@ struct route
 };
 
 string myIP;
-map<string,route> routingTable;
+map<string, route> routingTable;
 map<string, route> tempTable;
 set<string> adj;
+map<string, int > neighborCost;
 
 int sockfd, bind_flag;
 int bytes_received;
@@ -144,10 +145,10 @@ int main(int argc, char *argv[])
     {
         //cout<<u.length()<<" "<<v.length()<<" "<<w<<" "<<myIP.length()<<endl;
         if(u == myIP)
-            routingTable[v] = route(v, w), adj.insert(v);
+            routingTable[v] = route(v, w), adj.insert(v), neighborCost[v] = w;
 
         else if(v == myIP)
-            routingTable[u] = route(u, w), adj.insert(u);
+            routingTable[u] = route(u, w), adj.insert(u), neighborCost[u] = w;
 
         else
         {
@@ -209,9 +210,19 @@ int main(int argc, char *argv[])
                 w = vec[8];
 
                 if(u == myIP)
-                    routingTable[v].cost = w;
+                    neighborCost[v].cost = w;
                 else
-                    routingTable[u].cost = w;
+                    neighborCost[u].cost = w;
+
+                //check if you would go to the neighbours directly
+                //updates after cost change
+                auto itr = neighborCost.begin();
+                while(itr != neighborCost.end())
+                {
+                    if(routingTable[itr->first].cost > itr->second)
+                        routingTable[itr->first].next_hop = itr->first, routingTable[itr->first].cost = itr->second;
+                    itr++;
+                }
             }
 
             else if(cmd.find("send") != string::npos)
@@ -262,6 +273,16 @@ int main(int argc, char *argv[])
 
             else
             {
+
+                //check if you would go to the neighbours directly
+                auto itr = neighborCost.begin();
+                while(itr != neighborCost.end())
+                {
+                    if(routingTable[itr->first].cost > itr->second)
+                        routingTable[itr->first].next_hop = itr->first, routingTable[itr->first].cost = itr->second;
+                    itr++;
+                }
+
                 //the r'outing table is here, so try to update
                 //printf("got %s\n", buffer);
                 vector<string> rcv; u ="";

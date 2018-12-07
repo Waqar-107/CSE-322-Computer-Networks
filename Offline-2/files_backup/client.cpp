@@ -17,11 +17,6 @@ int main(int argc, char *argv[]){
 	struct sockaddr_in server_address;
 	struct sockaddr_in client_address;
 
-	if(argc != 2){
-		printf("%s <ip address>\n", argv[0]);
-		exit(1);
-	}
-
 	server_address.sin_family = AF_INET;
 	server_address.sin_port = htons(4747);
 	server_address.sin_addr.s_addr = inet_addr("192.168.0.100");	//change inet here
