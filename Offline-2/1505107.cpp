@@ -28,6 +28,7 @@ struct route
 
 string myIP;
 map<string,route> routingTable;
+map<string, route> tempTable;
 set<string> adj;
 
 int sockfd, bind_flag;
@@ -92,21 +93,24 @@ string toString(int n)
 //------------------------------------------------------------------------
 //thread for sending and updating
 sem_t readyToSend;
-
+bool flag;
 void *sendTable(void *arg)
 {
 	char buffer2[1024];
 
     while(true)
     {
-        sem_wait(&readyToSend);
+        //sem_wait(&readyToSend);
+        while(flag);
         for(string s : adj)
         {
-            inet_pton(AF_INET, s.c_str(), &client_address.sin_addr);
-
-            memcpy(&buffer2, &routingTable, sizeof(routingTable));
+            //memcpy(&buffer2, &routingTable, sizeof(routingTable));
+            strcpy(buffer2, "testing\n");
+            serve.sin_addr.s_addr = inet_addr(s.c_str());
             sendto(sockfd, buffer2, 1024, 0, (struct sockaddr*) &serve, sizeof(sockaddr_in));
         }
+        flag = 1;
+        sleep(10);
     }
 }
 //------------------------------------------------------------------------
@@ -114,7 +118,7 @@ void *sendTable(void *arg)
 int main(int argc, char *argv[])
 {
     int i, j, k;
-    int w;
+    int w; flag =1;
 
 
     string u, v, line;
@@ -169,7 +173,7 @@ int main(int argc, char *argv[])
         char buffer[1024];
         bytes_received = recvfrom(sockfd, buffer, 1024, 0, (struct sockaddr*) &senders_address, &addrlen);
 
-		//printf("[%s:%d]: %s\n", inet_ntoa(client_address.sin_addr), ntohs(client_address.sin_port), buffer);
+		printf("[%s:%d]: %s\n", inet_ntoa(senders_address.sin_addr), ntohs(senders_address.sin_port), buffer);
         if(bytes_received != -1)
         {
             string cmd(buffer);
@@ -182,8 +186,9 @@ int main(int argc, char *argv[])
             //exchange routing table
             else if(cmd.find("clk") != string::npos)
             {
-                sem_post(&readyToSend);
-
+                //cout << cmd << endl;
+                //flag = 0;
+                //sem_post(&readyToSend);
             }
 
             else if(cmd.find("cost") != string::npos)
@@ -224,18 +229,17 @@ int main(int argc, char *argv[])
                 v = toString(vec[4]) + "." + toString(vec[5]) + "." + toString(vec[6]) + "." + toString(vec[7]);
                 k = vec[8];
 
-                cout<<"u: "<<u<<". v: "<<v<<" mip: "<<myIP<<endl;
+                //cout<<"u: "<<u<<". v: "<<v<<" mip: "<<myIP<<endl;
 
                 //destination reached
                 string temp = "";
                 if(v == myIP)
                 {
-                    for(i = 9; i <= vec.size(); i++)
+                    for(i = 9; i <= k + 9; i++)
                         temp.push_back((char)vec[i]);
 
-                    cout << u << " sent to " <<v <<" : "<< temp << endl;
+                    cout << u << "sent packet: " << temp<<endl;
                 }
-
 
 
                 else
@@ -243,7 +247,8 @@ int main(int argc, char *argv[])
                     //cout<<"u: "<<u<<". v: "<<v<<". msg: "<<temp<<endl;
                     if(routingTable[v].next_hop != "-")
                     {
-                        inet_pton(AF_INET, routingTable[v].next_hop.c_str(), &client_address.sin_addr);
+                        cout << "packet forwarded to router-" << routingTable[v].next_hop << endl;
+                        serve.sin_addr.s_addr = inet_addr(routingTable[v].next_hop.c_str());
                         sendto(sockfd, buffer, 1024, 0, (struct sockaddr*) &serve, sizeof(sockaddr_in));
                     }
 
@@ -253,13 +258,20 @@ int main(int argc, char *argv[])
 
                 memset(buffer, 0, sizeof(buffer));
             }
+
+            else
+            {
+                tempTable.clear();
+                memcpy(&tempTable, &buffer, 1024);
+                cout<<"map of size: "<<tempTable.size()<<" received\n";
+                memset(buffer, 0, sizeof(buffer));
+            }
         }
 
         else
             cout << "-1 received : ", printf("%s\n", buffer);
     }
 
-    //--------------------------------------------------------------------
     //--------------------------------------------------------------------
 
     return 0;
