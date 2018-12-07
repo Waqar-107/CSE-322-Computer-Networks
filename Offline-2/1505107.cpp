@@ -2,8 +2,6 @@
 
 #include<bits/stdc++.h>
 #include<arpa/inet.h>
-#include<pthread.h>
-#include<semaphore.h>
 #include<sys/socket.h>
 #include<unistd.h>
 
@@ -90,27 +88,37 @@ string toString(int n)
     return str;
 }
 
-//------------------------------------------------------------------------
-//thread for sending and updating
-sem_t readyToSend;
-bool flag;
-void *sendTable(void *arg)
+int toInt(string s)
 {
-	char buffer2[1024];
+    int n = 0, k = 1;
+    for(int i = s.length() - 1 ; i >= 0; i--)
+        n += (s[i] - 48) * k, k *= 10;
 
-    while(true)
+    return n;
+}
+
+//------------------------------------------------------------------------
+//send table
+void sendTable()
+{
+    char buffer2[1024];
+    string str = "";
+
+    auto itr = routingTable.begin();
+    while(itr != routingTable.end())
     {
-        //sem_wait(&readyToSend);
-        while(flag);
-        for(string s : adj)
-        {
-            //memcpy(&buffer2, &routingTable, sizeof(routingTable));
-            strcpy(buffer2, "testing\n");
-            serve.sin_addr.s_addr = inet_addr(s.c_str());
-            sendto(sockfd, buffer2, 1024, 0, (struct sockaddr*) &serve, sizeof(sockaddr_in));
-        }
-        flag = 1;
-        sleep(10);
+        if(itr->second.next_hop != "     -     ")
+           str += myIP + "|" + itr->first + "|" + itr->second.next_hop + "|" + toString(itr->second.cost) + "_";
+
+        itr++;
+    }
+
+    strcpy(buffer2, str.c_str());
+    //printf("sending %s\n", buffer2);
+    for(string s : adj)
+    {
+        serve.sin_addr.s_addr = inet_addr(s.c_str());
+        sendto(sockfd, buffer2, 1024, 0, (struct sockaddr*) &serve, sizeof(sockaddr_in));
     }
 }
 //------------------------------------------------------------------------
@@ -118,7 +126,7 @@ void *sendTable(void *arg)
 int main(int argc, char *argv[])
 {
     int i, j, k;
-    int w; flag =1;
+    int w;
 
 
     string u, v, line;
@@ -128,12 +136,6 @@ int main(int argc, char *argv[])
     char *in = argv[1];
     for(i = 0; i< strlen(in); i++)
         myIP.push_back(in[i]);
-
-
-    pthread_t sender;
-    sem_init(&readyToSend, 0, 0);
-    pthread_create(&sender, NULL, sendTable, NULL);
-
 
     //--------------------------------------------------------------------
     //read the file and update the routing table
@@ -173,7 +175,7 @@ int main(int argc, char *argv[])
         char buffer[1024];
         bytes_received = recvfrom(sockfd, buffer, 1024, 0, (struct sockaddr*) &senders_address, &addrlen);
 
-		printf("[%s:%d]: %s\n", inet_ntoa(senders_address.sin_addr), ntohs(senders_address.sin_port), buffer);
+		//printf("[%s:%d]: %s\n", inet_ntoa(senders_address.sin_addr), ntohs(senders_address.sin_port), buffer);
         if(bytes_received != -1)
         {
             string cmd(buffer);
@@ -187,8 +189,7 @@ int main(int argc, char *argv[])
             else if(cmd.find("clk") != string::npos)
             {
                 //cout << cmd << endl;
-                //flag = 0;
-                //sem_post(&readyToSend);
+                sendTable();
             }
 
             else if(cmd.find("cost") != string::npos)
@@ -238,14 +239,14 @@ int main(int argc, char *argv[])
                     for(i = 9; i <= k + 9; i++)
                         temp.push_back((char)vec[i]);
 
-                    cout << u << "sent packet: " << temp<<endl;
+                    cout << u << "sent packet: " << temp <<endl;
                 }
 
 
                 else
                 {
                     //cout<<"u: "<<u<<". v: "<<v<<". msg: "<<temp<<endl;
-                    if(routingTable[v].next_hop != "-")
+                    if(routingTable[v].next_hop != "     -     ")
                     {
                         cout << "packet forwarded to router-" << routingTable[v].next_hop << endl;
                         serve.sin_addr.s_addr = inet_addr(routingTable[v].next_hop.c_str());
@@ -253,7 +254,7 @@ int main(int argc, char *argv[])
                     }
 
                     else
-                        cout << "router " << v<< " seems uncreachable at the moment\n";
+                        cout << "router " << v << " seems uncreachable at the moment\n";
                 }
 
                 memset(buffer, 0, sizeof(buffer));
@@ -261,15 +262,66 @@ int main(int argc, char *argv[])
 
             else
             {
-                tempTable.clear();
-                memcpy(&tempTable, &buffer, 1024);
-                cout<<"map of size: "<<tempTable.size()<<" received\n";
-                memset(buffer, 0, sizeof(buffer));
+                //the r'outing table is here, so try to update
+                //printf("got %s\n", buffer);
+                vector<string> rcv; u ="";
+                for(i = 0 ; i < strlen(buffer); i++)
+                {
+                    if(buffer[i] == '_')
+                        rcv.push_back(u), u = "";
+                    else
+                        u.push_back(buffer[i]);
+                }
+
+                string t2 = "", senderIP = "";
+                for(string s : rcv)
+                {
+                    k = 0; senderIP = "";
+                    while(k < s.length()) {
+                        if(s[k] == '|'){k++; break;}
+                        senderIP.push_back(s[k]); k++;
+                    }
+
+                    u = "";
+                    while(k < s.length()){
+                        if(s[k] == '|'){k++; break;}
+                        u.push_back(s[k]); k++;
+                    }
+
+                    v = "";
+                    while(k < s.length()){
+                        if(s[k] == '|'){k++; break;}
+                        v.push_back(s[k]); k++;
+                    }
+
+                    t2 = "";
+                    while(k < s.length()){
+                        if(s[k] == '|'){k++; break;}
+                        t2.push_back(s[k]); k++;
+                    }
+
+                    w = toInt(t2);
+
+                    //senderIP u v w
+                    //cout<<senderIP<<" "<<u<<" "<<v<<" "<<w<<endl;
+
+                    //see if i can go to any node via senderIP
+                    if(u != myIP)
+                    {
+                        if(routingTable[u].cost > routingTable[senderIP].cost + w)
+                        {
+                            routingTable[u].cost = routingTable[senderIP].cost + w;
+                            routingTable[u].next_hop = senderIP;
+                        }
+                    }
+                }
             }
         }
 
-        else
-            cout << "-1 received : ", printf("%s\n", buffer);
+        else{cout << "-1 received : ", printf("%s\n", buffer);
+        }
+
+        memset(buffer, 0, sizeof(buffer));
     }
 
     //--------------------------------------------------------------------
