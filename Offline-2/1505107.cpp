@@ -210,9 +210,9 @@ int main(int argc, char *argv[])
                 w = vec[8];
 
                 if(u == myIP)
-                    neighborCost[v].cost = w;
+                    neighborCost[v] = w;
                 else
-                    neighborCost[u].cost = w;
+                    neighborCost[u] = w;
 
                 //check if you would go to the neighbours directly
                 //updates after cost change
@@ -250,7 +250,7 @@ int main(int argc, char *argv[])
                     for(i = 9; i <= k + 9; i++)
                         temp.push_back((char)vec[i]);
 
-                    cout << u << "sent packet: " << temp <<endl;
+                    cout << u << " sent packet: " << temp <<endl;
                 }
 
 
