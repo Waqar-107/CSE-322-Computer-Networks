@@ -378,7 +378,7 @@ int main(int argc, char *argv[])
             cout<<currentCLK<<" "<<lastCLK[s]<<endl;
         }
         //check for down
-        /*active.clear();
+        active.clear();
         inactive.clear();
         for(string s : adj)
         {
@@ -398,7 +398,7 @@ int main(int argc, char *argv[])
         }
 
         if(inactive.size())
-            sendDown();*/
+            sendDown();
         //cout<<active.size()<<" "<<inactive.size()<<endl;
         //-----------------------------------------------------------------
     }
