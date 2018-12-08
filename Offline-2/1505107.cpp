@@ -24,11 +24,14 @@ struct route
     }
 };
 
+int currentCLK;
 string myIP;
 map<string, route> routingTable;
-map<string, route> tempTable;
+map<string, bool> downSent;
 set<string> adj;
 map<string, int > neighborCost;
+map<string, int> lastCLK;
+vector<string> active, inactive;
 
 int sockfd, bind_flag;
 int bytes_received;
@@ -122,12 +125,33 @@ void sendTable()
         sendto(sockfd, buffer2, 1024, 0, (struct sockaddr*) &serve, sizeof(sockaddr_in));
     }
 }
+
+void sendDown()
+{
+    string str = "down_" + myIP + "_";
+
+    for(string s : inactive)
+        str += s + "_";
+
+    str += "#";
+    for(string s : active)
+        str += s + "|" + routingTable[s].next_hop + "|" + toString(routingTable[s].cost) + "_";
+
+    char buffer2[1024];
+    strcpy(buffer2, str.c_str());
+    //printf("sending %s\n", buffer2);
+    for(string s : active)
+    {
+        serve.sin_addr.s_addr = inet_addr(s.c_str());
+        sendto(sockfd, buffer2, 1024, 0, (struct sockaddr*) &serve, sizeof(sockaddr_in));
+    }
+}
 //------------------------------------------------------------------------
 
 int main(int argc, char *argv[])
 {
     int i, j, k;
-    int w;
+    int w, currentCLK = 0;
 
 
     string u, v, line;
@@ -160,6 +184,9 @@ int main(int argc, char *argv[])
             else
                 routingTable[v] = route("     -     ", inf);
         }
+
+        lastCLK[u] = -1;
+        lastCLK[v] = -1;
     }
 
     //initial routing table
@@ -190,6 +217,7 @@ int main(int argc, char *argv[])
             else if(cmd.find("clk") != string::npos)
             {
                 //cout << cmd << endl;
+                currentCLK++;
                 sendTable();
             }
 
@@ -207,7 +235,9 @@ int main(int argc, char *argv[])
 
                 u = toString(vec[0]) + "." + toString(vec[1]) + "." + toString(vec[2]) + "." + toString(vec[3]);
                 v = toString(vec[4]) + "." + toString(vec[5]) + "." + toString(vec[6]) + "." + toString(vec[7]);
-                w = vec[8];
+
+                //vec[i+1] has len/256, vec[i] has len%256;
+                w = vec[9] * 256 + vec[8];
 
                 if(u == myIP)
                     neighborCost[v] = w;
@@ -239,7 +269,9 @@ int main(int argc, char *argv[])
 
                 u = toString(vec[0]) + "." + toString(vec[1]) + "." + toString(vec[2]) + "." + toString(vec[3]);
                 v = toString(vec[4]) + "." + toString(vec[5]) + "." + toString(vec[6]) + "." + toString(vec[7]);
-                k = vec[8];
+
+                //vec[i+1] has len/256, vec[i] has len%256;
+                k = vec[9] * 256 + vec[8];
 
                 //cout<<"u: "<<u<<". v: "<<v<<" mip: "<<myIP<<endl;
 
@@ -271,19 +303,14 @@ int main(int argc, char *argv[])
                 memset(buffer, 0, sizeof(buffer));
             }
 
+            else if(cmd.find("down") != string::npos)
+            {
+                cout<<"received down "<<buffer<<endl;
+            }
+
             else
             {
-
-                //check if you would go to the neighbours directly
-                auto itr = neighborCost.begin();
-                while(itr != neighborCost.end())
-                {
-                    if(routingTable[itr->first].cost > itr->second)
-                        routingTable[itr->first].next_hop = itr->first, routingTable[itr->first].cost = itr->second;
-                    itr++;
-                }
-
-                //the r'outing table is here, so try to update
+                //the routing table is here, so try to update
                 //printf("got %s\n", buffer);
                 vector<string> rcv; u ="";
                 for(i = 0 ; i < strlen(buffer); i++)
@@ -324,9 +351,10 @@ int main(int argc, char *argv[])
                     w = toInt(t2);
 
                     //senderIP u v w
-                    //cout<<senderIP<<" "<<u<<" "<<v<<" "<<w<<endl;
+                    lastCLK[senderIP] = currentCLK;
+                    //cout<<"|"<<senderIP<<"| "<<u<<" "<<v<<" "<<w<<" "<<lastCLK[senderIP]<<endl;
 
-                    //see if i can go to any node via senderIP
+                    //going to node u via senderIP
                     if(u != myIP)
                     {
                         if(routingTable[u].cost > routingTable[senderIP].cost + w)
@@ -343,6 +371,36 @@ int main(int argc, char *argv[])
         }
 
         memset(buffer, 0, sizeof(buffer));
+
+        //----------------------------------------------------------------
+        for(string s : adj)
+        {
+            cout<<currentCLK<<" "<<lastCLK[s]<<endl;
+        }
+        //check for down
+        /*active.clear();
+        inactive.clear();
+        for(string s : adj)
+        {
+            if(lastCLK[s] == -1)continue;
+
+            //the edge myIP-s is down
+            if(lastCLK[s] != -1 && currentCLK - lastCLK[s] >= 3 && !downSent[s])
+            {
+                neighborCost[s] = inf;
+                inactive.push_back(s);
+                downSent[s] = true;
+                cout<<currentCLK<<" "<<lastCLK[s]<<" "<<myIP<<" "<<s<<" down\n";
+            }
+
+            else
+                active.push_back(s);
+        }
+
+        if(inactive.size())
+            sendDown();*/
+        //cout<<active.size()<<" "<<inactive.size()<<endl;
+        //-----------------------------------------------------------------
     }
 
     //--------------------------------------------------------------------
