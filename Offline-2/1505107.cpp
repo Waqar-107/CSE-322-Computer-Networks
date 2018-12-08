@@ -57,7 +57,8 @@ void init()
     cout << "\n---------------------------------------\n";
     if(!bind_flag)
         cout << "connected!!!\n";
-    else {
+    else
+    {
         cout << "connection error\n";
         exit(0);
     }
@@ -113,7 +114,7 @@ void sendTable()
     while(itr != routingTable.end())
     {
         if(itr->second.next_hop != "     -     ")
-           str += myIP + "|" + itr->first + "|" + itr->second.next_hop + "|" + toString(itr->second.cost) + "_";
+            str += myIP + "|" + itr->first + "|" + itr->second.next_hop + "|" + toString(itr->second.cost) + "_";
 
         itr++;
     }
@@ -204,7 +205,7 @@ int main(int argc, char *argv[])
         char buffer[1024];
         bytes_received = recvfrom(sockfd, buffer, 1024, 0, (struct sockaddr*) &senders_address, &addrlen);
 
-		//printf("[%s:%d]: %s\n", inet_ntoa(senders_address.sin_addr), ntohs(senders_address.sin_port), buffer);
+        //printf("[%s:%d]: %s\n", inet_ntoa(senders_address.sin_addr), ntohs(senders_address.sin_port), buffer);
         if(bytes_received != -1)
         {
             string cmd(buffer);
@@ -244,17 +245,26 @@ int main(int argc, char *argv[])
                 {
                     neighborCost[v] = w;
 
+                    //if this was the least path
+                    if(routingTable[v].next_hop == v)
+                        routingTable[v].cost = w;
+
                     //there was a different path, but now i want to directly move to my neighbour
-                    if(routingTable[v].cost > w)
+                    else if(routingTable[v].cost > w)
                         routingTable[v].cost = w, routingTable[v].next_hop =v;
                 }
 
                 else
                 {
-                    //there was a different path, but now i want to directly move to my neighbour
                     neighborCost[u] = w;
-                    if(routingTable[u].cost > w)
-                        routingTable[u].cost = w, routingTable[u].next_hop =v;
+
+                    //if this was the least path
+                    if(routingTable[u].next_hop == u)
+                        routingTable[u].cost = w;
+
+                    //there was a different path, but now i want to directly move to my neighbour
+                    else if(routingTable[u].cost > w)
+                        routingTable[u].cost = w, routingTable[u].next_hop = u;
                 }
             }
 
@@ -292,7 +302,7 @@ int main(int argc, char *argv[])
                 else
                 {
                     //cout<<"u: "<<u<<". v: "<<v<<". msg: "<<temp<<endl;
-                    if(routingTable[v].next_hop != "     -     ")
+                    if(routingTable[v].cost < inf)
                     {
                         cout << "packet forwarded to router-" << routingTable[v].next_hop << endl;
                         serve.sin_addr.s_addr = inet_addr(routingTable[v].next_hop.c_str());
@@ -308,7 +318,13 @@ int main(int argc, char *argv[])
 
             else if(cmd.find("down") != string::npos)
             {
-                vector<string> sec;
+                tempTable.clear();
+
+                //let u-v be down and i am in X,
+                //then if i go somewhere using u-v edge previously, after 'down' i would not be able reach there
+                //so if routerTable[somewhere].next_hop == u and routerTable[u].next_hop == v then set it inf
+
+                set<string> sec;
                 string senderIP = "";
 
                 //senders ip
@@ -328,11 +344,15 @@ int main(int argc, char *argv[])
                 string temp = "";
                 while(k < strlen(buffer))
                 {
-                    if(buffer[k] == '#'){k++; break;}
+                    if(buffer[k] == '#')
+                    {
+                        k++;
+                        break;
+                    }
 
                     if(buffer[k] == '_')
                     {
-                        sec.push_back(temp);
+                        sec.insert(temp);
                         temp="";
                     }
 
@@ -343,7 +363,8 @@ int main(int argc, char *argv[])
                 }
 
                 //now get the routing table
-                vector<string> rcv; u ="";
+                vector<string> rcv;
+                u ="";
                 while(k < strlen(buffer))
                 {
                     if(buffer[k] == '_')
@@ -353,14 +374,88 @@ int main(int argc, char *argv[])
 
                     k++;
                 }
+
+                string nxt="", hop = "";
+                for(string s : rcv)
+                {
+                    k = 0;
+                    nxt = "";
+                    while(k < s.length())
+                    {
+                        if(s[k] == '|')
+                        {
+                            k++;
+                            break;
+                        }
+                        nxt.push_back(s[k]);
+                        k++;
+                    }
+
+                    hop = "";
+                    while(k < s.length())
+                    {
+                        if(s[k] == '|')
+                        {
+                            k++;
+                            break;
+                        }
+                        hop.push_back(s[k]);
+                        k++;
+                    }
+
+                    v = "";
+                    while(k < s.length())
+                    {
+                        if(s[k] == '|')
+                        {
+                            k++;
+                            break;
+                        }
+                        v.push_back(s[k]);
+                        k++;
+                    }
+
+                    w = toInt(v);
+
+                    //nxt hop cost
+                    tempTable[nxt] = route(hop, w);
+                }
+
+                auto itr = routingTable.begin();
+                while(itr != routingTable.end())
+                {
+                    if(routingTable[itr->first].next_hop == senderIP)
+                    {
+                        //sec has the list of router, that had edge with sender
+                        //so if we find the next hop from u, in the list then it is not possible for now to reach
+                        if(sec.find(tempTable[itr->first].next_hop) != sec.end())
+                        {
+                            routingTable[itr->first].next_hop = "     -     ";
+                            routingTable[itr->first].cost = inf;
+                        }
+                    }
+
+                    itr++;
+                }
+
             }
 
             else
             {
+                //case-3 check if it is reasonable to go to neighbours directly
+                for(string s : adj)
+                {
+                    if(routingTable[s].cost>neighborCost[s])
+                    {
+                        routingTable[s].cost = neighborCost[s];
+                        routingTable[s].next_hop = s;
+                    }
+                }
 
                 //the routing table is here, so try to update
                 //printf("got %s\n", buffer);
-                vector<string> rcv; u ="";
+                vector<string> rcv;
+                u ="";
                 for(i = 0 ; i < strlen(buffer); i++)
                 {
                     if(buffer[i] == '_')
@@ -372,28 +467,53 @@ int main(int argc, char *argv[])
                 string t2 = "", senderIP = "";
                 for(string s : rcv)
                 {
-                    k = 0; senderIP = "";
-                    while(k < s.length()) {
-                        if(s[k] == '|'){k++; break;}
-                        senderIP.push_back(s[k]); k++;
+                    k = 0;
+                    senderIP = "";
+                    while(k < s.length())
+                    {
+                        if(s[k] == '|')
+                        {
+                            k++;
+                            break;
+                        }
+                        senderIP.push_back(s[k]);
+                        k++;
                     }
 
                     u = "";
-                    while(k < s.length()){
-                        if(s[k] == '|'){k++; break;}
-                        u.push_back(s[k]); k++;
+                    while(k < s.length())
+                    {
+                        if(s[k] == '|')
+                        {
+                            k++;
+                            break;
+                        }
+                        u.push_back(s[k]);
+                        k++;
                     }
 
                     v = "";
-                    while(k < s.length()){
-                        if(s[k] == '|'){k++; break;}
-                        v.push_back(s[k]); k++;
+                    while(k < s.length())
+                    {
+                        if(s[k] == '|')
+                        {
+                            k++;
+                            break;
+                        }
+                        v.push_back(s[k]);
+                        k++;
                     }
 
                     t2 = "";
-                    while(k < s.length()){
-                        if(s[k] == '|'){k++; break;}
-                        t2.push_back(s[k]); k++;
+                    while(k < s.length())
+                    {
+                        if(s[k] == '|')
+                        {
+                            k++;
+                            break;
+                        }
+                        t2.push_back(s[k]);
+                        k++;
                     }
 
                     w = toInt(t2);
@@ -419,21 +539,11 @@ int main(int argc, char *argv[])
                         }
                     }
                 }
-
-                //case-3 check if it is reasonable to go to neighbours directly
-                for(string s : adj)
-                {
-                    if(routingTable[s].cost>neighborCost[s])
-                    {
-                        routingTable[s].cost = neighborCost[s];
-                        routingTable[s].next_hop = s;
-                    }
-                }
             }
         }
 
-        else{cout << "-1 received : ", printf("%s\n", buffer);
-        }
+        else
+            cout << "-1 received : ", printf("%s\n", buffer);
 
         memset(buffer, 0, sizeof(buffer));
 
@@ -450,6 +560,12 @@ int main(int argc, char *argv[])
             if(lastCLK[s] != -1 && currentCLK - lastCLK[s] >= 3 && !downSent[s])
             {
                 neighborCost[s] = inf;
+                if(routingTable[s].next_hop == s)
+                {
+                    routingTable[s].next_hop = "     -     ";
+                    routingTable[s].cost = inf;
+                }
+
                 inactive.push_back(s);
                 downSent[s] = true;
                 cout<<currentCLK<<" "<<lastCLK[s]<<" "<<myIP<<" "<<s<<" down\n";
