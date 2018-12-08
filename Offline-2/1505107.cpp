@@ -445,7 +445,7 @@ int main(int argc, char *argv[])
                 //case-3 check if it is reasonable to go to neighbours directly
                 for(string s : adj)
                 {
-                    if(routingTable[s].cost>neighborCost[s])
+                    if(!downSent[s] && routingTable[s].cost>neighborCost[s])
                     {
                         routingTable[s].cost = neighborCost[s];
                         routingTable[s].next_hop = s;
@@ -560,10 +560,17 @@ int main(int argc, char *argv[])
             if(lastCLK[s] != -1 && currentCLK - lastCLK[s] >= 3 && !downSent[s])
             {
                 neighborCost[s] = inf;
-                if(routingTable[s].next_hop == s)
+
+                auto itr = routingTable.begin();
+                while(itr != routingTable.end())
                 {
-                    routingTable[s].next_hop = "     -     ";
-                    routingTable[s].cost = inf;
+                    if(itr->second.next_hop == s)
+                    {
+                        routingTable[itr->first].next_hop = "     -     ";
+                        routingTable[itr->first].cost = inf;
+                    }
+
+                    itr++;
                 }
 
                 inactive.push_back(s);
