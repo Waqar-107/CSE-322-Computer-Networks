@@ -241,11 +241,21 @@ int main(int argc, char *argv[])
                 w = vec[9] * 256 + vec[8];
 
                 if(u == myIP)
+                {
                     neighborCost[v] = w;
+
+                    //there was a different path, but now i want to directly move to my neighbour
+                    if(routingTable[v].cost > w)
+                        routingTable[v].cost = w, routingTable[v].next_hop =v;
+                }
+
                 else
+                {
+                    //there was a different path, but now i want to directly move to my neighbour
                     neighborCost[u] = w;
-
-
+                    if(routingTable[u].cost > w)
+                        routingTable[u].cost = w, routingTable[u].next_hop =v;
+                }
             }
 
             else if(cmd.find("send") != string::npos)
@@ -347,6 +357,7 @@ int main(int argc, char *argv[])
 
             else
             {
+
                 //the routing table is here, so try to update
                 //printf("got %s\n", buffer);
                 vector<string> rcv; u ="";
@@ -387,18 +398,35 @@ int main(int argc, char *argv[])
 
                     w = toInt(t2);
 
-                    //senderIP u v w
                     lastCLK[senderIP] = currentCLK;
-                    //cout<<"|"<<senderIP<<"| "<<u<<" "<<v<<" "<<w<<" "<<lastCLK[senderIP]<<endl;
 
-                    //going to node u via senderIP
+                    //senderIP u=neighbour of sender, v=hop, cost
+                    //cout<<senderIP<<" "<<u<<" "<<cost<<endl;
                     if(u != myIP)
                     {
+                        //case 1 - if i went to u through senderIP -> then go through it\
+                        the cost of u-senderIP may have changed now that bellman will never get
+                        if(routingTable[u].next_hop == senderIP)
+                            routingTable[u].cost = routingTable[senderIP].cost + w;
+
+                        //normal bellman ford
                         if(routingTable[u].cost > routingTable[senderIP].cost + w)
                         {
+                            //cout<<u<<" i2f "<<routingTable[u].next_hop<<" "<<senderIP<<" "<<routingTable[u].cost<<" "<<(routingTable[senderIP].cost + w)<<endl;
                             routingTable[u].cost = routingTable[senderIP].cost + w;
-                            routingTable[u].next_hop = senderIP;
+                            routingTable[u].next_hop = routingTable[senderIP].next_hop;
+                            //cout<<myIP<<" "<<u<<" "<<routingTable[u].next_hop<<endl<<endl;
                         }
+                    }
+                }
+
+                //case-3 check if it is reasonable to go to neighbours directly
+                for(string s : adj)
+                {
+                    if(routingTable[s].cost>neighborCost[s])
+                    {
+                        routingTable[s].cost = neighborCost[s];
+                        routingTable[s].next_hop = s;
                     }
                 }
             }
