@@ -27,6 +27,7 @@ struct route
 int currentCLK;
 string myIP;
 map<string, route> routingTable;
+map<string, route> tempTable;
 map<string, bool> downSent;
 set<string> adj;
 map<string, int > neighborCost;
@@ -244,15 +245,7 @@ int main(int argc, char *argv[])
                 else
                     neighborCost[u] = w;
 
-                //check if you would go to the neighbours directly
-                //updates after cost change
-                auto itr = neighborCost.begin();
-                while(itr != neighborCost.end())
-                {
-                    if(routingTable[itr->first].cost > itr->second)
-                        routingTable[itr->first].next_hop = itr->first, routingTable[itr->first].cost = itr->second;
-                    itr++;
-                }
+
             }
 
             else if(cmd.find("send") != string::npos)
@@ -305,7 +298,51 @@ int main(int argc, char *argv[])
 
             else if(cmd.find("down") != string::npos)
             {
-                cout<<"received down "<<buffer<<endl;
+                vector<string> sec;
+                string senderIP = "";
+
+                //senders ip
+                k = 0;
+                for(i = 5; i < strlen(buffer); i++)
+                {
+                    if(buffer[i] == '_')
+                    {
+                        k = i + 1;
+                        break;
+                    }
+
+                    senderIP.push_back(buffer[i]);
+                }
+
+                //the edges that are down
+                string temp = "";
+                while(k < strlen(buffer))
+                {
+                    if(buffer[k] == '#'){k++; break;}
+
+                    if(buffer[k] == '_')
+                    {
+                        sec.push_back(temp);
+                        temp="";
+                    }
+
+                    else
+                        temp.push_back(buffer[k]);
+
+                    k++;
+                }
+
+                //now get the routing table
+                vector<string> rcv; u ="";
+                while(k < strlen(buffer))
+                {
+                    if(buffer[k] == '_')
+                        rcv.push_back(u), u = "";
+                    else
+                        u.push_back(buffer[k]);
+
+                    k++;
+                }
             }
 
             else
@@ -373,13 +410,10 @@ int main(int argc, char *argv[])
         memset(buffer, 0, sizeof(buffer));
 
         //----------------------------------------------------------------
-        for(string s : adj)
-        {
-            cout<<currentCLK<<" "<<lastCLK[s]<<endl;
-        }
         //check for down
         active.clear();
         inactive.clear();
+
         for(string s : adj)
         {
             if(lastCLK[s] == -1)continue;
