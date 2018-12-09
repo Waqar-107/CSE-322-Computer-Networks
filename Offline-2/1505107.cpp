@@ -27,10 +27,9 @@ struct route
 int currentCLK;
 string myIP;
 map<string, route> routingTable;
-map<string, route> tempTable;
 map<string, bool> downSent;
 set<string> adj;
-map<string, int > neighborCost;
+map<string, int > neighborCost, backupNeighbour;
 map<string, int> lastCLK;
 vector<string> active, inactive;
 
@@ -122,27 +121,6 @@ void sendTable()
     strcpy(buffer2, str.c_str());
     //printf("sending %s\n", buffer2);
     for(string s : adj)
-    {
-        serve.sin_addr.s_addr = inet_addr(s.c_str());
-        sendto(sockfd, buffer2, 1024, 0, (struct sockaddr*) &serve, sizeof(sockaddr_in));
-    }
-}
-
-void sendDown()
-{
-    string str = "down_" + myIP + "_";
-
-    for(string s : inactive)
-        str += s + "_";
-
-    str += "#";
-    for(string s : active)
-        str += s + "|" + routingTable[s].next_hop + "|" + toString(routingTable[s].cost) + "_";
-
-    char buffer2[1024];
-    strcpy(buffer2, str.c_str());
-    //printf("sending %s\n", buffer2);
-    for(string s : active)
     {
         serve.sin_addr.s_addr = inet_addr(s.c_str());
         sendto(sockfd, buffer2, 1024, 0, (struct sockaddr*) &serve, sizeof(sockaddr_in));
@@ -316,130 +294,6 @@ int main(int argc, char *argv[])
                 memset(buffer, 0, sizeof(buffer));
             }
 
-            else if(cmd.find("down") != string::npos)
-            {
-                tempTable.clear();
-
-                //let u-v be down and i am in X,
-                //then if i go somewhere using u-v edge previously, after 'down' i would not be able reach there
-                //so if routerTable[somewhere].next_hop == u and routerTable[u].next_hop == v then set it inf
-
-                set<string> sec;
-                string senderIP = "";
-
-                //senders ip
-                k = 0;
-                for(i = 5; i < strlen(buffer); i++)
-                {
-                    if(buffer[i] == '_')
-                    {
-                        k = i + 1;
-                        break;
-                    }
-
-                    senderIP.push_back(buffer[i]);
-                }
-
-                //the edges that are down
-                string temp = "";
-                while(k < strlen(buffer))
-                {
-                    if(buffer[k] == '#')
-                    {
-                        k++;
-                        break;
-                    }
-
-                    if(buffer[k] == '_')
-                    {
-                        sec.insert(temp);
-                        temp="";
-                    }
-
-                    else
-                        temp.push_back(buffer[k]);
-
-                    k++;
-                }
-
-                //now get the routing table
-                vector<string> rcv;
-                u ="";
-                while(k < strlen(buffer))
-                {
-                    if(buffer[k] == '_')
-                        rcv.push_back(u), u = "";
-                    else
-                        u.push_back(buffer[k]);
-
-                    k++;
-                }
-
-                string nxt="", hop = "";
-                for(string s : rcv)
-                {
-                    k = 0;
-                    nxt = "";
-                    while(k < s.length())
-                    {
-                        if(s[k] == '|')
-                        {
-                            k++;
-                            break;
-                        }
-                        nxt.push_back(s[k]);
-                        k++;
-                    }
-
-                    hop = "";
-                    while(k < s.length())
-                    {
-                        if(s[k] == '|')
-                        {
-                            k++;
-                            break;
-                        }
-                        hop.push_back(s[k]);
-                        k++;
-                    }
-
-                    v = "";
-                    while(k < s.length())
-                    {
-                        if(s[k] == '|')
-                        {
-                            k++;
-                            break;
-                        }
-                        v.push_back(s[k]);
-                        k++;
-                    }
-
-                    w = toInt(v);
-
-                    //nxt hop cost
-                    tempTable[nxt] = route(hop, w);
-                }
-
-                auto itr = routingTable.begin();
-                while(itr != routingTable.end())
-                {
-                    if(routingTable[itr->first].next_hop == senderIP)
-                    {
-                        //sec has the list of router, that had edge with sender
-                        //so if we find the next hop from u, in the list then it is not possible for now to reach
-                        if(sec.find(tempTable[itr->first].next_hop) != sec.end())
-                        {
-                            routingTable[itr->first].next_hop = "     -     ";
-                            routingTable[itr->first].cost = inf;
-                        }
-                    }
-
-                    itr++;
-                }
-
-            }
-
             else
             {
                 //case-3 check if it is reasonable to go to neighbours directly
@@ -548,17 +402,27 @@ int main(int argc, char *argv[])
         memset(buffer, 0, sizeof(buffer));
 
         //----------------------------------------------------------------
-        //check for down
-        active.clear();
-        inactive.clear();
-
+        //check for down and up
         for(string s : adj)
         {
+            //up
+            if(downSent[s])
+            {
+                if(currentCLK - lastCLK[s] < 3)
+                {
+                    neighborCost[s] = backupNeighbour[s];
+                    downSent[s] = false;
+                    continue;
+                }
+            }
+
+
             if(lastCLK[s] == -1)continue;
 
             //the edge myIP-s is down
             if(lastCLK[s] != -1 && currentCLK - lastCLK[s] >= 3 && !downSent[s])
             {
+                backupNeighbour[s] = neighborCost[s];
                 neighborCost[s] = inf;
 
                 auto itr = routingTable.begin();
@@ -573,18 +437,11 @@ int main(int argc, char *argv[])
                     itr++;
                 }
 
-                inactive.push_back(s);
+                //inactive.push_back(s);
                 downSent[s] = true;
                 cout<<currentCLK<<" "<<lastCLK[s]<<" "<<myIP<<" "<<s<<" down\n";
             }
-
-            else
-                active.push_back(s);
         }
-
-        if(inactive.size())
-            sendDown();
-        //cout<<active.size()<<" "<<inactive.size()<<endl;
         //-----------------------------------------------------------------
     }
 
