@@ -52,21 +52,9 @@ with whatever you get
 that is the end of setup process, now we shall talk about the code.
 thanks to my friend spondon(https://github.com/ShanjinurIslam) for the tutorial -> https://www.youtube.com/watch?v=FOc-Ykf6rcY
 
-# important facts for implementation
-* we can send char* through sockets, in order to send and receive objects we have to perform the followings-
-i have tested on a pair<int,int> object
+# running the code:
+first use ./setup.sh to create virtual ip's then run driver.py
+use ./rn1505107.sh router_number ipAdress to run
 
 
-in the client, 
-
-char buffer[1024]
-
-pair<int,int> p={5,6}		//pair init
-
-memcpy(&buffer,&p,sizeof(p))	//the conversion
-
-
-in the server,
-
-memcpy(&p,&buffer,sizeof(buffer))
 
