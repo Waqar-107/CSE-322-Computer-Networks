@@ -14,6 +14,7 @@ After going to a new splitted part there we need to use <b>'Ctrl+a'</b> then <b>
 The panes(splitted screens) are like linked list nodes. suppose the main window has been divided into two vertical panes. now it is like 0->1. Now if we split the pane '0' it will be given name '2' and the list would be like, 0->2->1. When we use 'Ctrl+a' and <tab> to switch to next it will do it according to the list demonstrated.
 
 To kill a pane use -> <b>'Ctrl+d'</b>
+---------------------------------------------------------------------------------------
 
 # running the codes:
 
@@ -52,7 +53,7 @@ with whatever you get
 that is the end of setup process, now we shall talk about the code.
 thanks to my friend spondon(https://github.com/ShanjinurIslam) for the tutorial -> https://www.youtube.com/watch?v=FOc-Ykf6rcY
 
-# running the code:
+# running the code - finally!!!:
 first use ./setup.sh to create virtual ip's then run driver.py
 use ./rn1505107.sh router_number ipAdress to run
 
