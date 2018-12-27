@@ -1,4 +1,5 @@
 #intro to basic commands of tcl - btw this is a comment
+# if you comment something in same line of a code then add ';' before '#'
 
 #print
 puts "puts command is equivalent to printf"
