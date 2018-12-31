@@ -26,7 +26,7 @@ set node_speed [lindex $argv 3]
 #number and other attributes of flows
 set time_duration 5
 set start_time 1
-set parallel_start_gap 1.0
+set parallel_start_gap 0.0
 set extra_time 10
 #-------------------------
 

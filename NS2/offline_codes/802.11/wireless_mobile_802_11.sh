@@ -2,9 +2,39 @@
 
 #tcl format 
 #ns filename.tcl nodes flows packets speed_of_node
-nodes=100
-flow=50
-packets=100
-speed=25
+nodes[0]=20
+nodes[1]=40
+nodes[2]=60
+nodes[3]=80
+nodes[4]=100
 
-ns wireless_mobile_802_11.tcl $nodes $flow $packets $speed
+flow[0]=10
+flow[1]=20
+flow[2]=30
+flow[3]=40
+flow[4]=50
+
+packets[0]=100
+packets[1]=200
+packets[2]=300
+packets[3]=400
+packets[4]=500
+
+speed[0]=5
+speed[1]=10
+speed[2]=15
+speed[3]=20
+speed[4]=25
+
+#vary nodes
+for((i=0;i<5;i++))
+do
+    echo "--------------------------------"
+    ns wireless_mobile_802_11.tcl ${nodes[$i]} ${flow[4]} ${packets[4]} ${speed[4]}
+    awk -f wireless_mobile_802_11.awk wireless_mobile_802_11.tr
+    echo "--------------------------------"
+done
+
+#ns wireless_mobile_802_11.tcl $nodes $flow $packets $speed
+#nam wireless_mobile_802_11.nam
+#awk -f wireless_mobile_802_11.awk wireless_mobile_802_11.tr
