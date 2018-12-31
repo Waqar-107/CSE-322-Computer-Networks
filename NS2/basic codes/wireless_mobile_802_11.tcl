@@ -48,7 +48,7 @@ set val(transitiontime_11) 		3			     ;#Stargate (802.11b)
 set val(chan) 		Channel/WirelessChannel      ;# channel type
 set val(prop) 		Propagation/TwoRayGround     ;# radio-propagation model
 set val(netif) 		Phy/WirelessPhy              ;# network interface type
-set val(mac) 		Mac/802_11                   ;# MAC type
+set val(mac) 		Mac/802_15_4                   ;# MAC type
 set val(ifq) 		Queue/DropTail/PriQueue      ;# interface queue type
 set val(ll) 		LL                           ;# link layer type
 set val(ant) 		Antenna/OmniAntenna          ;# antenna model

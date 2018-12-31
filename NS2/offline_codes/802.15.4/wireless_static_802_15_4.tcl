@@ -52,8 +52,8 @@ set val(transitiontime_15_4) 		3			     ;#Stargate (802.15.4b)
 #protocols and models for different layers
 set val(chan) 		Channel/WirelessChannel      ;# channel type
 set val(prop) 		Propagation/TwoRayGround     ;# radio-propagation model
-set val(netif) 		Phy/WirelessPhy              ;# network interface type
-set val(mac) 		Mac/802_11 				 ;# MAC type
+set val(netif) 		Phy/WirelessPhy/802_15_4     ;# network interface type
+set val(mac) 		Mac/802_15_4		 		 ;# MAC type
 set val(ifq) 		Queue/DropTail/PriQueue      ;# interface queue type
 set val(ll) 		LL                           ;# link layer type
 set val(ant) 		Antenna/OmniAntenna          ;# antenna model
@@ -126,16 +126,16 @@ $ns node-config -adhocRouting $val(rp) \
 # 5.Create nodes with positioning
 #=========================================================================
 puts "start node creation"
-
+puts "dbg\n"
 for {set i 0} {$i < [expr $num_col*$num_row]} {incr i} {
 	set node_($i) [$ns node]
-	$node_($i) random-motion 0					 ;#random-motion 0 is to make static
+	#$node_($i) random-motion 0					 ;#random-motion 0 is to make static
 }
-
+puts "dbg2\n"
 #node position in the animation
 set x_start [expr $x_dim/($num_col*2)]
 set y_start [expr $y_dim/($num_row*2)]
-
+puts "xs,ys: $x_start $y_start\n"
 set i 0
 while {$i < $num_row} {
 	for {set j 0} {$j < $num_col} {incr j} {
@@ -158,7 +158,7 @@ while {$i < $num_row} {
 }
 
 
-
+puts "finished node creation\n"
 #=========================================================================
 # 6.Create flows and associate them with nodes
 # attach transport layer agents e.g- TCP, UDP; attach traffic e.g- ftp, cbr
