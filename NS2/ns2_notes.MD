@@ -52,3 +52,32 @@ $node_name set Y_ $pos
 $node_name set Z_ $pos
 
 
+=====================================================================
+# AWK
+=====================================================================
+
+BEGIN {
+
+}
+
+{
+//BODY PART
+}
+
+END {
+
+}
+
+*** the spacing and lines should be just like above, and ';' in the end of line is optional
+1. var = 0 -> int, var=0.0 ->float
+
+2. have printf function just like c/c++
+
+3. run using-> awk -f "awk-file name" "file on which we are operating"
+4. print() also works
+
+5. $1 $2 $3 -> words seperated by space in a line
+
+6. sub(/"whom i want to"/,"with whom i want to sub",var_name)
+
+7. arr[sz]
