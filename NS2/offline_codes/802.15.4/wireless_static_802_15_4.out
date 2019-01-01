@@ -1,0 +1,17 @@
+varying number of nodes. flow: 50 packets: 500 coverage: 0
+---------------------------------------------------------------------
+iteration: 4, node: 100
+total packets sent: 1250
+total packets received: 146
+packets dropped: 959
+start: 5.000000 | stop: 30.000000
+throughput: 2300.160000 bps
+packet delivery ratio: 11.680000
+packet drop ratio: 76.720000
+total energy consumed: 2.666000
+avg delay: 0.070056
+---------------------------------------------------------------------
+
+varying number of flow. node: 100 packets: 500 coverage: 0
+varying number of packets. node: 100 flow: 50 coverage: 0 
+varying number of coverage. node: 100 flow: 50 packets: 500

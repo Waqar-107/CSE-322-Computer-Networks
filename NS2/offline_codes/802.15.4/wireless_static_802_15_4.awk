@@ -103,11 +103,12 @@ END {
 
 	#---------------------------------------------------------------------
 	rTime = rEndTime - rStartTime;
+	printf("start: %f | stop: %f\n", rStartTime, rEndTime);
 	rThroughput = nReceivedBytes*8 / rTime;
 	rPacketDeliveryRatio = nReceivedPackets / nSentPackets * 100;
 	rPacketDropRatio = dropPackets / nSentPackets * 100
 
-	printf("throughput: %f\n", rThroughput);
+	printf("throughput: %f bps\n", rThroughput);
 	printf("packet delivery ratio: %f\n", rPacketDeliveryRatio);
 	printf("packet drop ratio: %f\n",rPacketDropRatio);
 	#---------------------------------------------------------------------

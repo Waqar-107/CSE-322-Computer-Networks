@@ -7,8 +7,8 @@
 
 #-------------------------
 #network size
-set x_dim 1000
-set y_dim 1000
+set x_dim 200
+set y_dim 200
 #-------------------------
 
 #-------------------------
@@ -24,14 +24,14 @@ set coverage_area [lindex $argv 3]
 
 #-------------------------
 #number and other attributes of flows
-set time_duration 5
-set start_time 1
-set parallel_start_gap 1.0
-set extra_time 10
+set time_duration 25
+set start_time 5
+set parallel_start_gap 0.1
+set extra_time 0
 #-------------------------
 
 #-------------------------
-set cbr_size 1000
+set cbr_size 28
 set cbr_rate $num_of_packet
 set cbr_interval 1
 #-------------------------
@@ -39,13 +39,13 @@ set cbr_interval 1
 #-----------------------------------------------------------------------------------
 #energy parameters
 set val(energymodel_15_4)			EnergyModel      ;
-set val(initialenergy_15_4)			1000             ;# Initial energy in Joules
-set val(idlepower_15_4)     		900e-3			 ;#Stargate (802.15.4b) 
-set val(rxpower_15_4) 				925e-3			 ;#Stargate (802.15.4b)
-set val(txpower_15_4) 				1425e-3			 ;#Stargate (802.15.4b)
-set val(sleeppower_15_4) 			300e-3			 ;#Stargate (802.15.4b)
-set val(transitionpower_15_4) 		200e-3		     ;#Stargate (802.15.4b)
-set val(transitiontime_15_4) 		3			     ;#Stargate (802.15.4b)
+set val(initialenergy_15_4)			100              ;# Initial energy in Joules
+set val(idlepower_15_4)     		712e-6			  
+set val(rxpower_15_4) 				35.28e-3			 
+set val(txpower_15_4) 				31.32e-3			  
+set val(sleeppower_15_4) 			144e-9			  
+#set val(transitionpower_15_4) 		200e-3		      
+#set val(transitiontime_15_4) 		3			      
 #-----------------------------------------------------------------------------------
 
 #-----------------------------------------------------------------------------------
@@ -57,11 +57,38 @@ set val(mac) 		Mac/802_15_4		 		 ;# MAC type
 set val(ifq) 		Queue/DropTail/PriQueue      ;# interface queue type
 set val(ll) 		LL                           ;# link layer type
 set val(ant) 		Antenna/OmniAntenna          ;# antenna model
-set val(ifqlen) 	50                           ;# max packet in ifq - 50 is optimal
+set val(ifqlen) 	100                          ;# max packet in ifq - 50 is optimal
 set val(rp) 		DSDV                         ;# routing protocol
 #------------------------------------------------------------------------------------
 
+#------------------------------------------------------------------------------------
+#transmission range
+set dist(5m)  7.69113e-06
+set dist(9m)  2.37381e-06
+set dist(10m) 1.92278e-06
+set dist(11m) 1.58908e-06
+set dist(12m) 1.33527e-06
+set dist(13m) 1.13774e-06
+set dist(14m) 9.81011e-07
+set dist(15m) 8.54570e-07
+set dist(16m) 7.51087e-07
+set dist(20m) 4.80696e-07
+set dist(25m) 3.07645e-07
+set dist(30m) 2.13643e-07
+set dist(35m) 1.56962e-07
+set dist(40m) 1.20174e-07
 
+set dist(150) 2.81838e-09
+set dist(175) 1.52129e-09
+set dist(200) 8.91754e-10
+set dist(225) 5.56717e-10
+set dist(250m) 3.65262e-10
+set dist(500m) 2.28289e-11
+set dist(1000m) 1.42681e-12
+
+Phy/WirelessPhy set CSThresh_ $dist(40m)
+Phy/WirelessPhy set RXThresh_ $dist(40m)
+#------------------------------------------------------------------------------------
 
 #=========================================================================
 # 2.Initialize ns
@@ -116,8 +143,6 @@ $ns node-config -adhocRouting $val(rp) \
 		-rxPower $val(rxpower_15_4) \
 		-txPower $val(txpower_15_4) \
         -sleepPower $val(sleeppower_15_4) \
-        -transitionPower $val(transitionpower_15_4) \
-		-transitionTime $val(transitiontime_15_4) \
 		-initialEnergy $val(initialenergy_15_4)
 
 
@@ -129,7 +154,7 @@ puts "start node creation"
 
 for {set i 0} {$i < [expr $num_col*$num_row]} {incr i} {
 	set node_($i) [$ns node]
-	#$node_($i) random-motion 0					 ;#random-motion 0 is to make static
+	$node_($i) random-motion 0					 ;#random-motion 0 is to make static
 }
 
 #node position in the animation
@@ -159,13 +184,15 @@ while {$i < $num_row} {
 
 
 puts "finished node creation\n"
+
+
+
 #=========================================================================
 # 6.Create flows and associate them with nodes
 # attach transport layer agents e.g- TCP, UDP; attach traffic e.g- ftp, cbr
 # specify flow, src-sink in transport layer
 # this is actually building the topology or we can say making the graph
 #=========================================================================
-
 
 #random flow
 # there can be atmost total_node/2 flows

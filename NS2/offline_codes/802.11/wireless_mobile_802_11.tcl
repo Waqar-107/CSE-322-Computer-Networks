@@ -24,10 +24,9 @@ set node_speed [lindex $argv 3]
 
 #-------------------------
 #number and other attributes of flows
-set time_duration 5
+set time_duration 10
 set start_time 1
-set parallel_start_gap 0.0
-set extra_time 10
+set extra_time 5
 #-------------------------
 
 #-------------------------
@@ -281,7 +280,7 @@ $ns at [expr $start_time + $time_duration + $extra_time] "finish"
 $ns at [expr $start_time + $time_duration + $extra_time] "$ns nam-end-wireless [$ns now]; puts \"NS Exiting...\"; $ns halt"
 
 $ns at [expr $start_time + $time_duration/2] "puts \"half of the simulation is finished\""
-$ns at [expr $start_time + $time_duration] "puts \"end of simulation duration\""
+$ns at [expr $start_time + $time_duration] "puts \"end of simulation\""
 
 
 
