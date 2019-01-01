@@ -1,0 +1,244 @@
+varying number of nodes. flow: 50 packets: 500 speed: 25
+---------------------------------------------------------------------
+iteration: 0, node: 20
+total packets sent: 300
+total packets received: 249
+packets dropped: 100
+throughput: 138837.270694
+packet delivery ratio: 83.000000
+packet drop ratio: 33.333333
+total energy consumed: 276.702000
+avg delay: 0.068363
+---------------------------------------------------------------------
+
+---------------------------------------------------------------------
+iteration: 1, node: 40
+total packets sent: 600
+total packets received: 515
+packets dropped: 105
+throughput: 285098.882200
+packet delivery ratio: 85.833333
+packet drop ratio: 17.500000
+total energy consumed: 570.743000
+avg delay: 0.116167
+---------------------------------------------------------------------
+
+---------------------------------------------------------------------
+iteration: 2, node: 60
+total packets sent: 900
+total packets received: 723
+packets dropped: 225
+throughput: 395393.219271
+packet delivery ratio: 80.333333
+packet drop ratio: 25.000000
+total energy consumed: 865.074000
+avg delay: 0.182800
+---------------------------------------------------------------------
+
+---------------------------------------------------------------------
+iteration: 3, node: 80
+total packets sent: 1200
+total packets received: 819
+packets dropped: 439
+throughput: 446225.583390
+packet delivery ratio: 68.250000
+packet drop ratio: 36.583333
+total energy consumed: 1166.436000
+avg delay: 0.295873
+---------------------------------------------------------------------
+
+---------------------------------------------------------------------
+iteration: 4, node: 100
+total packets sent: 1500
+total packets received: 1045
+packets dropped: 371
+throughput: 568803.040579
+packet delivery ratio: 69.666667
+packet drop ratio: 24.733333
+total energy consumed: 1474.974000
+avg delay: 0.352656
+---------------------------------------------------------------------
+
+varying number of flow. node: 100 packets: 500 speed: 25
+---------------------------------------------------------------------
+iteration: 0, flows: 10
+total packets sent: 300
+total packets received: 184
+packets dropped: 121
+throughput: 102632.509687
+packet delivery ratio: 61.333333
+packet drop ratio: 40.333333
+total energy consumed: 1409.989000
+avg delay: 0.070203
+---------------------------------------------------------------------
+
+---------------------------------------------------------------------
+iteration: 1, flows: 20
+total packets sent: 600
+total packets received: 441
+packets dropped: 193
+throughput: 243283.737032
+packet delivery ratio: 73.500000
+packet drop ratio: 32.166667
+total energy consumed: 1416.259000
+avg delay: 0.122564
+---------------------------------------------------------------------
+
+---------------------------------------------------------------------
+iteration: 2, flows: 30
+total packets sent: 900
+total packets received: 670
+packets dropped: 266
+throughput: 367688.507450
+packet delivery ratio: 74.444444
+packet drop ratio: 29.555556
+total energy consumed: 1433.030000
+avg delay: 0.191981
+---------------------------------------------------------------------
+
+---------------------------------------------------------------------
+iteration: 3, flows: 40
+total packets sent: 1200
+total packets received: 891
+packets dropped: 325
+throughput: 485070.509777
+packet delivery ratio: 74.250000
+packet drop ratio: 27.083333
+total energy consumed: 1442.213000
+avg delay: 0.263463
+---------------------------------------------------------------------
+
+---------------------------------------------------------------------
+iteration: 4, flows: 50
+total packets sent: 1500
+total packets received: 990
+packets dropped: 452
+throughput: 538819.030535
+packet delivery ratio: 66.000000
+packet drop ratio: 30.133333
+total energy consumed: 1471.068000
+avg delay: 0.338878
+---------------------------------------------------------------------
+
+varying number of packets. node: 100 flow: 50 speed: 25 
+---------------------------------------------------------------------
+iteration: 0, packets: 100
+total packets sent: 1500
+total packets received: 980
+packets dropped: 475
+throughput: 533251.751302
+packet delivery ratio: 65.333333
+packet drop ratio: 31.666667
+total energy consumed: 1471.437000
+avg delay: 0.375527
+---------------------------------------------------------------------
+
+---------------------------------------------------------------------
+iteration: 1, packets: 200
+total packets sent: 1500
+total packets received: 1026
+packets dropped: 407
+throughput: 558675.109453
+packet delivery ratio: 68.400000
+packet drop ratio: 27.133333
+total energy consumed: 1473.856000
+avg delay: 0.363447
+---------------------------------------------------------------------
+
+---------------------------------------------------------------------
+iteration: 2, packets: 300
+total packets sent: 1500
+total packets received: 1087
+packets dropped: 288
+throughput: 591732.608485
+packet delivery ratio: 72.466667
+packet drop ratio: 19.200000
+total energy consumed: 1461.384000
+avg delay: 0.470918
+---------------------------------------------------------------------
+
+---------------------------------------------------------------------
+iteration: 3, packets: 400
+total packets sent: 1500
+total packets received: 874
+packets dropped: 633
+throughput: 476644.574248
+packet delivery ratio: 58.266667
+packet drop ratio: 42.200000
+total energy consumed: 1470.410000
+avg delay: 0.292935
+---------------------------------------------------------------------
+
+---------------------------------------------------------------------
+iteration: 4, packets: 500
+total packets sent: 1500
+total packets received: 796
+packets dropped: 673
+throughput: 434213.546106
+packet delivery ratio: 53.066667
+packet drop ratio: 44.866667
+total energy consumed: 1468.730000
+avg delay: 0.348356
+---------------------------------------------------------------------
+
+varying number of speed. node: 100 flow: 50 packets: 500
+---------------------------------------------------------------------
+iteration: 0, speed: 5
+total packets sent: 1500
+total packets received: 753
+packets dropped: 787
+throughput: 409960.787701
+packet delivery ratio: 50.200000
+packet drop ratio: 52.466667
+total energy consumed: 1456.549000
+avg delay: 0.326004
+---------------------------------------------------------------------
+
+---------------------------------------------------------------------
+iteration: 1, speed: 10
+total packets sent: 1500
+total packets received: 891
+packets dropped: 551
+throughput: 484977.554124
+packet delivery ratio: 59.400000
+packet drop ratio: 36.733333
+total energy consumed: 1469.746000
+avg delay: 0.269213
+---------------------------------------------------------------------
+
+---------------------------------------------------------------------
+iteration: 2, speed: 15
+total packets sent: 1500
+total packets received: 964
+packets dropped: 491
+throughput: 524762.171449
+packet delivery ratio: 64.266667
+packet drop ratio: 32.733333
+total energy consumed: 1458.842000
+avg delay: 0.346503
+---------------------------------------------------------------------
+
+---------------------------------------------------------------------
+iteration: 3, speed: 20
+total packets sent: 1500
+total packets received: 1074
+packets dropped: 322
+throughput: 584725.005535
+packet delivery ratio: 71.600000
+packet drop ratio: 21.466667
+total energy consumed: 1473.212000
+avg delay: 0.349748
+---------------------------------------------------------------------
+
+---------------------------------------------------------------------
+iteration: 4, speed: 25
+total packets sent: 1500
+total packets received: 989
+packets dropped: 515
+throughput: 538533.398164
+packet delivery ratio: 65.933333
+packet drop ratio: 34.333333
+total energy consumed: 1462.260000
+avg delay: 0.356395
+---------------------------------------------------------------------
+

@@ -166,12 +166,15 @@ puts "finished node creation\n"
 # this is actually building the topology or we can say making the graph
 #=========================================================================
 
+
+#random flow
 # there can be atmost total_node/2 flows
 set nn [expr $num_col*$num_row]
 if {$num_flow > [expr $nn/2]} {
 	set num_flow [expr $nn/2]
 }
 
+#made udp and null for each node, some will remain unused
 for {set i 0} {$i < $nn} {incr i} {
 	
 	set udp_($i) [new Agent/UDP]
@@ -189,23 +192,29 @@ for {set i 0} {$i < $nn} {incr i} {
 } 
 
 # determine src-sink
-set j [expr $nn - 1]
+set rt 0
 for {set i 0} {$i < $num_flow} {incr i} {
-	set udp_node $i
-	set null_node $j
-	puts "src: $i  sink: $j\n"
-	$ns attach-agent $node_($udp_node) $udp_($i)
-  	$ns attach-agent $node_($null_node) $null_($j)
+	set udp_node [expr int($nn*rand()) % $nn ] 		  		;# src node
+	set null_node $udp_node
+
+	while {$null_node == $udp_node} {
+		set null_node [expr int($nn*rand()) % $nn] 	;# dest node
+	}
+
+	puts "src: $udp_node  sink: $null_node\n"
+
+	$ns attach-agent $node_($udp_node) $udp_($rt)
+  	$ns attach-agent $node_($null_node) $null_($rt)
 	
-	set j [expr $j-1]
+	incr rt
 	puts -nonewline $topofile "flow of nodes: Src: $udp_node Dest: $null_node\n"
 } 
 
 #connect src-dest
-set j [expr $nn - 1]
+set rt 0
 for {set i 0} {$i < $num_flow} {incr i} {
-     $ns connect $udp_($i) $null_($j)
-	 set j [expr $j-1]
+     $ns connect $udp_($rt) $null_($rt)
+	 incr rt
 }
 
 #attach cbr

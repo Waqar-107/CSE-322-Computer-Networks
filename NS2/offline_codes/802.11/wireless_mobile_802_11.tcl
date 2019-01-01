@@ -33,7 +33,7 @@ set extra_time 10
 #-------------------------
 set cbr_size 1000
 set cbr_rate $num_of_packet
-set cbr_interval 1
+set cbr_interval 0.5
 #-------------------------
 
 #-----------------------------------------------------------------------------------
@@ -61,7 +61,34 @@ set val(ifqlen) 	50                           ;# max packet in ifq - 50 is optim
 set val(rp) 		DSDV                         ;# routing protocol
 #------------------------------------------------------------------------------------
 
+#------------------------------------------------------------------------------------
+#transmission range
+set dist(5m)  7.69113e-06
+set dist(9m)  2.37381e-06
+set dist(10m) 1.92278e-06
+set dist(11m) 1.58908e-06
+set dist(12m) 1.33527e-06
+set dist(13m) 1.13774e-06
+set dist(14m) 9.81011e-07
+set dist(15m) 8.54570e-07
+set dist(16m) 7.51087e-07
+set dist(20m) 4.80696e-07
+set dist(25m) 3.07645e-07
+set dist(30m) 2.13643e-07
+set dist(35m) 1.56962e-07
+set dist(40m) 1.20174e-07
 
+set dist(150) 2.81838e-09
+set dist(175) 1.52129e-09
+set dist(200) 8.91754e-10
+set dist(225) 5.56717e-10
+set dist(250m) 3.65262e-10
+set dist(500m) 2.28289e-11
+set dist(1000m) 1.42681e-12
+
+Phy/WirelessPhy set CSThresh_ $dist(1000m)
+Phy/WirelessPhy set RXThresh_ $dist(1000m)
+#------------------------------------------------------------------------------------
 
 #=========================================================================
 # 2.Initialize ns
@@ -129,7 +156,7 @@ puts "start node creation"
 
 for {set i 0} {$i < [expr $num_col*$num_row]} {incr i} {
 	set node_($i) [$ns node]
-	$node_($i) random-motion 0					 ;#random-motion 0 is to make static
+	#$node_($i) random-motion 0					 ;#random-motion 0 is to make static
 }
 
 #node position in the animation
@@ -174,12 +201,14 @@ while {$i < [expr $num_row*$num_col]} {
 # this is actually building the topology or we can say making the graph
 #=========================================================================
 
+#random flow
 # there can be atmost total_node/2 flows
 set nn [expr $num_col*$num_row]
 if {$num_flow > [expr $nn/2]} {
 	set num_flow [expr $nn/2]
 }
 
+#made udp and null for each node, some will remain unused
 for {set i 0} {$i < $nn} {incr i} {
 	
 	set udp_($i) [new Agent/UDP]
@@ -197,23 +226,29 @@ for {set i 0} {$i < $nn} {incr i} {
 } 
 
 # determine src-sink
-set j [expr $nn - 1]
+set rt 0
 for {set i 0} {$i < $num_flow} {incr i} {
-	set udp_node $i
-	set null_node $j
-	puts "src: $i  sink: $j\n"
-	$ns attach-agent $node_($udp_node) $udp_($i)
-  	$ns attach-agent $node_($null_node) $null_($j)
+	set udp_node [expr int($nn*rand()) % $nn ] 		  		;# src node
+	set null_node $udp_node
+
+	while {$null_node == $udp_node} {
+		set null_node [expr int($nn*rand()) % $nn] 	;# dest node
+	}
+
+	#puts "src: $udp_node  sink: $null_node\n"
+
+	$ns attach-agent $node_($udp_node) $udp_($rt)
+  	$ns attach-agent $node_($null_node) $null_($rt)
 	
-	set j [expr $j-1]
+	incr rt
 	puts -nonewline $topofile "flow of nodes: Src: $udp_node Dest: $null_node\n"
 } 
 
 #connect src-dest
-set j [expr $nn - 1]
+set rt 0
 for {set i 0} {$i < $num_flow} {incr i} {
-     $ns connect $udp_($i) $null_($j)
-	 set j [expr $j-1]
+     $ns connect $udp_($rt) $null_($rt)
+	 incr rt
 }
 
 #attach cbr
