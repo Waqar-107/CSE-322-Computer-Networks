@@ -2,243 +2,323 @@ varying number of nodes. flow: 50 packets: 500 speed: 25
 ---------------------------------------------------------------------
 iteration: 0, node: 20
 total packets sent: 300
-total packets received: 278
-packets dropped: 22
-throughput: 155399.249331
-packet delivery ratio: 92.666667
-packet drop ratio: 7.333333
-total energy consumed: 278.236000
-avg delay: 0.056269
+total packets received: 263
+packets dropped: 67
+throughput: 146740.039486 bps
+packet delivery ratio: 87.666667
+packet drop ratio: 22.333333
+total energy consumed: 277.600000
+avg delay: 0.062683
+
+other metrics:
+node 6 has the most throughput - 36263.846049 bps
+
 ---------------------------------------------------------------------
 
 ---------------------------------------------------------------------
 iteration: 1, node: 40
 total packets sent: 600
-total packets received: 502
-packets dropped: 106
-throughput: 277107.035236
-packet delivery ratio: 83.666667
-packet drop ratio: 17.666667
-total energy consumed: 561.096000
-avg delay: 0.112077
+total packets received: 450
+packets dropped: 207
+throughput: 248932.314761 bps
+packet delivery ratio: 75.000000
+packet drop ratio: 34.500000
+total energy consumed: 567.441000
+avg delay: 0.127204
+
+other metrics:
+node 31 has the most throughput - 23784.792884 bps
+
 ---------------------------------------------------------------------
 
 ---------------------------------------------------------------------
 iteration: 2, node: 60
 total packets sent: 900
-total packets received: 767
-packets dropped: 167
-throughput: 419196.325611
-packet delivery ratio: 85.222222
-packet drop ratio: 18.555556
-total energy consumed: 870.662000
-avg delay: 0.197608
+total packets received: 672
+packets dropped: 313
+throughput: 369271.362678 bps
+packet delivery ratio: 74.666667
+packet drop ratio: 34.777778
+total energy consumed: 859.390000
+avg delay: 0.183197
+
+other metrics:
+node 16 has the most throughput - 31878.302424 bps
+
 ---------------------------------------------------------------------
 
 ---------------------------------------------------------------------
 iteration: 3, node: 80
 total packets sent: 1200
-total packets received: 909
-packets dropped: 341
-throughput: 494615.086955
-packet delivery ratio: 75.750000
-packet drop ratio: 28.416667
-total energy consumed: 1173.728000
-avg delay: 0.268173
+total packets received: 755
+packets dropped: 551
+throughput: 411112.085034 bps
+packet delivery ratio: 62.916667
+packet drop ratio: 45.916667
+total energy consumed: 1173.103000
+avg delay: 0.332731
+
+other metrics:
+node 25 has the most throughput - 32663.524438 bps
+
 ---------------------------------------------------------------------
 
 ---------------------------------------------------------------------
 iteration: 4, node: 100
 total packets sent: 1500
-total packets received: 1102
-packets dropped: 332
-throughput: 599798.722956
-packet delivery ratio: 73.466667
-packet drop ratio: 22.133333
-total energy consumed: 1462.232000
-avg delay: 0.431837
+total packets received: 1059
+packets dropped: 385
+throughput: 576368.628658 bps
+packet delivery ratio: 70.600000
+packet drop ratio: 25.666667
+total energy consumed: 1448.345000
+avg delay: 0.305759
+
+other metrics:
+node 54 has the most throughput - 32662.275664 bps
+
 ---------------------------------------------------------------------
 
 varying number of flow. node: 100 packets: 500 speed: 25
 ---------------------------------------------------------------------
 iteration: 0, flows: 10
 total packets sent: 300
-total packets received: 259
-packets dropped: 52
-throughput: 144658.389474
-packet delivery ratio: 86.333333
-packet drop ratio: 17.333333
-total energy consumed: 1365.537000
-avg delay: 0.072181
+total packets received: 278
+packets dropped: 22
+throughput: 155422.122629 bps
+packet delivery ratio: 92.666667
+packet drop ratio: 7.333333
+total energy consumed: 1364.498000
+avg delay: 0.069005
+
+other metrics:
+node 14 has the most throughput - 16778.400067 bps
+
 ---------------------------------------------------------------------
 
 ---------------------------------------------------------------------
 iteration: 1, flows: 20
 total packets sent: 600
-total packets received: 500
-packets dropped: 98
-throughput: 277738.020182
-packet delivery ratio: 83.333333
-packet drop ratio: 16.333333
-total energy consumed: 1422.079000
-avg delay: 0.113731
+total packets received: 393
+packets dropped: 224
+throughput: 217313.282363 bps
+packet delivery ratio: 65.500000
+packet drop ratio: 37.333333
+total energy consumed: 1423.340000
+avg delay: 0.111290
+
+other metrics:
+node 57 has the most throughput - 29853.882358 bps
+
 ---------------------------------------------------------------------
 
 ---------------------------------------------------------------------
 iteration: 2, flows: 30
 total packets sent: 900
-total packets received: 628
-packets dropped: 337
-throughput: 343001.392060
-packet delivery ratio: 69.777778
-packet drop ratio: 37.444444
-total energy consumed: 1426.071000
-avg delay: 0.189937
+total packets received: 674
+packets dropped: 252
+throughput: 369851.098539 bps
+packet delivery ratio: 74.888889
+packet drop ratio: 28.000000
+total energy consumed: 1432.201000
+avg delay: 0.173684
+
+other metrics:
+node 11 has the most throughput - 31838.279822 bps
+
 ---------------------------------------------------------------------
 
 ---------------------------------------------------------------------
 iteration: 3, flows: 40
 total packets sent: 1200
-total packets received: 854
-packets dropped: 397
-throughput: 464797.171620
-packet delivery ratio: 71.166667
-packet drop ratio: 33.083333
-total energy consumed: 1467.476000
-avg delay: 0.263942
+total packets received: 840
+packets dropped: 389
+throughput: 457788.821697 bps
+packet delivery ratio: 70.000000
+packet drop ratio: 32.416667
+total energy consumed: 1462.499000
+avg delay: 0.233470
+
+other metrics:
+node 50 has the most throughput - 31612.534968 bps
+
 ---------------------------------------------------------------------
 
 ---------------------------------------------------------------------
 iteration: 4, flows: 50
 total packets sent: 1500
-total packets received: 967
-packets dropped: 495
-throughput: 526287.909395
-packet delivery ratio: 64.466667
-packet drop ratio: 33.000000
-total energy consumed: 1465.278000
-avg delay: 0.370206
+total packets received: 1093
+packets dropped: 316
+throughput: 595101.824286 bps
+packet delivery ratio: 72.866667
+packet drop ratio: 21.066667
+total energy consumed: 1476.069000
+avg delay: 0.352379
+
+other metrics:
+node 25 has the most throughput - 42454.673643 bps
+
 ---------------------------------------------------------------------
 
 varying number of packets. node: 100 flow: 50 speed: 25 
 ---------------------------------------------------------------------
 iteration: 0, packets: 100
 total packets sent: 1500
-total packets received: 1050
-packets dropped: 375
-throughput: 571648.716248
-packet delivery ratio: 70.000000
-packet drop ratio: 25.000000
-total energy consumed: 1473.379000
-avg delay: 0.373899
+total packets received: 944
+packets dropped: 565
+throughput: 514360.111047 bps
+packet delivery ratio: 62.933333
+packet drop ratio: 37.666667
+total energy consumed: 1454.329000
+avg delay: 0.430920
+
+other metrics:
+node 9 has the most throughput - 32704.237303 bps
+
 ---------------------------------------------------------------------
 
 ---------------------------------------------------------------------
 iteration: 1, packets: 200
 total packets sent: 1500
-total packets received: 1024
-packets dropped: 427
-throughput: 557698.763584
-packet delivery ratio: 68.266667
-packet drop ratio: 28.466667
-total energy consumed: 1474.489000
-avg delay: 0.365731
+total packets received: 955
+packets dropped: 452
+throughput: 520386.842055 bps
+packet delivery ratio: 63.666667
+packet drop ratio: 30.133333
+total energy consumed: 1462.454000
+avg delay: 0.297604
+
+other metrics:
+node 56 has the most throughput - 58816.217471 bps
+
 ---------------------------------------------------------------------
 
 ---------------------------------------------------------------------
 iteration: 2, packets: 300
 total packets sent: 1500
-total packets received: 996
-packets dropped: 451
-throughput: 542459.442678
-packet delivery ratio: 66.400000
-packet drop ratio: 30.066667
-total energy consumed: 1473.263000
-avg delay: 0.368445
+total packets received: 1051
+packets dropped: 396
+throughput: 572141.074676 bps
+packet delivery ratio: 70.066667
+packet drop ratio: 26.400000
+total energy consumed: 1471.175000
+avg delay: 0.391546
+
+other metrics:
+node 27 has the most throughput - 31585.832498 bps
+
 ---------------------------------------------------------------------
 
 ---------------------------------------------------------------------
 iteration: 3, packets: 400
 total packets sent: 1500
-total packets received: 1009
-packets dropped: 458
-throughput: 549701.550895
-packet delivery ratio: 67.266667
-packet drop ratio: 30.533333
-total energy consumed: 1473.832000
-avg delay: 0.352724
+total packets received: 911
+packets dropped: 586
+throughput: 496416.835591 bps
+packet delivery ratio: 60.733333
+packet drop ratio: 39.066667
+total energy consumed: 1461.288000
+avg delay: 0.393755
+
+other metrics:
+node 42 has the most throughput - 46305.747042 bps
+
 ---------------------------------------------------------------------
 
 ---------------------------------------------------------------------
 iteration: 4, packets: 500
 total packets sent: 1500
-total packets received: 1086
-packets dropped: 378
-throughput: 591039.423480
-packet delivery ratio: 72.400000
-packet drop ratio: 25.200000
-total energy consumed: 1458.743000
-avg delay: 0.370916
+total packets received: 948
+packets dropped: 501
+throughput: 516581.590778 bps
+packet delivery ratio: 63.200000
+packet drop ratio: 33.400000
+total energy consumed: 1472.310000
+avg delay: 0.319147
+
+other metrics:
+node 8 has the most throughput - 32679.491178 bps
+
 ---------------------------------------------------------------------
 
 varying number of speed. node: 100 flow: 50 packets: 500
 ---------------------------------------------------------------------
 iteration: 0, speed: 5
 total packets sent: 1500
-total packets received: 782
-packets dropped: 755
-throughput: 427016.501442
-packet delivery ratio: 52.133333
-packet drop ratio: 50.333333
-total energy consumed: 1467.826000
-avg delay: 0.292474
+total packets received: 824
+packets dropped: 742
+throughput: 448729.440347 bps
+packet delivery ratio: 54.933333
+packet drop ratio: 49.466667
+total energy consumed: 1463.027000
+avg delay: 0.275943
+
+other metrics:
+node 63 has the most throughput - 41939.625366 bps
+
 ---------------------------------------------------------------------
 
 ---------------------------------------------------------------------
 iteration: 1, speed: 10
 total packets sent: 1500
-total packets received: 870
-packets dropped: 655
-throughput: 473973.984857
-packet delivery ratio: 58.000000
-packet drop ratio: 43.666667
-total energy consumed: 1470.078000
-avg delay: 0.325450
+total packets received: 962
+packets dropped: 512
+throughput: 523762.111419 bps
+packet delivery ratio: 64.133333
+packet drop ratio: 34.133333
+total energy consumed: 1464.029000
+avg delay: 0.406543
+
+other metrics:
+node 52 has the most throughput - 44092.463619 bps
+
 ---------------------------------------------------------------------
 
 ---------------------------------------------------------------------
 iteration: 2, speed: 15
 total packets sent: 1500
-total packets received: 838
-packets dropped: 647
-throughput: 456638.995712
-packet delivery ratio: 55.866667
-packet drop ratio: 43.133333
-total energy consumed: 1469.009000
-avg delay: 0.347674
+total packets received: 898
+packets dropped: 616
+throughput: 488807.908223 bps
+packet delivery ratio: 59.866667
+packet drop ratio: 41.066667
+total energy consumed: 1470.953000
+avg delay: 0.366004
+
+other metrics:
+node 35 has the most throughput - 47345.296531 bps
+
 ---------------------------------------------------------------------
 
 ---------------------------------------------------------------------
 iteration: 3, speed: 20
 total packets sent: 1500
-total packets received: 957
-packets dropped: 483
-throughput: 520954.516082
-packet delivery ratio: 63.800000
-packet drop ratio: 32.200000
-total energy consumed: 1471.875000
-avg delay: 0.333351
+total packets received: 932
+packets dropped: 551
+throughput: 507246.658612 bps
+packet delivery ratio: 62.133333
+packet drop ratio: 36.733333
+total energy consumed: 1469.635000
+avg delay: 0.480579
+
+other metrics:
+node 35 has the most throughput - 47342.310144 bps
+
 ---------------------------------------------------------------------
 
 ---------------------------------------------------------------------
 iteration: 4, speed: 25
 total packets sent: 1500
-total packets received: 887
-packets dropped: 583
-throughput: 482913.424299
-packet delivery ratio: 59.133333
-packet drop ratio: 38.866667
-total energy consumed: 1470.096000
-avg delay: 0.313088
+total packets received: 1024
+packets dropped: 401
+throughput: 557515.021876 bps
+packet delivery ratio: 68.266667
+packet drop ratio: 26.733333
+total energy consumed: 1466.350000
+avg delay: 0.386833
+
+other metrics:
+node 3 has the most throughput - 31571.349377 bps
+
 ---------------------------------------------------------------------
 

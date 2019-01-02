@@ -25,6 +25,10 @@ BEGIN {
 	for (i=0; i<max_pckt; i++) {
 		retransmit[i] = 0;		
 	}
+
+	for (i=0; i<max_node; i++) {
+		byteReceivedByNode[i] = 0;
+	}
 }
 
 {
@@ -64,6 +68,7 @@ BEGIN {
 		if(event == "r" && packetID >= idLowestPacket) {
 			nReceivedPackets++;
 			nReceivedBytes += nBytes;
+			byteReceivedByNode[node] += nBytes;
 
 			#printf("received %15.0f bytes\n", nBytes);
 			
@@ -128,4 +133,44 @@ END {
 		printf("avg delay: %f\n", rAverageDelay);
 	}
 	#---------------------------------------------------------------------
+
+	#BONUS
+	#---------------------------------------------------------------------
+	#per node throughput-> node that has the most throughput
+	printf("\nother metrics:\n");
+	mx = 0.0; n = -1
+	for(i=0; i<max_node; i++) {
+		temp = byteReceivedByNode[i] * 8 / rTime;
+		if(mx < temp) {
+			mx = temp;
+			n = i;
+		}
+	}
+	printf("node %d has the most throughput : %f bps\n", n, mx);
+	#---------------------------------------------------------------------
+
+	#---------------------------------------------------------------------
+	if ( nReceivedPackets != 0 ) {
+		rAverageDelay = rTotalDelay / nReceivedPackets ;
+		avg_energy_per_packet = total_energy_consumption / nReceivedPackets ;
+	}
+
+	if ( nReceivedBytes != 0 ) {
+		avg_energy_per_byte = total_energy_consumption / nReceivedBytes ;
+		avg_energy_per_bit = avg_energy_per_byte / 8;
+	}
+
+	for (i=0; i<max_pckt; i++) {
+		total_retransmit += retransmit[i] ;		
+		#printf("%d %15.5f\n", i, retransmit[i]);
+	}
+
+	printf("average delay: %f\n", rAverageDelay);
+	printf("average energy per packet: %f joules\n", avg_energy_per_packet);
+	printf("average energy per bit: %f joules\n", avg_energy_per_bit);
+	printf("average energy per byte: %f joules\n", avg_energy_per_byte);
+	printf("total retransmit: %d\n", total_retransmit);
+	#---------------------------------------------------------------------
+
+	printf("\n");
 }
