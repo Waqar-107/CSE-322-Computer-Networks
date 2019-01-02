@@ -26,7 +26,7 @@ set coverage_area [lindex $argv 3]
 #number and other attributes of flows
 set time_duration 25
 set start_time 5
-set parallel_start_gap 0.1
+set random_flow_start_gap 0.1
 set extra_time 0
 #-------------------------
 
@@ -34,6 +34,7 @@ set extra_time 0
 set cbr_size 28
 set cbr_rate $num_of_packet
 set cbr_interval 1
+set cbr_type CBR
 #-------------------------
 
 #-----------------------------------------------------------------------------------
@@ -57,8 +58,8 @@ set val(mac) 		Mac/802_15_4		 		 ;# MAC type
 set val(ifq) 		Queue/DropTail/PriQueue      ;# interface queue type
 set val(ll) 		LL                           ;# link layer type
 set val(ant) 		Antenna/OmniAntenna          ;# antenna model
-set val(ifqlen) 	100                          ;# max packet in ifq - 50 is optimal
-set val(rp) 		DSDV                         ;# routing protocol
+set val(ifqlen) 	100                          ;# max packet in ifq
+set val(rp) 		AODV                         ;# routing protocol - Ad Hoc On-Demand Distance Vector
 #------------------------------------------------------------------------------------
 
 #------------------------------------------------------------------------------------
@@ -78,16 +79,30 @@ set dist(30m) 2.13643e-07
 set dist(35m) 1.56962e-07
 set dist(40m) 1.20174e-07
 
-set dist(150) 2.81838e-09
-set dist(175) 1.52129e-09
-set dist(200) 8.91754e-10
-set dist(225) 5.56717e-10
+set dist(150m) 2.81838e-09
+set dist(175m) 1.52129e-09
+set dist(200m) 8.91754e-10
+set dist(225m) 5.56717e-10
 set dist(250m) 3.65262e-10
 set dist(500m) 2.28289e-11
 set dist(1000m) 1.42681e-12
 
-Phy/WirelessPhy set CSThresh_ $dist(40m)
-Phy/WirelessPhy set RXThresh_ $dist(40m)
+set default_coverage $dist(200m) 
+if {$coverage_area == 2} {
+	set default_coverage $dist(225m)
+}
+if {$coverage_area == 3} {
+	set default_coverage $dist(250m)
+}
+if {$coverage_area == 4} {
+	set default_coverage $dist(500m)
+}
+if {$coverage_area == 5} {
+	set default_coverage $dist(1000m)
+}
+
+Phy/WirelessPhy set CSThresh_ $default_coverage
+Phy/WirelessPhy set RXThresh_ $default_coverage
 #------------------------------------------------------------------------------------
 
 #=========================================================================
@@ -202,7 +217,7 @@ if {$num_flow > [expr $nn/2]} {
 }
 
 #made udp and null for each node, some will remain unused
-for {set i 0} {$i < $nn} {incr i} {
+for {set i 0} {$i < $num_flow} {incr i} {
 	
 	set udp_($i) [new Agent/UDP]
 	$udp_($i) set class_ $i
@@ -228,7 +243,7 @@ for {set i 0} {$i < $num_flow} {incr i} {
 		set null_node [expr int($nn*rand()) % $nn] 	;# dest node
 	}
 
-	puts "src: $udp_node  sink: $null_node\n"
+	#puts "src: $udp_node  sink: $null_node\n"
 
 	$ns attach-agent $node_($udp_node) $udp_($rt)
   	$ns attach-agent $node_($null_node) $null_($rt)
@@ -248,6 +263,7 @@ for {set i 0} {$i < $num_flow} {incr i} {
 for {set i 0} {$i < $num_flow} {incr i} {
 	set cbr_($i) [new Application/Traffic/CBR]
 	
+	$cbr_($i) set type_ $cbr_type
 	$cbr_($i) set packetSize_ $cbr_size
 	$cbr_($i) set rate_ $cbr_rate
 	$cbr_($i) set interval_ $cbr_interval
@@ -256,7 +272,7 @@ for {set i 0} {$i < $num_flow} {incr i} {
 } 
 
 for {set i 0} {$i < $num_flow } {incr i} {
-     $ns at $start_time "$cbr_($i) start"
+     $ns at [expr $start_time + $i * $random_flow_start_gap] "$cbr_($i) start"
 }
 
 puts "flow creation complete"
@@ -303,3 +319,8 @@ for {set i 0} {$i < [expr $num_row*$num_col]  } { incr i} {
 
 puts "running the simulation"
 $ns run
+
+#Invalid PSDU/MPDU length:
+#in p802_15_4phy.cc, if psdulength > aMaxPHYPktSize this error occurs. max size of pkt in 802.15.4 is 127
+# "$cbr_($i) set type_ $cbr_type" helped to get rid of the error
+#https://www.mail-archive.com/ns-users@isi.edu/msg01629.html
