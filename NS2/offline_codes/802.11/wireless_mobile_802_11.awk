@@ -101,6 +101,7 @@ BEGIN {
 
 END {
 	#---------------------------------------------------------------------
+	printf("start time: %d, end time: %d\n", rStartTime, rEndTime);
 	printf("total packets sent: %d\n",nSentPackets);
 	printf("total packets received: %d\n", nReceivedPackets);
 	printf("packets dropped: %d\n",dropPackets);

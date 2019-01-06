@@ -24,9 +24,9 @@ set node_speed [lindex $argv 3]
 
 #-------------------------
 #number and other attributes of flows
-set time_duration 10
-set start_time 1
-set extra_time 5
+set time_duration 50
+set start_time 100
+set extra_time 0
 #-------------------------
 
 #-------------------------

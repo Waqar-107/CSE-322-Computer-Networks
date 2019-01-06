@@ -101,6 +101,8 @@ $ns color 3 green
 set tracefile [open 802_11_mixed.tr w]
 $ns trace-all $tracefile
 
+$ns use-newtrace
+
 #animation file
 set namfile [open 802_11_mixed.nam w]
 $ns namtrace-all-wireless $namfile $x_dim $y_dim

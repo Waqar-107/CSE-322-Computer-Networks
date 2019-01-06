@@ -1,0 +1,19 @@
+start time: 100, end time: 125
+total packets sent: 1750
+total packets received: 1600
+packets dropped: 183
+throughput: 532800.000000 bps
+packet delivery ratio: 91.428571
+packet drop ratio: 10.457143
+end-to-end delay: 654.576193
+total energy consumed: 11324.937000
+avg delay: 0.409110
+
+other metrics:
+node 15 has the most throughput : 39046.400000 bps
+average delay: 0.409110
+average energy per packet: 7.078086 joules
+average energy per bit: 0.000850 joules
+average energy per byte: 0.006802 joules
+total retransmit: 1683
+
