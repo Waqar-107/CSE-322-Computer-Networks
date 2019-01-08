@@ -24,8 +24,8 @@ set node_speed [lindex $argv 3]
 
 #-------------------------
 #number and other attributes of flows
-set time_duration 25
-set start_time 100
+set time_duration 10
+set start_time 1
 set extra_time 0
 #-------------------------
 
@@ -85,8 +85,8 @@ set dist(250m) 3.65262e-10
 set dist(500m) 2.28289e-11
 set dist(1000m) 1.42681e-12
 
-Phy/WirelessPhy set CSThresh_ $dist(1000m)
-Phy/WirelessPhy set RXThresh_ $dist(1000m)
+Phy/WirelessPhy set CSThresh_ $dist(250m)
+Phy/WirelessPhy set RXThresh_ $dist(250m)
 #------------------------------------------------------------------------------------
 
 #=========================================================================

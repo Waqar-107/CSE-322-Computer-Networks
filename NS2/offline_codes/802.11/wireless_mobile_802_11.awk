@@ -23,7 +23,8 @@ BEGIN {
 
 	total_retransmit = 0;
 	for (i=0; i<max_pckt; i++) {
-		retransmit[i] = 0;		
+		retransmit[i] = 0;	
+		rDelay[i] = 0;		
 	}
 
 	for (i=0; i<max_node; i++) {
@@ -112,6 +113,11 @@ END {
 	rThroughput = nReceivedBytes*8 / rTime;
 	rPacketDeliveryRatio = nReceivedPackets / nSentPackets * 100;
 	rPacketDropRatio = dropPackets / nSentPackets * 100
+
+	avg_time = 0;
+	for(i=0; i<max_pckt;i++)avg_time+=rDelay[i];
+	avg_time/=nReceivedPackets;
+	printf("avg time for pkt to travel aka end-to-end delay: %f\n",avg_time);
 
 	printf("throughput: %f bps\n", rThroughput);
 	printf("packet delivery ratio: %f\n", rPacketDeliveryRatio);
