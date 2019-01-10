@@ -210,11 +210,7 @@ puts "finished node creation\n"
 #=========================================================================
 
 #random flow
-# there can be atmost total_node/2 flows
 set nn [expr $num_col*$num_row]
-if {$num_flow > [expr $nn/2]} {
-	set num_flow [expr $nn/2]
-}
 
 #made udp and null for each node, some will remain unused
 for {set i 0} {$i < $num_flow} {incr i} {

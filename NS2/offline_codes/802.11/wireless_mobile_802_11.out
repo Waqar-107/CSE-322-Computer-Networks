@@ -2,22 +2,23 @@ varying number of nodes. flow: 50 packets: 500 speed: 25
 ---------------------------------------------------------------------
 iteration: 0, node: 20
 start time: 100, end time: 150
-total packets sent: 1000
-total packets received: 687
-packets dropped: 413
-throughput: 112118.400000 bps
-packet delivery ratio: 68.700000
-packet drop ratio: 41.300000
-end-to-end delay: 37.167854
-total energy consumed: 2700.513000
-avg delay: 0.054102
+total packets sent: 5000
+total packets received: 2204
+packets dropped: 3619
+avg time for pkt to travel aka end-to-end delay: 3.536265
+throughput: 359692.800000 bps
+packet delivery ratio: 44.080000
+packet drop ratio: 72.380000
+end-to-end delay: 7793.929131
+total energy consumed: 2725.374000
+avg delay: 3.536265
 
 other metrics:
-node 10 has the most throughput : 30844.800000 bps
-average delay: 0.054102
-average energy per packet: 3.930878 joules
-average energy per bit: 0.000482 joules
-average energy per byte: 0.003854 joules
+node 2 has the most throughput : 69360.000000 bps
+average delay: 3.536265
+average energy per packet: 1.236558 joules
+average energy per bit: 0.000152 joules
+average energy per byte: 0.001212 joules
 total retransmit: 0
 
 ---------------------------------------------------------------------
@@ -25,22 +26,23 @@ total retransmit: 0
 ---------------------------------------------------------------------
 iteration: 1, node: 40
 start time: 100, end time: 150
-total packets sent: 2000
-total packets received: 892
-packets dropped: 1419
-throughput: 145574.400000 bps
-packet delivery ratio: 44.600000
-packet drop ratio: 70.950000
-end-to-end delay: 84.245139
-total energy consumed: 5414.367000
-avg delay: 0.094445
+total packets sent: 5000
+total packets received: 2705
+packets dropped: 2941
+avg time for pkt to travel aka end-to-end delay: 1.423012
+throughput: 441456.000000 bps
+packet delivery ratio: 54.100000
+packet drop ratio: 58.820000
+end-to-end delay: 3849.248444
+total energy consumed: 5447.749000
+avg delay: 1.423012
 
 other metrics:
-node 3 has the most throughput : 32476.800000 bps
-average delay: 0.094445
-average energy per packet: 6.069918 joules
-average energy per bit: 0.000744 joules
-average energy per byte: 0.005951 joules
+node 10 has the most throughput : 38188.800000 bps
+average delay: 1.423012
+average energy per packet: 2.013955 joules
+average energy per bit: 0.000247 joules
+average energy per byte: 0.001974 joules
 total retransmit: 0
 
 ---------------------------------------------------------------------
@@ -48,22 +50,23 @@ total retransmit: 0
 ---------------------------------------------------------------------
 iteration: 2, node: 60
 start time: 100, end time: 150
-total packets sent: 3000
-total packets received: 1602
-packets dropped: 1624
-throughput: 261446.400000 bps
-packet delivery ratio: 53.400000
-packet drop ratio: 54.133333
-end-to-end delay: 234.219705
-total energy consumed: 8139.394000
-avg delay: 0.146205
+total packets sent: 5000
+total packets received: 2396
+packets dropped: 3365
+avg time for pkt to travel aka end-to-end delay: 1.176471
+throughput: 391027.200000 bps
+packet delivery ratio: 47.920000
+packet drop ratio: 67.300000
+end-to-end delay: 2818.823831
+total energy consumed: 8159.698000
+avg delay: 1.176471
 
 other metrics:
-node 1 has the most throughput : 48960.000000 bps
-average delay: 0.146205
-average energy per packet: 5.080770 joules
-average energy per bit: 0.000623 joules
-average energy per byte: 0.004981 joules
+node 2 has the most throughput : 31987.200000 bps
+average delay: 1.176471
+average energy per packet: 3.405550 joules
+average energy per bit: 0.000417 joules
+average energy per byte: 0.003339 joules
 total retransmit: 0
 
 ---------------------------------------------------------------------
@@ -71,22 +74,23 @@ total retransmit: 0
 ---------------------------------------------------------------------
 iteration: 3, node: 80
 start time: 100, end time: 150
-total packets sent: 4000
-total packets received: 2381
-packets dropped: 2161
-throughput: 388579.200000 bps
-packet delivery ratio: 59.525000
-packet drop ratio: 54.025000
-end-to-end delay: 718.169461
-total energy consumed: 10874.953000
-avg delay: 0.301625
+total packets sent: 5000
+total packets received: 2515
+packets dropped: 3098
+avg time for pkt to travel aka end-to-end delay: 0.519283
+throughput: 410448.000000 bps
+packet delivery ratio: 50.300000
+packet drop ratio: 61.960000
+end-to-end delay: 1305.995841
+total energy consumed: 10875.541000
+avg delay: 0.519283
 
 other metrics:
-node 60 has the most throughput : 32313.600000 bps
-average delay: 0.301625
-average energy per packet: 4.567389 joules
-average energy per bit: 0.000560 joules
-average energy per byte: 0.004478 joules
+node 78 has the most throughput : 47654.400000 bps
+average delay: 0.519283
+average energy per packet: 4.324271 joules
+average energy per bit: 0.000530 joules
+average energy per byte: 0.004239 joules
 total retransmit: 0
 
 ---------------------------------------------------------------------
@@ -95,21 +99,22 @@ total retransmit: 0
 iteration: 4, node: 100
 start time: 100, end time: 150
 total packets sent: 5000
-total packets received: 2529
-packets dropped: 2970
-throughput: 412732.800000 bps
-packet delivery ratio: 50.580000
-packet drop ratio: 59.400000
-end-to-end delay: 3359.635505
-total energy consumed: 13603.015000
-avg delay: 1.328444
+total packets received: 2439
+packets dropped: 3059
+avg time for pkt to travel aka end-to-end delay: 1.449664
+throughput: 398044.800000 bps
+packet delivery ratio: 48.780000
+packet drop ratio: 61.180000
+end-to-end delay: 3535.729562
+total energy consumed: 13608.344000
+avg delay: 1.449664
 
 other metrics:
-node 96 has the most throughput : 32313.600000 bps
-average delay: 1.328444
-average energy per packet: 5.378812 joules
-average energy per bit: 0.000659 joules
-average energy per byte: 0.005273 joules
+node 76 has the most throughput : 31497.600000 bps
+average delay: 1.449664
+average energy per packet: 5.579477 joules
+average energy per bit: 0.000684 joules
+average energy per byte: 0.005470 joules
 total retransmit: 0
 
 ---------------------------------------------------------------------
@@ -119,21 +124,22 @@ varying number of flow. node: 100 packets: 500 speed: 25
 iteration: 0, flows: 10
 start time: 100, end time: 149
 total packets sent: 1000
-total packets received: 494
-packets dropped: 506
-throughput: 81355.133498 bps
-packet delivery ratio: 49.400000
-packet drop ratio: 50.600000
-end-to-end delay: 17.824426
-total energy consumed: 13532.338000
-avg delay: 0.036082
+total packets received: 398
+packets dropped: 602
+avg time for pkt to travel aka end-to-end delay: 0.030187
+throughput: 65556.243876 bps
+packet delivery ratio: 39.800000
+packet drop ratio: 60.200000
+end-to-end delay: 12.014248
+total energy consumed: 13524.334000
+avg delay: 0.030187
 
 other metrics:
-node 39 has the most throughput : 16468.650506 bps
-average delay: 0.036082
-average energy per packet: 27.393397 joules
-average energy per bit: 0.003357 joules
-average energy per byte: 0.026856 joules
+node 23 has the most throughput : 16471.418059 bps
+average delay: 0.030187
+average energy per packet: 33.980739 joules
+average energy per bit: 0.004164 joules
+average energy per byte: 0.033314 joules
 total retransmit: 0
 
 ---------------------------------------------------------------------
@@ -142,21 +148,22 @@ total retransmit: 0
 iteration: 1, flows: 20
 start time: 100, end time: 150
 total packets sent: 2000
-total packets received: 1189
-packets dropped: 1160
-throughput: 194044.800000 bps
-packet delivery ratio: 59.450000
-packet drop ratio: 58.000000
-end-to-end delay: 141.679549
-total energy consumed: 13529.460000
-avg delay: 0.119159
+total packets received: 1070
+packets dropped: 1186
+avg time for pkt to travel aka end-to-end delay: 0.115842
+throughput: 174624.000000 bps
+packet delivery ratio: 53.500000
+packet drop ratio: 59.300000
+end-to-end delay: 123.951031
+total energy consumed: 13545.736000
+avg delay: 0.115842
 
 other metrics:
-node 66 has the most throughput : 32640.000000 bps
-average delay: 0.119159
-average energy per packet: 11.378856 joules
-average energy per bit: 0.001394 joules
-average energy per byte: 0.011156 joules
+node 3 has the most throughput : 16320.000000 bps
+average delay: 0.115842
+average energy per packet: 12.659566 joules
+average energy per bit: 0.001551 joules
+average energy per byte: 0.012411 joules
 total retransmit: 0
 
 ---------------------------------------------------------------------
@@ -165,21 +172,22 @@ total retransmit: 0
 iteration: 2, flows: 30
 start time: 100, end time: 150
 total packets sent: 3000
-total packets received: 1903
-packets dropped: 1486
-throughput: 310569.600000 bps
-packet delivery ratio: 63.433333
-packet drop ratio: 49.533333
-end-to-end delay: 348.954211
-total energy consumed: 13578.652000
-avg delay: 0.183371
+total packets received: 1993
+packets dropped: 1316
+avg time for pkt to travel aka end-to-end delay: 0.191097
+throughput: 325257.600000 bps
+packet delivery ratio: 66.433333
+packet drop ratio: 43.866667
+end-to-end delay: 380.856005
+total energy consumed: 13589.390000
+avg delay: 0.191097
 
 other metrics:
-node 2 has the most throughput : 16320.000000 bps
-average delay: 0.183371
-average energy per packet: 7.135393 joules
-average energy per bit: 0.000874 joules
-average energy per byte: 0.006995 joules
+node 43 has the most throughput : 32640.000000 bps
+average delay: 0.191097
+average energy per packet: 6.818560 joules
+average energy per bit: 0.000836 joules
+average energy per byte: 0.006685 joules
 total retransmit: 0
 
 ---------------------------------------------------------------------
@@ -188,21 +196,22 @@ total retransmit: 0
 iteration: 3, flows: 40
 start time: 100, end time: 150
 total packets sent: 4000
-total packets received: 2451
-packets dropped: 1877
-throughput: 400003.200000 bps
-packet delivery ratio: 61.275000
-packet drop ratio: 46.925000
-end-to-end delay: 628.199468
-total energy consumed: 13580.682000
-avg delay: 0.256303
+total packets received: 2695
+packets dropped: 1612
+avg time for pkt to travel aka end-to-end delay: 0.272673
+throughput: 439824.000000 bps
+packet delivery ratio: 67.375000
+packet drop ratio: 40.300000
+end-to-end delay: 734.853214
+total energy consumed: 13608.613000
+avg delay: 0.272673
 
 other metrics:
-node 76 has the most throughput : 46348.800000 bps
-average delay: 0.256303
-average energy per packet: 5.540874 joules
-average energy per bit: 0.000679 joules
-average energy per byte: 0.005432 joules
+node 38 has the most throughput : 47164.800000 bps
+average delay: 0.272673
+average energy per packet: 5.049578 joules
+average energy per bit: 0.000619 joules
+average energy per byte: 0.004951 joules
 total retransmit: 0
 
 ---------------------------------------------------------------------
@@ -211,21 +220,22 @@ total retransmit: 0
 iteration: 4, flows: 50
 start time: 100, end time: 150
 total packets sent: 5000
-total packets received: 2279
-packets dropped: 3352
-throughput: 371932.800000 bps
-packet delivery ratio: 45.580000
-packet drop ratio: 67.040000
-end-to-end delay: 3954.454966
-total energy consumed: 13597.392000
-avg delay: 1.735171
+total packets received: 3014
+packets dropped: 2256
+avg time for pkt to travel aka end-to-end delay: 1.542105
+throughput: 491884.800000 bps
+packet delivery ratio: 60.280000
+packet drop ratio: 45.120000
+end-to-end delay: 4647.903007
+total energy consumed: 13622.316000
+avg delay: 1.542105
 
 other metrics:
-node 50 has the most throughput : 32640.000000 bps
-average delay: 1.735171
-average energy per packet: 5.966385 joules
-average energy per bit: 0.000731 joules
-average energy per byte: 0.005849 joules
+node 62 has the most throughput : 34108.800000 bps
+average delay: 1.542105
+average energy per packet: 4.519680 joules
+average energy per bit: 0.000554 joules
+average energy per byte: 0.004431 joules
 total retransmit: 0
 
 ---------------------------------------------------------------------
@@ -235,21 +245,22 @@ varying number of packets. node: 100 flow: 50 speed: 25
 iteration: 0, packets: 100
 start time: 100, end time: 150
 total packets sent: 5000
-total packets received: 2887
-packets dropped: 2470
-throughput: 471158.400000 bps
-packet delivery ratio: 57.740000
-packet drop ratio: 49.400000
-end-to-end delay: 2483.482491
-total energy consumed: 13625.680000
-avg delay: 0.860229
+total packets received: 2937
+packets dropped: 2405
+avg time for pkt to travel aka end-to-end delay: 1.862471
+throughput: 479318.400000 bps
+packet delivery ratio: 58.740000
+packet drop ratio: 48.100000
+end-to-end delay: 5470.077375
+total energy consumed: 13626.331000
+avg delay: 1.862471
 
 other metrics:
-node 22 has the most throughput : 31987.200000 bps
-average delay: 0.860229
-average energy per packet: 4.719667 joules
-average energy per bit: 0.000578 joules
-average energy per byte: 0.004627 joules
+node 62 has the most throughput : 52713.600000 bps
+average delay: 1.862471
+average energy per packet: 4.639541 joules
+average energy per bit: 0.000569 joules
+average energy per byte: 0.004549 joules
 total retransmit: 0
 
 ---------------------------------------------------------------------
@@ -258,21 +269,22 @@ total retransmit: 0
 iteration: 1, packets: 200
 start time: 100, end time: 150
 total packets sent: 5000
-total packets received: 2788
-packets dropped: 2500
-throughput: 455001.600000 bps
-packet delivery ratio: 55.760000
-packet drop ratio: 50.000000
-end-to-end delay: 2683.587575
-total energy consumed: 13624.718000
-avg delay: 0.962549
+total packets received: 2180
+packets dropped: 3607
+avg time for pkt to travel aka end-to-end delay: 1.496231
+throughput: 355776.000000 bps
+packet delivery ratio: 43.600000
+packet drop ratio: 72.140000
+end-to-end delay: 3261.783358
+total energy consumed: 13603.018000
+avg delay: 1.496231
 
 other metrics:
-node 49 has the most throughput : 45532.800000 bps
-average delay: 0.962549
-average energy per packet: 4.886915 joules
-average energy per bit: 0.000599 joules
-average energy per byte: 0.004791 joules
+node 96 has the most throughput : 22521.600000 bps
+average delay: 1.496231
+average energy per packet: 6.239917 joules
+average energy per bit: 0.000765 joules
+average energy per byte: 0.006118 joules
 total retransmit: 0
 
 ---------------------------------------------------------------------
@@ -281,21 +293,22 @@ total retransmit: 0
 iteration: 2, packets: 300
 start time: 100, end time: 150
 total packets sent: 5000
-total packets received: 2473
-packets dropped: 2966
-throughput: 403593.600000 bps
-packet delivery ratio: 49.460000
-packet drop ratio: 59.320000
-end-to-end delay: 2637.680926
-total energy consumed: 13608.530000
-avg delay: 1.066592
+total packets received: 2574
+packets dropped: 2760
+avg time for pkt to travel aka end-to-end delay: 1.274722
+throughput: 420076.800000 bps
+packet delivery ratio: 51.480000
+packet drop ratio: 55.200000
+end-to-end delay: 3281.135565
+total energy consumed: 13622.901000
+avg delay: 1.274722
 
 other metrics:
-node 82 has the most throughput : 26601.600000 bps
-average delay: 1.066592
-average energy per packet: 5.502843 joules
-average energy per bit: 0.000674 joules
-average energy per byte: 0.005395 joules
+node 16 has the most throughput : 43737.600000 bps
+average delay: 1.274722
+average energy per packet: 5.292502 joules
+average energy per bit: 0.000649 joules
+average energy per byte: 0.005189 joules
 total retransmit: 0
 
 ---------------------------------------------------------------------
@@ -304,21 +317,22 @@ total retransmit: 0
 iteration: 3, packets: 400
 start time: 100, end time: 150
 total packets sent: 5000
-total packets received: 2361
-packets dropped: 3132
-throughput: 385315.200000 bps
-packet delivery ratio: 47.220000
-packet drop ratio: 62.640000
-end-to-end delay: 3296.139126
-total energy consumed: 13598.969000
-avg delay: 1.396078
+total packets received: 2627
+packets dropped: 2757
+avg time for pkt to travel aka end-to-end delay: 0.931933
+throughput: 428726.400000 bps
+packet delivery ratio: 52.540000
+packet drop ratio: 55.140000
+end-to-end delay: 2448.187784
+total energy consumed: 13617.852000
+avg delay: 0.931933
 
 other metrics:
-node 56 has the most throughput : 31824.000000 bps
-average delay: 1.396078
-average energy per packet: 5.759834 joules
-average energy per bit: 0.000706 joules
-average energy per byte: 0.005647 joules
+node 67 has the most throughput : 31660.800000 bps
+average delay: 0.931933
+average energy per packet: 5.183804 joules
+average energy per bit: 0.000635 joules
+average energy per byte: 0.005082 joules
 total retransmit: 0
 
 ---------------------------------------------------------------------
@@ -327,21 +341,22 @@ total retransmit: 0
 iteration: 4, packets: 500
 start time: 100, end time: 150
 total packets sent: 5000
-total packets received: 2822
-packets dropped: 2510
-throughput: 460550.400000 bps
-packet delivery ratio: 56.440000
-packet drop ratio: 50.200000
-end-to-end delay: 3033.794629
-total energy consumed: 13625.991000
-avg delay: 1.075051
+total packets received: 2883
+packets dropped: 2289
+avg time for pkt to travel aka end-to-end delay: 1.493099
+throughput: 470505.600000 bps
+packet delivery ratio: 57.660000
+packet drop ratio: 45.780000
+end-to-end delay: 4304.604924
+total energy consumed: 13634.269000
+avg delay: 1.493099
 
 other metrics:
-node 77 has the most throughput : 45369.600000 bps
-average delay: 1.075051
-average energy per packet: 4.828487 joules
-average energy per bit: 0.000592 joules
-average energy per byte: 0.004734 joules
+node 15 has the most throughput : 50918.400000 bps
+average delay: 1.493099
+average energy per packet: 4.729195 joules
+average energy per bit: 0.000580 joules
+average energy per byte: 0.004636 joules
 total retransmit: 0
 
 ---------------------------------------------------------------------
@@ -351,21 +366,22 @@ varying number of speed. node: 100 flow: 50 packets: 500
 iteration: 0, speed: 5
 start time: 100, end time: 150
 total packets sent: 5000
-total packets received: 2899
-packets dropped: 2413
-throughput: 473116.800000 bps
-packet delivery ratio: 57.980000
-packet drop ratio: 48.260000
-end-to-end delay: 6166.799274
-total energy consumed: 13609.743000
-avg delay: 2.127216
+total packets received: 3020
+packets dropped: 2197
+avg time for pkt to travel aka end-to-end delay: 1.096356
+throughput: 492864.000000 bps
+packet delivery ratio: 60.400000
+packet drop ratio: 43.940000
+end-to-end delay: 3310.996550
+total energy consumed: 13624.073000
+avg delay: 1.096356
 
 other metrics:
-node 98 has the most throughput : 30192.000000 bps
-average delay: 2.127216
-average energy per packet: 4.694634 joules
-average energy per bit: 0.000575 joules
-average energy per byte: 0.004603 joules
+node 0 has the most throughput : 41942.400000 bps
+average delay: 1.096356
+average energy per packet: 4.511282 joules
+average energy per bit: 0.000553 joules
+average energy per byte: 0.004423 joules
 total retransmit: 0
 
 ---------------------------------------------------------------------
@@ -374,21 +390,22 @@ total retransmit: 0
 iteration: 1, speed: 10
 start time: 100, end time: 150
 total packets sent: 5000
-total packets received: 2870
-packets dropped: 2455
-throughput: 468384.000000 bps
-packet delivery ratio: 57.400000
-packet drop ratio: 49.100000
-end-to-end delay: 4665.164249
-total energy consumed: 13626.492000
-avg delay: 1.625493
+total packets received: 2759
+packets dropped: 2642
+avg time for pkt to travel aka end-to-end delay: 1.480854
+throughput: 450268.800000 bps
+packet delivery ratio: 55.180000
+packet drop ratio: 52.840000
+end-to-end delay: 4085.675240
+total energy consumed: 13628.804000
+avg delay: 1.480854
 
 other metrics:
-node 77 has the most throughput : 30518.400000 bps
-average delay: 1.625493
-average energy per packet: 4.747907 joules
-average energy per bit: 0.000582 joules
-average energy per byte: 0.004655 joules
+node 18 has the most throughput : 30518.400000 bps
+average delay: 1.480854
+average energy per packet: 4.939762 joules
+average energy per bit: 0.000605 joules
+average energy per byte: 0.004843 joules
 total retransmit: 0
 
 ---------------------------------------------------------------------
@@ -397,21 +414,22 @@ total retransmit: 0
 iteration: 2, speed: 15
 start time: 100, end time: 150
 total packets sent: 5000
-total packets received: 2600
-packets dropped: 2835
-throughput: 424320.000000 bps
-packet delivery ratio: 52.000000
-packet drop ratio: 56.700000
-end-to-end delay: 3467.270605
-total energy consumed: 13618.970000
-avg delay: 1.333566
+total packets received: 3198
+packets dropped: 2024
+avg time for pkt to travel aka end-to-end delay: 1.695725
+throughput: 521913.600000 bps
+packet delivery ratio: 63.960000
+packet drop ratio: 40.480000
+end-to-end delay: 5422.930094
+total energy consumed: 13620.583000
+avg delay: 1.695725
 
 other metrics:
-node 69 has the most throughput : 31334.400000 bps
-average delay: 1.333566
-average energy per packet: 5.238065 joules
-average energy per bit: 0.000642 joules
-average energy per byte: 0.005135 joules
+node 96 has the most throughput : 29865.600000 bps
+average delay: 1.695725
+average energy per packet: 4.259094 joules
+average energy per bit: 0.000522 joules
+average energy per byte: 0.004176 joules
 total retransmit: 0
 
 ---------------------------------------------------------------------
@@ -420,21 +438,22 @@ total retransmit: 0
 iteration: 3, speed: 20
 start time: 100, end time: 150
 total packets sent: 5000
-total packets received: 2675
-packets dropped: 2724
-throughput: 436560.000000 bps
-packet delivery ratio: 53.500000
-packet drop ratio: 54.480000
-end-to-end delay: 3197.518865
-total energy consumed: 13618.319000
-avg delay: 1.195334
+total packets received: 2993
+packets dropped: 2280
+avg time for pkt to travel aka end-to-end delay: 1.341059
+throughput: 488457.600000 bps
+packet delivery ratio: 59.860000
+packet drop ratio: 45.600000
+end-to-end delay: 4013.790347
+total energy consumed: 13627.305000
+avg delay: 1.341059
 
 other metrics:
-node 39 has the most throughput : 45206.400000 bps
-average delay: 1.195334
-average energy per packet: 5.090960 joules
-average energy per bit: 0.000624 joules
-average energy per byte: 0.004991 joules
+node 0 has the most throughput : 39004.800000 bps
+average delay: 1.341059
+average energy per packet: 4.553059 joules
+average energy per bit: 0.000558 joules
+average energy per byte: 0.004464 joules
 total retransmit: 0
 
 ---------------------------------------------------------------------
@@ -443,21 +462,22 @@ total retransmit: 0
 iteration: 4, speed: 25
 start time: 100, end time: 150
 total packets sent: 5000
-total packets received: 1837
-packets dropped: 3898
-throughput: 299798.400000 bps
-packet delivery ratio: 36.740000
-packet drop ratio: 77.960000
-end-to-end delay: 2279.658916
-total energy consumed: 13598.923000
-avg delay: 1.240968
+total packets received: 2782
+packets dropped: 2596
+avg time for pkt to travel aka end-to-end delay: 0.818673
+throughput: 454022.400000 bps
+packet delivery ratio: 55.640000
+packet drop ratio: 51.920000
+end-to-end delay: 2277.548486
+total energy consumed: 13603.396000
+avg delay: 0.818673
 
 other metrics:
-node 74 has the most throughput : 29376.000000 bps
-average delay: 1.240968
-average energy per packet: 7.402789 joules
-average energy per bit: 0.000907 joules
-average energy per byte: 0.007258 joules
+node 65 has the most throughput : 43248.000000 bps
+average delay: 0.818673
+average energy per packet: 4.889790 joules
+average energy per bit: 0.000599 joules
+average energy per byte: 0.004794 joules
 total retransmit: 0
 
 ---------------------------------------------------------------------
