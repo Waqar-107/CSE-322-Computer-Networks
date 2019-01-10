@@ -12,10 +12,11 @@ set y_dim 100
 #-------------------------
 
 #-------------------------
-set total_node 2
+set wired_node 7
+set base_station_node 1
+set wireless_node 1
 
-set num_of_packet [lindex $argv 0]
-set node_speed [lindex $argv 1]
+set total_node [expr $wired_node + $base_station_node + $wireless_node]
 #-------------------------
 
 #-------------------------
@@ -49,10 +50,10 @@ set ns [new Simulator]
 #configuring hierarchical topology structure
 $ns node-config -addressType hierarchical
 AddrParams set domain_num_ 2				;#number of domains
-lappend cluster_num 2 1						;#number of cluster in each of the domains
+lappend cluster_num $wired_node 1						;#number of cluster in each of the domains
 
 AddrParams set cluster_num_ $cluster_num
-lappend eilastlevel 1 1 2					;#number of nodes in each cluster
+lappend eilastlevel 1 1 1 1 1 1 1 2			;#number of nodes in each cluster
 AddrParams set nodes_num_ $eilastlevel		;#for each domain
 
 #-------------------------
@@ -61,7 +62,6 @@ $ns color 1 red
 $ns color 2 blue
 $ns color 3 green
 #-------------------------
-
 
 
 #=========================================================================
@@ -80,18 +80,20 @@ set topo [new Topography]
 $topo load_flatgrid $x_dim $y_dim	             ;#flatgrid for (x,y) -> 2D
 
 #base+wireless
-create-god 2
+create-god [expr $wireless_node + $base_station_node]
 
 #=========================================================================
 # 5.Create nodes with positioning
 #=========================================================================
 puts "start node creation"
 
-set temp {0.0.0 0.1.0}           ;# hierarchical addresses to be used
+# hierarchical addresses to be used
+set temp {0.0.0 0.1.0 0.2.0 0.3.0 0.4.0 0.5.0 0.6.0}           
 
-#4 nodes are wired, 1 is wireless static, 1 base-station
-set n0 [$ns node [lindex $temp 0]]
-set n1 [$ns node [lindex $temp 1]]
+#7 nodes are wired, 1 is wireless static, 1 base-station
+for {set i 0} {$i < $wired_node} {incr i} {
+	set n$i [$ns node [lindex $temp $i]]
+}
 
 #declaring some extra agents and traffic
 for {set i 0} {$i < 50} {incr i} {
@@ -134,11 +136,11 @@ $bStation color red
 #change the config a bit
 $ns node-config -wiredRouting OFF
 
-set n4 [$ns node [lindex $temp 1]]
-$n4 set X_ 50.0
-$n4 set Y_ 40.0
-$n4 random-motion 0
-$n4 base-station [AddrParams addr2id [$bStation node-addr]]
+set n7 [$ns node [lindex $temp 1]]
+$n7 set X_ 50.0
+$n7 set Y_ 40.0
+$n7 random-motion 0
+$n7 base-station [AddrParams addr2id [$bStation node-addr]]
 
 
 #=========================================================================
@@ -150,39 +152,49 @@ $n4 base-station [AddrParams addr2id [$bStation node-addr]]
 
 #wired
 $ns duplex-link $n0 $n1 2Mb 3ms DropTail  
-$ns duplex-link-op $n0 $n1 orient left-down
+$ns duplex-link-op $n0 $n1 orient 45deg
 
-#$ns duplex-link $n1 $n2 2Mb 3ms DropTail 
-#$ns duplex-link $n2 $n3 2Mb 3ms DropTail
+$ns duplex-link $n0 $n2 2Mb 3ms DropTail
+$ns duplex-link-op $n0 $n2 orient 315deg
 
-#$ns duplex-link $n0 $n2 2Mb 3ms DropTail
-#$ns duplex-link-op $n0 $n2 orient right-down
+$ns duplex-link $n1 $n3 2Mb 3ms DropTail 
+$ns duplex-link-op $n1 $n3 orient 0deg
+
+$ns duplex-link $n1 $n4 2Mb 3ms DropTail
+$ns duplex-link-op $n1 $n4 orient 315deg
+
+$ns duplex-link $n2 $n4 2Mb 3ms DropTail
+$ns duplex-link-op $n2 $n4 orient 0deg
+
+$ns duplex-link $n3 $n4 2Mb 3ms DropTail
+$ns duplex-link-op $n3 $n4 orient 225deg
+
+$ns duplex-link $n3 $n6 2Mb 3ms DropTail  
+$ns duplex-link-op $n3 $n6 orient 315deg
+
+$ns duplex-link $n4 $n5 2Mb 3ms DropTail
+$ns duplex-link-op $n4 $n5 orient 0deg
+
+$ns duplex-link $n5 $n6 2Mb 3ms DropTail 
+$ns duplex-link-op $n5 $n6 orient 45deg
 
 #connect nodes with base station
-$ns duplex-link $n1 $bStation 5Mb 2ms DropTail
+$ns duplex-link $n6 $bStation 5Mb 2ms DropTail
 
 #wired connection
 $ns attach-agent $n0 $tcp_(0)
-$ns attach-agent $n4 $sink_(0)
-
-#wireless
-#$ns attach-agent $n4 $sink_(0)
+$ns attach-agent $n7 $sink_(0)
 
 #start from a node that is in wired part
 #the destination is one that is wireless
 $ns connect $tcp_(0) $sink_(0)
 
 #-------------------------------------------
-#mobility - params are:
-#at what time? which node? where to? what speed? 
-#$ns at .3 "$n5 setdest [expr $x_dim*rand()] [expr $y_dim*rand()] $node_speed"
-#$ns at .3 "$n6 setdest [expr $x_dim*rand()] [expr $y_dim*rand()] $node_speed"
-#-------------------------------------------
 
 puts "flow creation complete"
 
 #init pos of wireless node
-$ns initial_node_pos $n4 20
+$ns initial_node_pos $n7 20
 
 #=========================================================================
 # 7.Set timings of different events
