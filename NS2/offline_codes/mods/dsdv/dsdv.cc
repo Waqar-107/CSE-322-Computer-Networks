@@ -425,13 +425,15 @@ mac_callback (Packet * p, void *arg)
   ((DSDV_Agent *) arg)->lost_link (p);
 }
 
+//-------------------------------------------------------------------------------------------------------------
+//make changes here to make it DVR
 Packet *
 DSDV_Agent::makeUpdate(int& periodic)
     // return a packet advertising the state in the routing table
     // makes a full ``periodic'' update if requested, or a ``triggered''
     // partial update if there are only a few changes and full update otherwise
     // returns with periodic = 1 if full update returned, or = 0 if partial
-  //   update returned
+    // update returned
 	
 {
 	//DEBUG
@@ -445,8 +447,8 @@ DSDV_Agent::makeUpdate(int& periodic)
   unsigned char *walk;
 
   int change_count;             // count of entries to go in this update
-  int rtbl_sz;			// counts total entries in rt table
-  int unadvertiseable;		// number of routes we can't advertise yet
+  int rtbl_sz;			            // counts total entries in rt table
+  int unadvertiseable;		      // number of routes we can't advertise yet
 
   //printf("Update packet from %d [per=%d]\n", myaddr_, periodic);
 
@@ -459,34 +461,35 @@ DSDV_Agent::makeUpdate(int& periodic)
   change_count = 0;
   rtbl_sz = 0;
   unadvertiseable = 0;
-  for (table_->InitLoop (); 
-       (prte = table_->NextLoop ()); )
-    {
+  for (table_->InitLoop (); (prte = table_->NextLoop ()); )
+  {
       rtbl_sz++;
-      if ((prte->advert_seqnum || prte->advert_metric) 
-	  && prte->advertise_ok_at <= now) 
-	change_count++; //107's change
+      /*if ((prte->advert_seqnum || prte->advert_metric) && prte->advertise_ok_at <= now) 
+	      change_count++;*/ //107
 
-      if (prte->advertise_ok_at > now) unadvertiseable++;
-    }
+      if (prte->advertise_ok_at > now) 
+        unadvertiseable++;
+  }
+
   //printf("change_count = %d\n",change_count);
-  if (change_count * 3 > rtbl_sz && change_count > 3)
-    { // much of the table has changed, just do a periodic update now
-      periodic = 1;
-    }
+  if(change_count * 3 > rtbl_sz && change_count > 3)
+  { 
+    // much of the table has changed, just do a periodic update now
+    periodic = 1;
+  }
 
   // Periodic update... increment the sequence number...
   if (periodic)
-    {
+  {
       change_count = rtbl_sz - unadvertiseable;
       //printf("rtbsize-%d, unadvert-%d\n",rtbl_sz,unadvertiseable);
       rtable_ent rte;
       bzero(&rte, sizeof(rte));
 
       /* inc sequence number on any periodic update, even if we started
-	 off wanting to do a triggered update, b/c we're doing a real
-	 live periodic update now that'll take the place of our next
-	 periodic update */
+      off wanting to do a triggered update, b/c we're doing a real
+      live periodic update now that'll take the place of our next
+      periodic update */
       seqno_ += 2;
 
       rte.dst = myaddr_;
@@ -508,11 +511,10 @@ DSDV_Agent::makeUpdate(int& periodic)
     }
 
   if (change_count == 0) 
-    {
-      Packet::free(p); // allocated by us, no drop needed
-
-      return NULL; // nothing to advertise
-    }
+  {
+    Packet::free(p);  // allocated by us, no drop needed
+    return NULL;      // nothing to advertise
+  }
 
   /* ****** make the update packet.... ***********
      with less than 100+ nodes, an update for all nodes is less than the
@@ -527,47 +529,50 @@ DSDV_Agent::makeUpdate(int& periodic)
   // hdrc->size_ = change_count * 12 + 20;	// DSDV + IP
   hdrc->size_ = change_count * 12 + IP_HDR_LEN;	// DSDV + IP
 
-  for (table_->InitLoop (); (prte = table_->NextLoop ());)
-    {
-      if (periodic && prte->advertise_ok_at > now)
-      { // don't send out routes that shouldn't be advertised
-        // even in periodic updates
-        continue;
+  for(table_->InitLoop (); (prte = table_->NextLoop ());)
+  {
+    if (periodic && prte->advertise_ok_at > now)
+    { 
+      // don't send out routes that shouldn't be advertised
+      // even in periodic updates
+      continue;
+    }
+
+    if (periodic || ((/* "prte->advert_seqnum" q part by 107*/ 0 || prte->advert_metric) && prte->advertise_ok_at <= now))
+    { 
+      // include this rte in the advert
+      if (!periodic && verbose_)
+        trace ("VCT %.5f _%d_ %d", now, myaddr_, prte->dst);
+
+      //assert (prte->dst < 256 && prte->metric < 256);
+      //*(walk++) = prte->dst;
+      *(walk++) = prte->dst >> 24;
+      *(walk++) = (prte->dst >> 16) & 0xFF;
+      *(walk++) = (prte->dst >> 8) & 0xFF;
+      *(walk++) = (prte->dst >> 0) & 0xFF;
+      *(walk++) = prte->metric;
+      *(walk++) = (prte->seqnum) >> 24;
+      *(walk++) = ((prte->seqnum) >> 16) & 0xFF;
+      *(walk++) = ((prte->seqnum) >> 8) & 0xFF;
+      *(walk++) = (prte->seqnum) & 0xFF;
+
+      prte->last_advertised_metric = prte->metric;
+
+      // seqnum's only need to be advertised once after they change
+      prte->advert_seqnum = false; // don't need to advert seqnum again
+
+      if (periodic) 
+      { 
+        // a full advert means we don't have to re-advert either 
+        // metrics or seqnums again until they change
+        prte->advert_seqnum = false;
+        prte->advert_metric = false;
       }
+      
+      change_count--;
+    }
+  }
 
-      if (periodic || 
-	  ((prte->advert_seqnum || prte->advert_metric) 
-	   && prte->advertise_ok_at <= now))
-	{ // include this rte in the advert
-	  if (!periodic && verbose_)
-	    trace ("VCT %.5f _%d_ %d", now, myaddr_, prte->dst);
-
-	  //assert (prte->dst < 256 && prte->metric < 256);
-	  //*(walk++) = prte->dst;
-	  *(walk++) = prte->dst >> 24;
- 	  *(walk++) = (prte->dst >> 16) & 0xFF;
- 	  *(walk++) = (prte->dst >> 8) & 0xFF;
- 	  *(walk++) = (prte->dst >> 0) & 0xFF;
-	  *(walk++) = prte->metric;
-	  *(walk++) = (prte->seqnum) >> 24;
-	  *(walk++) = ((prte->seqnum) >> 16) & 0xFF;
-	  *(walk++) = ((prte->seqnum) >> 8) & 0xFF;
-	  *(walk++) = (prte->seqnum) & 0xFF;
-
-	  prte->last_advertised_metric = prte->metric;
-
-	  // seqnum's only need to be advertised once after they change
-	  prte->advert_seqnum = false; // don't need to advert seqnum again
-
-	  if (periodic) 
-	    { // a full advert means we don't have to re-advert either 
-	      // metrics or seqnums again until they change
-	      prte->advert_seqnum = false;
-	      prte->advert_metric = false;
-	    }
-	  change_count--;
-	}
-    }  
   assert(change_count == 0);
   return p;
 }
@@ -677,7 +682,7 @@ DSDV_Agent::processUpdate (Packet * p)
     if (prte)
 	  { 
       // we already have a route to this dst
-	    if (prte->seqnum == rte.seqnum)
+	    /*if (prte->seqnum == rte.seqnum)
 	    { 
         // we've got an update with out a new squenece number
 	      // this update must have come along a different path
@@ -687,10 +692,10 @@ DSDV_Agent::processUpdate (Packet * p)
 	      // this code is now a no-op left here for clarity -dam XXX
 	      rte.wst = prte->wst;
 	      rte.new_seqnum_at = prte->new_seqnum_at;
-	    }
+	    }*/
 
-	    else 
-	    {
+	    //else 
+	    //{
          // we've got a new seq number, end the measurement period
 	      // for wst over the course of the old sequence number
 	      // and update wst with the difference between the last
@@ -703,7 +708,7 @@ DSDV_Agent::processUpdate (Packet * p)
 	      // more than a single sequence number??? XXX -dam 4/20/98
 	      rte.wst = alpha_ * prte->wst + (1.0 - alpha_) * (prte->changed_at - prte->new_seqnum_at);
 	      rte.new_seqnum_at = now;
-	    }
+	    //}
 	  }
   
     else
@@ -731,7 +736,7 @@ DSDV_Agent::processUpdate (Packet * p)
       updateRoute(prte,&rte);
     }
 
-    else if ( prte->seqnum == rte.seqnum )
+    /*else if ( prte->seqnum == rte.seqnum )
     { 
       // stnd dist vector case
       if (rte.metric < prte->metric) 
@@ -754,10 +759,11 @@ DSDV_Agent::processUpdate (Packet * p)
         updateRoute(prte,&rte);
       }
 
-      else{ /* ignore the longer route*/}
-    }
+      else{ //ignore the longer route
+      }
+    }*/
     
-    else if ( prte->seqnum < rte.seqnum )
+    /*else if ( prte->seqnum < rte.seqnum )
     { 
       // we've heard a fresher sequence number
       // we *must* believe its rt metric
@@ -781,9 +787,9 @@ DSDV_Agent::processUpdate (Packet * p)
       #else
           trigger_update = false;
       #endif
-    }
+    }*/
     
-    else if ( prte->seqnum > rte.seqnum )
+    /*else if ( prte->seqnum > rte.seqnum )
     { 
       // our neighbor has older sequnum info than we do
       if (rte.metric == BIG && prte->metric != BIG)
@@ -797,8 +803,8 @@ DSDV_Agent::processUpdate (Packet * p)
         needTriggeredUpdate(prte,now);
       }
 
-      else{ /* we don't care about their stale info*/}
-    }
+      else{ //we don't care about their stale info}
+    }*/
     
     else
     {

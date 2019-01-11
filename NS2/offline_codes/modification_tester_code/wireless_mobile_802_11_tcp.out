@@ -1,0 +1,19 @@
+start time: 1.000000, end time: 1.050789, total: 0.050789
+total packets sent: 54
+total packets received: 8
+packets dropped: 0
+avg time for pkt to travel aka end-to-end delay: 0.010689
+throughput: 705669.100221 bps
+packet delivery ratio: 14.814815
+packet drop ratio: 0.000000
+total delay: 0.085512
+total energy consumed: 98.123000
+avg delay: 0.010689
+
+other metrics:
+node 11 has the most throughput : 176417.275055 bps
+average energy per packet: 12.265375 joules
+average energy per bit: 0.002738 joules
+average energy per byte: 0.021902 joules
+total retransmit: 8
+
