@@ -14,6 +14,7 @@ BEGIN {
 	dropPackets = 0.0;
 
 	total_energy_consumption = 0;
+	rEnergyEfficeincy = 0;
 
 	temp = 0;
 	
@@ -63,7 +64,7 @@ BEGIN {
 		if(event == "s") {
 			nSentPackets++;
 			rSentTime[packetID] = receiveTime;
-			#printf("packet no- %d sent at %d\n",packetID,receiveTime);
+			##printf("packet no- %d sent at %d\n",packetID,receiveTime);
 		}
 
 		if(event == "r" && packetID >= idLowestPacket) {
@@ -71,24 +72,24 @@ BEGIN {
 			nReceivedBytes += nBytes;
 			byteReceivedByNode[node] += nBytes;
 
-			#printf("received %15.0f bytes\n", nBytes);
+			##printf("received %15.0f bytes\n", nBytes);
 			
 			rReceivedTime[packetID] = receiveTime;
 			rDelay[packetID] = rReceivedTime[packetID] - rSentTime[packetID];
 			rTotalDelay += rDelay[packetID]
 
-			#printf("%15.5f\n",rDelay[packetID]);
+			##printf("%15.5f\n",rDelay[packetID]);
 		}
 	}
 	
 	#energy of nodes
 	if(energy == "[energy") {
 		energy_consumption[node] = (idle_energy_consumption + sleep_energy_consumption + transmit_energy_consumption + receive_energy_consumption);
-		#printf("%d %15.5f\n", node, energy_consumption[node]);
+		##printf("%d %15.5f\n", node, energy_consumption[node]);
 	}
 
 	if(messageType == "cbr") {
-		#printf("%d %15d\n", packetID, num_retransmit);
+		##printf("%d %15d\n", packetID, num_retransmit);
 		retransmit[packetID] = num_retransmit;
 	}
 
@@ -102,10 +103,10 @@ BEGIN {
 
 END {
 	#---------------------------------------------------------------------
-	printf("start time: %d, end time: %d\n", rStartTime, rEndTime);
-	printf("total packets sent: %d\n",nSentPackets);
-	printf("total packets received: %d\n", nReceivedPackets);
-	printf("packets dropped: %d\n",dropPackets);
+	#printf("start time: %d, end time: %d\n", rStartTime, rEndTime);
+	#printf("total packets sent: %d\n",nSentPackets);
+	#printf("total packets received: %d\n", nReceivedPackets);
+	#printf("packets dropped: %d\n",dropPackets);
 	#---------------------------------------------------------------------
 
 	#---------------------------------------------------------------------
@@ -117,12 +118,12 @@ END {
 	avg_time = 0;
 	for(i=0; i<max_pckt;i++)avg_time+=rDelay[i];
 	avg_time/=nReceivedPackets;
-	printf("avg time for pkt to travel aka end-to-end delay: %f\n",avg_time);
+	#printf("avg time for pkt to travel aka end-to-end delay: %f\n",avg_time);
 
-	printf("throughput: %f bps\n", rThroughput);
-	printf("packet delivery ratio: %f\n", rPacketDeliveryRatio);
-	printf("packet drop ratio: %f\n",rPacketDropRatio);
-	printf("end-to-end delay: %f\n", rTotalDelay);
+	#printf("throughput: %f bps\n", rThroughput);
+	#printf("packet delivery ratio: %f\n", rPacketDeliveryRatio);
+	#printf("packet drop ratio: %f\n",rPacketDropRatio);
+	#printf("end-to-end delay: %f\n", rTotalDelay);
 	#---------------------------------------------------------------------
 
 	#---------------------------------------------------------------------
@@ -130,14 +131,14 @@ END {
 		total_energy_consumption += energy_consumption[i];
 	}
 
-	printf("total energy consumed: %f\n", total_energy_consumption);
+	#printf("total energy consumed: %f\n", total_energy_consumption);
 	#---------------------------------------------------------------------
 
 	#---------------------------------------------------------------------
 	if (nReceivedPackets != 0) {
 		rAverageDelay = rTotalDelay / nReceivedPackets ;
 		#avg_energy_per_packet = total_energy_consumption / nReceivedPackets ;
-		printf("avg delay: %f\n", rAverageDelay);
+		#printf("avg delay: %f\n", rAverageDelay);
 	}
 
 	#---------------------------------------------------------------------
@@ -145,7 +146,7 @@ END {
 	#BONUS
 	#---------------------------------------------------------------------
 	#per node throughput-> node that has the most throughput
-	printf("\nother metrics:\n");
+	#printf("\nother metrics:\n");
 	mx = 0.0; n = -1
 	for(i=0; i<max_node; i++) {
 		temp = byteReceivedByNode[i] * 8 / rTime;
@@ -154,7 +155,7 @@ END {
 			n = i;
 		}
 	}
-	printf("node %d has the most throughput : %f bps\n", n, mx);
+	#printf("node %d has the most throughput : %f bps\n", n, mx);
 	#---------------------------------------------------------------------
 
 	#---------------------------------------------------------------------
@@ -166,19 +167,25 @@ END {
 	if ( nReceivedBytes != 0 ) {
 		avg_energy_per_byte = total_energy_consumption / nReceivedBytes ;
 		avg_energy_per_bit = avg_energy_per_byte / 8;
+		rEnergyEfficeincy = total_energy_consumption / (nReceivedBytes*8);
 	}
 
 	for (i=0; i<max_pckt; i++) {
 		total_retransmit += retransmit[i] ;		
-		#printf("%d %15.5f\n", i, retransmit[i]);
+		##printf("%d %15.5f\n", i, retransmit[i]);
 	}
 
-	printf("average delay: %f\n", rAverageDelay);
-	printf("average energy per packet: %f joules\n", avg_energy_per_packet);
-	printf("average energy per bit: %f joules\n", avg_energy_per_bit);
-	printf("average energy per byte: %f joules\n", avg_energy_per_byte);
-	printf("total retransmit: %d\n", total_retransmit);
+	#printf("average delay: %f\n", rAverageDelay);
+	#printf("average energy per packet: %f joules\n", avg_energy_per_packet);
+	#printf("average energy per bit: %f joules\n", avg_energy_per_bit);
+	#printf("average energy per byte: %f joules\n", avg_energy_per_byte);
+	#printf("total retransmit: %d\n", total_retransmit);
 	#---------------------------------------------------------------------
 
-	printf("\n");
+	#printf("\n");
+
+printf("%15.2f\n%15.5f\n%15.2f\n%15.2f\n%15.2f\n%10.2f\n%10.2f\n%10.5f\n", rThroughput, rAverageDelay, nSentPackets, nReceivedPackets, nDropPackets, rPacketDeliveryRatio, rPacketDropRatio,rTime) ;
+
+printf("%15.5f\n%15.5f\n%15.5f\n%15.5f\n%15.0f\n%15.9f\n", total_energy_consumption, avg_energy_per_bit, avg_energy_per_byte, avg_energy_per_packet, total_retransmit, rEnergyEfficeincy);
 }
+
