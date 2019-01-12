@@ -24,7 +24,7 @@ set node_speed [lindex $argv 3]
 
 #-------------------------
 #number and other attributes of flows
-set time_duration 10
+set time_duration 15
 set start_time 1
 set extra_time 0
 #-------------------------
@@ -201,14 +201,10 @@ while {$i < [expr $num_row*$num_col]} {
 #=========================================================================
 
 #random flow
-# there can be atmost total_node/2 flows
 set nn [expr $num_col*$num_row]
-if {$num_flow > [expr $nn/2]} {
-	set num_flow [expr $nn/2]
-}
 
 #made udp and null for each node, some will remain unused
-for {set i 0} {$i < $nn} {incr i} {
+for {set i 0} {$i < $num_flow} {incr i} {
 	
 	set udp_($i) [new Agent/TCP]
 	$udp_($i) set class_ $i
