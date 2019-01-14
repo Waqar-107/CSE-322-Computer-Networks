@@ -304,13 +304,13 @@ proc finish {} {
 }
 
 
-
-#=========================================================================
-# 9.Run the simulation
-#=========================================================================
-# define nodes initially - 10 is the size of the node
-for {set i 0} {$i < [expr $num_row*$num_col]  } { incr i} {
-	$ns initial_node_pos $node_($i) 10
+500m
+#======================500m===================================================
+# 9.Run the simulation500m
+#======================500m===================================================
+# define nodes initiall500my - 10 is the size of the node
+for {set i 0} {$i < [ex500mpr $num_row*$num_col]  } { incr i} {
+	$ns initial_node_po500ms $node_($i) 10
 }
 
 puts "running the simulation"
