@@ -3,7 +3,10 @@
 #include <string.h>
 
 #define pfs(s) printf("%s", s)
-#define time_threshold 5.0
+#define time_threshold 150.0
+#define SZ 20
+#define dbg printf("in\n")
+#define nl printf("\n")
 
 /* ******************************************************************
  ALTERNATING BIT AND GO-BACK-N NETWORK EMULATOR: SLIGHTLY MODIFIED
@@ -49,17 +52,21 @@ void tolayer5(int AorB, char datasent[20]);
 /********* STUDENTS WRITE THE NEXT SEVEN ROUTINES *********/
 
 #define _A_ 0
-#define _B_ 0
+#define _B_ 1
 
-struct pkt pktA;
-int lastSent_A, lastACK_A, sendFrom_A, expectedACK_A;
+int msgNo = 1;
+struct pkt pktA, pktB;
+int lastSent_A, sendFrom_A, expectedACK_A;
+int expectedSeq_B, expectedACK_B;
+char _ACK_[SZ], _NAK_[SZ];
 
 //=============================================================================
 //utilities
-int getSum(char a[20]) {
+int getSum(char a[SZ]) {
   int i, sum = 0;
-  for (i = 0; i < 20; i++)
-    sum += a[i];
+  for (i = 0; i < SZ; i++)
+    sum += (int) a[i];
+
   return sum;
 }
 
@@ -70,12 +77,17 @@ void printPktDetail(struct pkt packet) {
          packet.checksum);
 }
 
+int getCheckSum(struct pkt packet) {
+  return getSum(packet.payload) + packet.seqnum + packet.acknum;
+}
+
 int isCorrupted(struct pkt packet) {
-  int c_sum = getSum(packet.payload) + packet.seqnum + packet.acknum;
+  int c_sum = getCheckSum(packet);
   if (c_sum == packet.checksum)return 0;
   return 1;
 }
 //=============================================================================
+
 
 //=============================================================================
 // the following routine will be called once (only) before any other
@@ -89,10 +101,22 @@ void A_init(void) {
 
 
 //=============================================================================
+//the following routine will be called once (only) before any other
+//entity B routines are called. You can use it to do any initialization
+void B_init(void) {
+  expectedACK_B = 0;
+  expectedSeq_B = 0;
+
+  strncpy(_ACK_, "ack_________________", SZ);
+  strncpy(_NAK_, "nak_________________", SZ);
+}
+//=============================================================================
+
+
+//=============================================================================
 //layer-5/application layer send a msg to layer-3/transport layer
 //make a packet and send to layer-4/the medium through which the packet will go
 void A_output(struct msg message) {
-
   if (sendFrom_A) {
 
     pfs("packet being made in A\n");
@@ -100,21 +124,19 @@ void A_output(struct msg message) {
     //set the params accordingly
     pktA.seqnum = lastSent_A;
     pktA.acknum = expectedACK_A;
-    pktA.checksum = getSum(message.data) + lastSent_A + expectedACK_A;
-    strncmp(pktA.payload, message.data, strlen(message.data));
+    strncpy(pktA.payload, message.data, SZ);
+    pktA.checksum = getCheckSum(pktA);
 
     //start timer and send
     starttimer(_A_, time_threshold);
 
     tolayer3(_A_, pktA);
-    pfs("packet sent to layer-3 from A\npkt detai:\n");
+    pfs("packet sent to layer-3 from A\npkt detail:\n");
     printPktDetail(pktA);
 
     //this var will be true after ack is received
     sendFrom_A = 0;
-  }
-
-  else{
+  } else {
     pfs("unable to sent, last sent pkt was not successfully sent\n");
   }
 }
@@ -125,13 +147,17 @@ void A_output(struct msg message) {
 //called from layer 3, when a packet arrives for layer 4
 // ACK packet from B to A
 void A_input(struct pkt packet) {
-  printf("pkt arrived in A %d\n", packet.seqnum);
+
+  pfs("pkt arrived in A\n");
+  printf("expected ack: %d | received ack: %d\n", expectedACK_A, packet.acknum);
+  printf("received checksum: %d | calc checksum: %d\n", packet.checksum, getCheckSum(packet));
 
   //resend
   if (isCorrupted(packet) || packet.acknum != expectedACK_A) {
     pfs("pkt is corrupted or ack not matched!!! resending...\n");
     tolayer3(_A_, pktA);
   } else {
+    printf("%dth message has been transferred successfully\n\n\n", msgNo++);
     expectedACK_A = 1 - expectedACK_A;
     lastSent_A = 1 - lastSent_A;
     sendFrom_A = 1;
@@ -151,27 +177,59 @@ void A_timerinterrupt(void) {
 }
 //=============================================================================
 
-/* need be completed only for extra credit */
-void B_output(struct msg message) {
 
-}
+//=============================================================================
+// BONUS PART - NOT REQUIRED IN THIS PROTOCOL
+//need be completed only for extra credit
+void B_output(struct msg message) {}
 /* Note that with simplex transfer from a-to-B, there is no B_output() */
+//=============================================================================
 
-/* called from layer 3, when a packet arrives for layer 4 at B*/
+
+//=============================================================================
+//called from layer 3, when a packet arrives for layer 4 at B
 void B_input(struct pkt packet) {
-  tolayer5(_B_, packet.payload);
-}
 
-/* called when B's timer goes off */
+  pfs("pkt arrived at B\n");
+  printf("checksum rec: %d, checksum calc: %d\n", packet.checksum, getCheckSum(packet));
+  printf("expected seq: %d | received seq: %d\n", expectedSeq_B, packet.seqnum);
+
+  if (isCorrupted(packet) || expectedSeq_B != packet.seqnum) {
+    //send previous ack
+    pktB.acknum = 1 - expectedACK_B;
+    pktB.seqnum = expectedSeq_B;
+    pktB.checksum = getSum(_NAK_) + pktB.acknum + pktB.seqnum;
+    strncpy(pktB.payload, _NAK_, SZ);
+
+    tolayer3(_B_, pktB);
+    pfs("B sent nak\n");
+  } else {
+    //sent ack to layer-3 and the data to layer-5
+    tolayer5(_B_, packet.payload);
+
+    pktB.acknum = expectedACK_B;
+    pktB.seqnum = expectedSeq_B;
+    pktB.checksum = getSum(_ACK_) + pktB.acknum + pktB.seqnum;
+    strncpy(pktB.payload, _ACK_, SZ);
+
+    tolayer3(_B_, pktB);
+    pfs("B sent ack, B sent data\n");
+
+    //update var
+    expectedSeq_B = 1 - expectedSeq_B;
+    expectedACK_B = 1 - expectedACK_B;
+  }
+}
+//=============================================================================
+
+
+//=============================================================================
+//called when B's timer goes off
 void B_timerinterrupt(void) {
   printf("  B_timerinterrupt: B doesn't have a timer. ignore.\n");
 }
+//=============================================================================
 
-/* the following routine will be called once (only) before any other */
-/* entity B routines are called. You can use it to do any initialization */
-void B_init(void) {
-
-}
 
 /*****************************************************************
 ***************** NETWORK EMULATION CODE STARTS BELOW ***********
