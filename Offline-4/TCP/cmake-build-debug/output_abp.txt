@@ -1,0 +1,94 @@
+-----  Stop and Wait Network Simulator Version 1.1 -------- 
+
+Enter the number of messages to simulate: Enter  packet loss probability [enter 0.0 for no loss]:Enter packet corruption probability [0.0 for no corruption]:Enter average time between messages from sender's layer5 [ > 0.0]:Enter TRACE:
+EVENT time: 93.569748,  type: 1, fromlayer5  entity: 0
+packet being made in A
+packet sent to layer-3 from A
+pkt detai:
+seq: 0 | ack: 0 | checksum: 1843
+
+
+EVENT time: 99.062195,  type: 2, fromlayer3  entity: 1
+
+EVENT time: 1607.715088,  type: 1, fromlayer5  entity: 0
+packet being made in A
+packet sent to layer-3 from A
+pkt detai:
+seq: 1 | ack: 1 | checksum: 1863
+
+
+EVENT time: 1612.889526,  type: 2, fromlayer3  entity: 1
+
+EVENT time: 2294.503662,  type: 1, fromlayer5  entity: 0
+packet being made in A
+packet sent to layer-3 from A
+pkt detai:
+seq: 0 | ack: 0 | checksum: 1881
+
+
+EVENT time: 2299.896484,  type: 2, fromlayer3  entity: 1
+
+EVENT time: 3425.397705,  type: 1, fromlayer5  entity: 0
+packet being made in A
+packet sent to layer-3 from A
+pkt detai:
+seq: 1 | ack: 1 | checksum: 1901
+
+
+EVENT time: 3430.946289,  type: 2, fromlayer3  entity: 1
+
+EVENT time: 4411.328613,  type: 1, fromlayer5  entity: 0
+packet being made in A
+packet sent to layer-3 from A
+pkt detai:
+seq: 0 | ack: 0 | checksum: 1919
+
+
+EVENT time: 4418.063965,  type: 2, fromlayer3  entity: 1
+
+EVENT time: 4966.033203,  type: 1, fromlayer5  entity: 0
+packet being made in A
+packet sent to layer-3 from A
+pkt detai:
+seq: 1 | ack: 1 | checksum: 1939
+
+
+EVENT time: 4972.919434,  type: 2, fromlayer3  entity: 1
+
+EVENT time: 6649.617188,  type: 1, fromlayer5  entity: 0
+packet being made in A
+packet sent to layer-3 from A
+pkt detai:
+seq: 0 | ack: 0 | checksum: 1957
+
+
+EVENT time: 6657.646484,  type: 2, fromlayer3  entity: 1
+
+EVENT time: 7202.124512,  type: 1, fromlayer5  entity: 0
+packet being made in A
+packet sent to layer-3 from A
+pkt detai:
+seq: 1 | ack: 1 | checksum: 1977
+
+
+EVENT time: 7207.686035,  type: 2, fromlayer3  entity: 1
+
+EVENT time: 7890.561035,  type: 1, fromlayer5  entity: 0
+packet being made in A
+packet sent to layer-3 from A
+pkt detai:
+seq: 0 | ack: 0 | checksum: 1995
+
+
+EVENT time: 7896.508789,  type: 2, fromlayer3  entity: 1
+
+EVENT time: 7903.317871,  type: 1, fromlayer5  entity: 0
+packet being made in A
+packet sent to layer-3 from A
+pkt detai:
+seq: 1 | ack: 1 | checksum: 2015
+
+
+EVENT time: 7905.515625,  type: 2, fromlayer3  entity: 1
+ Simulator terminated at time 7905.515625
+ after sending 10 msgs from layer5

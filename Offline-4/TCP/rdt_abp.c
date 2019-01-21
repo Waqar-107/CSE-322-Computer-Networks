@@ -1,5 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+
+#define pfs(s) printf("%s", s)
+#define time_threshold 5.0
 
 /* ******************************************************************
  ALTERNATING BIT AND GO-BACK-N NETWORK EMULATOR: SLIGHTLY MODIFIED
@@ -45,39 +49,117 @@ void tolayer5(int AorB, char datasent[20]);
 /********* STUDENTS WRITE THE NEXT SEVEN ROUTINES *********/
 
 #define _A_ 0
-#define _B_ 1
+#define _B_ 0
 
-/* called from layer 5, passed the data to be sent to other side */
+struct pkt pktA;
+int lastSent_A, lastACK_A, sendFrom_A, expectedACK_A;
+
+//=============================================================================
+//utilities
+int getSum(char a[20]) {
+  int i, sum = 0;
+  for (i = 0; i < 20; i++)
+    sum += a[i];
+  return sum;
+}
+
+void printPktDetail(struct pkt packet) {
+  printf("seq: %d | ack: %d | checksum: %d\n\n",
+         packet.seqnum,
+         packet.acknum,
+         packet.checksum);
+}
+
+int isCorrupted(struct pkt packet) {
+  int c_sum = getSum(packet.payload) + packet.seqnum + packet.acknum;
+  if (c_sum == packet.checksum)return 0;
+  return 1;
+}
+//=============================================================================
+
+//=============================================================================
+// the following routine will be called once (only) before any other
+// entity A routines are called. You can use it to do any initialization
+void A_init(void) {
+  expectedACK_A = 0;
+  lastSent_A = 0;
+  sendFrom_A = 1;
+}
+//=============================================================================
+
+
+//=============================================================================
+//layer-5/application layer send a msg to layer-3/transport layer
+//make a packet and send to layer-4/the medium through which the packet will go
 void A_output(struct msg message) {
 
+  if (sendFrom_A) {
+
+    pfs("packet being made in A\n");
+
+    //set the params accordingly
+    pktA.seqnum = lastSent_A;
+    pktA.acknum = expectedACK_A;
+    pktA.checksum = getSum(message.data) + lastSent_A + expectedACK_A;
+    strncmp(pktA.payload, message.data, strlen(message.data));
+
+    //start timer and send
+    starttimer(_A_, time_threshold);
+
+    tolayer3(_A_, pktA);
+    pfs("packet sent to layer-3 from A\npkt detai:\n");
+    printPktDetail(pktA);
+
+    //this var will be true after ack is received
+    sendFrom_A = 0;
+  }
+
+  else{
+    pfs("unable to sent, last sent pkt was not successfully sent\n");
+  }
 }
+//=============================================================================
+
+
+//=============================================================================
+//called from layer 3, when a packet arrives for layer 4
+// ACK packet from B to A
+void A_input(struct pkt packet) {
+  printf("pkt arrived in A %d\n", packet.seqnum);
+
+  //resend
+  if (isCorrupted(packet) || packet.acknum != expectedACK_A) {
+    pfs("pkt is corrupted or ack not matched!!! resending...\n");
+    tolayer3(_A_, pktA);
+  } else {
+    expectedACK_A = 1 - expectedACK_A;
+    lastSent_A = 1 - lastSent_A;
+    sendFrom_A = 1;
+
+    //stop the timer
+    stoptimer(_A_);
+  }
+}
+//=============================================================================
+
+
+//=============================================================================
+//called when A's timer goes off
+void A_timerinterrupt(void) {
+  pfs("timeout occurred while sending pkt from A to B, resending...\n");
+  tolayer3(_A_, pktA);
+}
+//=============================================================================
 
 /* need be completed only for extra credit */
 void B_output(struct msg message) {
 
 }
-
-/* called from layer 3, when a packet arrives for layer 4 */
-void A_input(struct pkt packet) {
-
-}
-
-/* called when A's timer goes off */
-void A_timerinterrupt(void) {
-
-}
-
-/* the following routine will be called once (only) before any other */
-/* entity A routines are called. You can use it to do any initialization */
-void A_init(void) {
-
-}
-
 /* Note that with simplex transfer from a-to-B, there is no B_output() */
 
 /* called from layer 3, when a packet arrives for layer 4 at B*/
 void B_input(struct pkt packet) {
-
+  tolayer5(_B_, packet.payload);
 }
 
 /* called when B's timer goes off */
@@ -142,6 +224,7 @@ void init();
 void generate_next_arrival(void);
 void insertevent(struct event *p);
 
+void B_output(struct msg msg);
 int main() {
 
   //--------------------------------------------------------------------------------------
@@ -150,7 +233,7 @@ int main() {
   freopen("in.txt", "r", stdin);
   freopen("output_abp.txt", "w", stdout);
   //--------------------------------------------------------------------------------------
-  
+
   struct event *eventptr;
   struct msg msg2give;
   struct pkt pkt2give;
