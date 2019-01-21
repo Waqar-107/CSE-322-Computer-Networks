@@ -3,7 +3,7 @@
 #include <string.h>
 
 #define pfs(s) printf("%s", s)
-#define time_threshold 150.0
+#define time_threshold 10.0
 #define SZ 20
 #define dbg printf("in\n")
 #define nl printf("\n")
@@ -54,10 +54,10 @@ void tolayer5(int AorB, char datasent[20]);
 #define _A_ 0
 #define _B_ 1
 
-int msgNo = 1;
+int msgNo = 1, X = 1;
 struct pkt pktA, pktB;
 int lastSent_A, sendFrom_A, expectedACK_A;
-int expectedSeq_B, expectedACK_B;
+int expectedSeq_B, lastSuccessfull_B;
 char _ACK_[SZ], _NAK_[SZ];
 
 //=============================================================================
@@ -104,7 +104,6 @@ void A_init(void) {
 //the following routine will be called once (only) before any other
 //entity B routines are called. You can use it to do any initialization
 void B_init(void) {
-  expectedACK_B = 0;
   expectedSeq_B = 0;
 
   strncpy(_ACK_, "ack_________________", SZ);
@@ -118,8 +117,8 @@ void B_init(void) {
 //make a packet and send to layer-4/the medium through which the packet will go
 void A_output(struct msg message) {
   if (sendFrom_A) {
-
-    pfs("packet being made in A\n");
+    pfs("------------------------------------------------------------\n");
+    printf("packet being made in A, attempt to send msg : %d X : %d\n", msgNo,X++);
 
     //set the params accordingly
     pktA.seqnum = lastSent_A;
@@ -155,9 +154,17 @@ void A_input(struct pkt packet) {
   //resend
   if (isCorrupted(packet) || packet.acknum != expectedACK_A) {
     pfs("pkt is corrupted or ack not matched!!! resending...\n");
+
+    //already a timer is running, cancel it
+    stoptimer(_A_);
+
+    //start a new timer and send
+    starttimer(_A_, time_threshold);
     tolayer3(_A_, pktA);
   } else {
     printf("%dth message has been transferred successfully\n\n\n", msgNo++);
+    pfs("------------------------------------------------------------\n");
+
     expectedACK_A = 1 - expectedACK_A;
     lastSent_A = 1 - lastSent_A;
     sendFrom_A = 1;
@@ -173,6 +180,8 @@ void A_input(struct pkt packet) {
 //called when A's timer goes off
 void A_timerinterrupt(void) {
   pfs("timeout occurred while sending pkt from A to B, resending...\n");
+
+  starttimer(_A_, time_threshold);
   tolayer3(_A_, pktA);
 }
 //=============================================================================
@@ -195,8 +204,10 @@ void B_input(struct pkt packet) {
   printf("expected seq: %d | received seq: %d\n", expectedSeq_B, packet.seqnum);
 
   if (isCorrupted(packet) || expectedSeq_B != packet.seqnum) {
-    //send previous ack
-    pktB.acknum = 1 - expectedACK_B;
+    //if error occurs send:
+    //if waiting for 0, send 1 and vice versa
+
+    pktB.acknum = 1 - expectedSeq_B;
     pktB.seqnum = expectedSeq_B;
     pktB.checksum = getSum(_NAK_) + pktB.acknum + pktB.seqnum;
     strncpy(pktB.payload, _NAK_, SZ);
@@ -207,17 +218,15 @@ void B_input(struct pkt packet) {
     //sent ack to layer-3 and the data to layer-5
     tolayer5(_B_, packet.payload);
 
-    pktB.acknum = expectedACK_B;
+    pktB.acknum = expectedSeq_B;
     pktB.seqnum = expectedSeq_B;
     pktB.checksum = getSum(_ACK_) + pktB.acknum + pktB.seqnum;
     strncpy(pktB.payload, _ACK_, SZ);
 
+    expectedSeq_B = 1 - expectedSeq_B;
+
     tolayer3(_B_, pktB);
     pfs("B sent ack, B sent data\n");
-
-    //update var
-    expectedSeq_B = 1 - expectedSeq_B;
-    expectedACK_B = 1 - expectedACK_B;
   }
 }
 //=============================================================================
