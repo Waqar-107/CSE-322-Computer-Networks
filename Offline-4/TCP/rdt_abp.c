@@ -148,23 +148,18 @@ void A_output(struct msg message) {
 // ACK packet from B to A
 void A_input(struct pkt packet) {
 
-  //stop the timer
-  stoptimer(_A_);
-
   pfs("pkt arrived in A\n");
   printf("expected ack: %d | received ack: %d\n", expectedACK_A, packet.acknum);
   printf("received checksum: %d | calc checksum: %d\n", packet.checksum, getCheckSum(packet));
 
   //resend
   if (isCorrupted(packet) || packet.acknum != expectedACK_A) {
-    pfs("pkt is corrupted or ack not matched!!! resending...\n");
-
-    tolayer3(_A_, pktA);
-
-    //start a new timer
-    starttimer(_A_, time_threshold);
-
+    pfs("pkt is corrupted or ack not matched!!! waiting...\n");
   } else {
+
+    //stop the timer
+    stoptimer(_A_);
+
     printf("%dth message has been transferred successfully\n\n\n", msgNo++);
     pfs("------------------------------------------------------------\n");
 

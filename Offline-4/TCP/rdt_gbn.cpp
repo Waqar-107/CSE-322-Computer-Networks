@@ -58,9 +58,10 @@ struct pkt {
 int msgNo = 1;
 struct pkt pktA, pktB;
 int nxtSeqNum_A;
+bool timerRunning;
 int expectedSeq_B, lastSuccessfull_B;
 char _ACK_[SZ], _NAK_[SZ];
-float time_threshold = 50.0;
+float time_threshold = 10.0;
 
 vector<pkt> window;
 queue<pkt> buffer;
@@ -111,6 +112,7 @@ bool isCorrupted(struct pkt packet) {
 // entity A routines are called. You can use it to do any initialization
 void A_init(void) {
   nxtSeqNum_A = 0;
+  timerRunning = false;
 }
 //=================================================
 
@@ -149,9 +151,11 @@ void A_output(struct msg message) {
       tolayer3(_A_, packet);
 
       if (window.size() == 1)
-        starttimer(_A_, time_threshold);
+        starttimer(_A_, time_threshold), timerRunning = true;
+
+      printf("pkt pushed in the window, currently %d pkt in the window\n",window.size());
     } else
-      buffer.push(packet);
+      buffer.push(packet), printf("pkt pushed in the buffer, currently %d pkt in the buffer\n",buffer.size());;
   }
 }
 //=================================================
@@ -161,14 +165,14 @@ void A_output(struct msg message) {
 //called from layer 3, when a packet arrives for layer 4
 //ACK packet from B to A
 void A_input(struct pkt packet) {
-  printf("i am in a input, packet corruption stat: %d\n\n",isCorrupted(packet));
   if (isCorrupted(packet)) {
     pfs("packet received at A is corrupted, ignoring...\n");
     return;
   }
-printf("stopping the time in A\n");
+
   //stop the timer
-  stoptimer(_A_);
+  if(timerRunning)
+    stoptimer(_A_), timerRunning = false;
 
   //check if the ack no. is in the window
   int idx = -1;
@@ -181,14 +185,16 @@ printf("stopping the time in A\n");
 
   //duplicate ack
   if (idx == -1) {
-    printf("duplicate ack found, resending the whole window\n");
-    stoptimer(_A_);
+    printf("duplicate ack found, resending the whole window, currently %d pkts in the window\n", window.size());
+
+    if(timerRunning)
+      stoptimer(_A_), timerRunning = false;
 
     for (pkt p : window)
       tolayer3(_A_, p);
 
     if(window.size())
-      starttimer(_A_, time_threshold);
+      starttimer(_A_, time_threshold), timerRunning = true;
 
     return;
   }
@@ -196,9 +202,11 @@ printf("stopping the time in A\n");
   //all the pkts upto the acknum is accepted
   //as the receiver accepts pkt sequentially
   for (int i = 0; i <= idx; i++)
-    printf("%dth msg tranmitted successfully\n", msgNo++);
+    printf("\n***%dth msg tranmitted successfully***\n", msgNo++);
 
+  printf("%d packets in the window before erasing\n", window.size());
   window.erase(window.begin(), window.begin() + idx + 1);
+  printf("%d packets in the window after erasing\n", window.size());
 
   struct pkt temp;
   while (buffer.size()) {
@@ -211,7 +219,7 @@ printf("stopping the time in A\n");
 
   //if any packet in the window then restart time
   if(window.size())
-    starttimer(_A_, time_threshold);
+    starttimer(_A_, time_threshold), timerRunning = true;
 
 }
 //=================================================
@@ -225,7 +233,7 @@ void A_timerinterrupt(void) {
   for (pkt p : window)
     tolayer3(_A_, p);
 
-  starttimer(_A_, time_threshold);
+  starttimer(_A_, time_threshold), timerRunning = true;
 }
 //=================================================
 
@@ -698,3 +706,6 @@ void tolayer5(int AorB, char datasent[20]) {
   }
 }
 //=================================================
+
+//go back n visualization
+//http://www.ccs-labs.org/teaching/rn/animations/gbn_sr/
