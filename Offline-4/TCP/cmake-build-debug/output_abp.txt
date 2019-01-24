@@ -1,0 +1,234 @@
+-----  Stop and Wait Network Simulator Version 1.1 -------- 
+
+Enter the number of messages to simulate: Enter  packet loss probability [enter 0.0 for no loss]:Enter packet corruption probability [0.0 for no corruption]:Enter average time between messages from sender's layer5 [ > 0.0]:Enter TRACE:
+EVENT time: 9.356975,  type: 1, fromlayer5  entity: 0
+------------------------------------------------------------
+packet being made in A, attempt to send msg : 1
+packet sent to layer-3 from A
+pkt detail:
+seq: 0 | ack: 0 | checksum: 1843
+
+
+EVENT time: 14.849422,  type: 2, fromlayer3  entity: 1
+pkt arrived at B
+checksum received: 1843, checksum calculated: 1843
+expected seq: 0 | received seq: 0
+B sent ack, B sent data
+
+EVENT time: 17.348551,  type: 2, fromlayer3  entity: 0
+pkt arrived in A
+expected ack: 0 | received ack: 0
+received checksum: 1918 | calc checksum: 1918
+1th message has been transferred successfully
+
+
+------------------------------------------------------------
+
+EVENT time: 160.771515,  type: 1, fromlayer5  entity: 0
+------------------------------------------------------------
+packet being made in A, attempt to send msg : 2
+packet sent to layer-3 from A
+pkt detail:
+seq: 1 | ack: 1 | checksum: 1864
+
+
+EVENT time: 162.172806,  type: 2, fromlayer3  entity: 1
+pkt arrived at B
+checksum received: 1864, checksum calculated: 1864
+expected seq: 1 | received seq: 1
+B sent ack, B sent data
+
+EVENT time: 167.609497,  type: 2, fromlayer3  entity: 0
+pkt arrived in A
+expected ack: 1 | received ack: 1
+received checksum: 1920 | calc checksum: 1920
+2th message has been transferred successfully
+
+
+------------------------------------------------------------
+
+EVENT time: 232.203140,  type: 1, fromlayer5  entity: 0
+------------------------------------------------------------
+packet being made in A, attempt to send msg : 3
+packet sent to layer-3 from A
+pkt detail:
+seq: 0 | ack: 0 | checksum: 1881
+
+
+EVENT time: 235.699310,  type: 2, fromlayer3  entity: 1
+pkt arrived at B
+checksum received: 1881, checksum calculated: 1881
+expected seq: 0 | received seq: 0
+B sent ack, B sent data
+
+EVENT time: 238.584351,  type: 2, fromlayer3  entity: 0
+pkt arrived in A
+expected ack: 0 | received ack: 0
+received checksum: 1918 | calc checksum: 1918
+3th message has been transferred successfully
+
+
+------------------------------------------------------------
+
+EVENT time: 333.280457,  type: 1, fromlayer5  entity: 0
+------------------------------------------------------------
+packet being made in A, attempt to send msg : 4
+packet sent to layer-3 from A
+pkt detail:
+seq: 1 | ack: 1 | checksum: 1902
+
+
+EVENT time: 337.856903,  type: 2, fromlayer3  entity: 1
+pkt arrived at B
+checksum received: 1902, checksum calculated: 1902
+expected seq: 1 | received seq: 1
+B sent ack, B sent data
+
+EVENT time: 345.886169,  type: 2, fromlayer3  entity: 0
+pkt arrived in A
+expected ack: 1 | received ack: 1
+received checksum: 1920 | calc checksum: 1920
+4th message has been transferred successfully
+
+
+------------------------------------------------------------
+
+EVENT time: 505.789398,  type: 1, fromlayer5  entity: 0
+------------------------------------------------------------
+packet being made in A, attempt to send msg : 5
+packet sent to layer-3 from A
+pkt detail:
+seq: 0 | ack: 0 | checksum: 1919
+
+
+EVENT time: 511.350800,  type: 2, fromlayer3  entity: 1
+pkt arrived at B
+checksum received: 1919, checksum calculated: 1919
+expected seq: 0 | received seq: 0
+B sent ack, B sent data
+
+EVENT time: 517.435486,  type: 2, fromlayer3  entity: 0
+pkt arrived in A
+expected ack: 0 | received ack: 0
+received checksum: 1918 | calc checksum: 1918
+5th message has been transferred successfully
+
+
+------------------------------------------------------------
+
+EVENT time: 574.633057,  type: 1, fromlayer5  entity: 0
+------------------------------------------------------------
+packet being made in A, attempt to send msg : 6
+packet sent to layer-3 from A
+pkt detail:
+seq: 1 | ack: 1 | checksum: 1940
+
+
+EVENT time: 576.830872,  type: 2, fromlayer3  entity: 1
+pkt arrived at B
+checksum received: 1940, checksum calculated: 1940
+expected seq: 1 | received seq: 1
+B sent ack, B sent data
+
+EVENT time: 586.478455,  type: 2, fromlayer3  entity: 0
+pkt arrived in A
+expected ack: 1 | received ack: 1
+received checksum: 1920 | calc checksum: 1920
+6th message has been transferred successfully
+
+
+------------------------------------------------------------
+
+EVENT time: 759.856018,  type: 1, fromlayer5  entity: 0
+------------------------------------------------------------
+packet being made in A, attempt to send msg : 7
+packet sent to layer-3 from A
+pkt detail:
+seq: 0 | ack: 0 | checksum: 1957
+
+
+EVENT time: 767.598511,  type: 2, fromlayer3  entity: 1
+pkt arrived at B
+checksum received: 1957, checksum calculated: 1957
+expected seq: 0 | received seq: 0
+B sent ack, B sent data
+
+EVENT time: 774.085510,  type: 2, fromlayer3  entity: 0
+pkt arrived in A
+expected ack: 0 | received ack: 0
+received checksum: 1918 | calc checksum: 1918
+7th message has been transferred successfully
+
+
+------------------------------------------------------------
+
+EVENT time: 812.707947,  type: 1, fromlayer5  entity: 0
+------------------------------------------------------------
+packet being made in A, attempt to send msg : 8
+packet sent to layer-3 from A
+pkt detail:
+seq: 1 | ack: 1 | checksum: 1978
+
+
+EVENT time: 817.985352,  type: 2, fromlayer3  entity: 1
+pkt arrived at B
+checksum received: 1978, checksum calculated: 1978
+expected seq: 1 | received seq: 1
+B sent ack, B sent data
+
+EVENT time: 826.124512,  type: 2, fromlayer3  entity: 0
+pkt arrived in A
+expected ack: 1 | received ack: 1
+received checksum: 1920 | calc checksum: 1920
+8th message has been transferred successfully
+
+
+------------------------------------------------------------
+
+EVENT time: 833.149231,  type: 1, fromlayer5  entity: 0
+------------------------------------------------------------
+packet being made in A, attempt to send msg : 9
+packet sent to layer-3 from A
+pkt detail:
+seq: 0 | ack: 0 | checksum: 1995
+
+
+EVENT time: 838.735046,  type: 2, fromlayer3  entity: 1
+pkt arrived at B
+checksum received: 1995, checksum calculated: 1995
+expected seq: 0 | received seq: 0
+B sent ack, B sent data
+
+EVENT time: 841.070740,  type: 2, fromlayer3  entity: 0
+pkt arrived in A
+expected ack: 0 | received ack: 0
+received checksum: 1918 | calc checksum: 1918
+9th message has been transferred successfully
+
+
+------------------------------------------------------------
+
+EVENT time: 946.067688,  type: 1, fromlayer5  entity: 0
+------------------------------------------------------------
+packet being made in A, attempt to send msg : 10
+packet sent to layer-3 from A
+pkt detail:
+seq: 1 | ack: 1 | checksum: 2016
+
+
+EVENT time: 947.872437,  type: 2, fromlayer3  entity: 1
+pkt arrived at B
+checksum received: 2016, checksum calculated: 2016
+expected seq: 1 | received seq: 1
+B sent ack, B sent data
+
+EVENT time: 953.568115,  type: 2, fromlayer3  entity: 0
+pkt arrived in A
+expected ack: 1 | received ack: 1
+received checksum: 1920 | calc checksum: 1920
+10th message has been transferred successfully
+
+
+------------------------------------------------------------
+ Simulator terminated at time 953.568115
+ after sending 10 msgs from layer5

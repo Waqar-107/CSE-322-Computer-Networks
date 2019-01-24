@@ -15,8 +15,8 @@
       <file leaf-file-name="Main.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/Main.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="364">
-              <caret line="157" column="13" lean-forward="true" selection-start-line="125" selection-start-column="14" selection-end-line="157" selection-end-column="13" />
+            <state relative-caret-position="628">
+              <caret line="153" column="36" lean-forward="true" selection-start-line="153" selection-start-column="36" selection-end-line="153" selection-end-column="36" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="method#closing#0;class#Main#0" />
@@ -90,6 +90,8 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="AndroidView" />
+      <pane id="Scope" />
       <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
@@ -107,8 +109,6 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
-      <pane id="AndroidView" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -219,11 +219,12 @@
       <workItem from="1541616838291" duration="5823000" />
       <workItem from="1541657012826" duration="3774000" />
       <workItem from="1541665716059" duration="8268000" />
+      <workItem from="1548089460434" duration="88000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="61773000" />
+    <option name="totallyTimeSpent" value="61861000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
@@ -231,7 +232,6 @@
     <layout>
       <window_info anchor="right" id="Palette" order="3" />
       <window_info anchor="bottom" id="TODO" order="6" />
-      <window_info anchor="bottom" id="Messages" order="7" />
       <window_info anchor="right" id="Palette&#9;" order="3" />
       <window_info id="Image Layers" order="2" />
       <window_info anchor="right" id="Capture Analysis" order="3" />
@@ -257,6 +257,7 @@
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Find" order="1" />
+      <window_info anchor="bottom" id="Messages" order="7" />
     </layout>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -266,6 +267,25 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/src/Main.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3768">
+          <caret line="157" column="13" lean-forward="true" selection-start-line="125" selection-start-column="14" selection-end-line="157" selection-end-column="13" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="method#closing#0;class#Main#0" />
+            <element signature="method#getResponse#0;class#Main#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/timeOutThread.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="264">
+          <caret line="11" column="23" selection-start-line="11" selection-start-column="23" selection-end-line="11" selection-end-column="23" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/Client.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="5328">
@@ -447,8 +467,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Main.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="364">
-          <caret line="157" column="13" lean-forward="true" selection-start-line="125" selection-start-column="14" selection-end-line="157" selection-end-column="13" />
+        <state relative-caret-position="628">
+          <caret line="153" column="36" lean-forward="true" selection-start-line="153" selection-start-column="36" selection-end-line="153" selection-end-column="36" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="method#closing#0;class#Main#0" />

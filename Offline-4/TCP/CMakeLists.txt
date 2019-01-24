@@ -1,7 +1,9 @@
 cmake_minimum_required(VERSION 3.7)
 project(TCP)
 
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 14)
 
-set(SOURCE_FILES rdt_abp.c)
+set(SOURCE_FILES rdt_gbn.cpp)
 add_executable(TCP ${SOURCE_FILES})
+
+#rdt_abp.c rdt_gbn.cpp

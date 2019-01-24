@@ -1,0 +1,144 @@
+-----  Stop and Wait Network Simulator Version 1.1 -------- 
+
+Enter the number of messages to simulate: Enter  packet loss probability [enter 0.0 for no loss]:Enter packet corruption probability [0.0 for no corruption]:Enter average time between messages from sender's layer5 [ > 0.0]:Enter TRACE:
+EVENT time: 93.569748,  type: 1, fromlayer5  entity: 0
+
+EVENT time: 99.062195,  type: 2, fromlayer3  entity: 1
+pkt arrived at B
+checksum received: 1843, checksum calculated: 1843
+expected seq: 0 | received seq: 0
+B sent ack, B sent data
+
+EVENT time: 101.561325,  type: 2, fromlayer3  entity: 0
+i am in a input, packet corruption stat: 0
+
+stopping the time in A
+1th msg tranmitted successfully
+
+EVENT time: 1607.715088,  type: 1, fromlayer5  entity: 0
+
+EVENT time: 1609.116333,  type: 2, fromlayer3  entity: 1
+pkt arrived at B
+checksum received: 1864, checksum calculated: 1864
+expected seq: 1 | received seq: 1
+B sent ack, B sent data
+
+EVENT time: 1614.552979,  type: 2, fromlayer3  entity: 0
+i am in a input, packet corruption stat: 0
+
+stopping the time in A
+2th msg tranmitted successfully
+
+EVENT time: 2322.031250,  type: 1, fromlayer5  entity: 0
+
+EVENT time: 2325.527344,  type: 2, fromlayer3  entity: 1
+pkt arrived at B
+checksum received: 1885, checksum calculated: 1885
+expected seq: 2 | received seq: 2
+B sent ack, B sent data
+
+EVENT time: 2328.412354,  type: 2, fromlayer3  entity: 0
+i am in a input, packet corruption stat: 0
+
+stopping the time in A
+3th msg tranmitted successfully
+
+EVENT time: 3332.804199,  type: 1, fromlayer5  entity: 0
+
+EVENT time: 3337.380615,  type: 2, fromlayer3  entity: 1
+pkt arrived at B
+checksum received: 1906, checksum calculated: 1906
+expected seq: 3 | received seq: 3
+B sent ack, B sent data
+
+EVENT time: 3345.409912,  type: 2, fromlayer3  entity: 0
+i am in a input, packet corruption stat: 0
+
+stopping the time in A
+4th msg tranmitted successfully
+
+EVENT time: 5057.893555,  type: 1, fromlayer5  entity: 0
+
+EVENT time: 5063.455078,  type: 2, fromlayer3  entity: 1
+pkt arrived at B
+checksum received: 1927, checksum calculated: 1927
+expected seq: 4 | received seq: 4
+B sent ack, B sent data
+
+EVENT time: 5069.539551,  type: 2, fromlayer3  entity: 0
+i am in a input, packet corruption stat: 0
+
+stopping the time in A
+5th msg tranmitted successfully
+
+EVENT time: 5746.330078,  type: 1, fromlayer5  entity: 0
+
+EVENT time: 5748.527832,  type: 2, fromlayer3  entity: 1
+pkt arrived at B
+checksum received: 1948, checksum calculated: 1948
+expected seq: 5 | received seq: 5
+B sent ack, B sent data
+
+EVENT time: 5758.175293,  type: 2, fromlayer3  entity: 0
+i am in a input, packet corruption stat: 0
+
+stopping the time in A
+6th msg tranmitted successfully
+
+EVENT time: 7598.559570,  type: 1, fromlayer5  entity: 0
+
+EVENT time: 7606.302246,  type: 2, fromlayer3  entity: 1
+pkt arrived at B
+checksum received: 1969, checksum calculated: 1969
+expected seq: 6 | received seq: 6
+B sent ack, B sent data
+
+EVENT time: 7612.789063,  type: 2, fromlayer3  entity: 0
+i am in a input, packet corruption stat: 0
+
+stopping the time in A
+7th msg tranmitted successfully
+
+EVENT time: 8127.079102,  type: 1, fromlayer5  entity: 0
+
+EVENT time: 8132.356445,  type: 2, fromlayer3  entity: 1
+pkt arrived at B
+checksum received: 1990, checksum calculated: 1990
+expected seq: 7 | received seq: 7
+B sent ack, B sent data
+
+EVENT time: 8140.495605,  type: 2, fromlayer3  entity: 0
+i am in a input, packet corruption stat: 0
+
+stopping the time in A
+8th msg tranmitted successfully
+
+EVENT time: 8331.492188,  type: 1, fromlayer5  entity: 0
+
+EVENT time: 8337.078125,  type: 2, fromlayer3  entity: 1
+pkt arrived at B
+checksum received: 1995, checksum calculated: 1995
+expected seq: 0 | received seq: 0
+B sent ack, B sent data
+
+EVENT time: 8339.414063,  type: 2, fromlayer3  entity: 0
+i am in a input, packet corruption stat: 0
+
+stopping the time in A
+9th msg tranmitted successfully
+
+EVENT time: 9460.676758,  type: 1, fromlayer5  entity: 0
+
+EVENT time: 9462.481445,  type: 2, fromlayer3  entity: 1
+pkt arrived at B
+checksum received: 2016, checksum calculated: 2016
+expected seq: 1 | received seq: 1
+B sent ack, B sent data
+
+EVENT time: 9468.176758,  type: 2, fromlayer3  entity: 0
+i am in a input, packet corruption stat: 0
+
+stopping the time in A
+10th msg tranmitted successfully
+ Simulator terminated at time 9468.176758
+ after sending 10 msgs from layer5

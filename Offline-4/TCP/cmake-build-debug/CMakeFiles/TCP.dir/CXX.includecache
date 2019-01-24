@@ -1,0 +1,20 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+C:/programming/CSE-322-Computer-Networks/Offline-4/TCP/rdt_gbn.cpp
+stdio.h
+-
+stdlib.h
+-
+string.h
+-
+vector
+-
+queue
+-
+
