@@ -122,32 +122,32 @@ TCP/fast:
 	$(MAKE) -f CMakeFiles\TCP.dir\build.make CMakeFiles/TCP.dir/build
 .PHONY : TCP/fast
 
-rdt_gbn.obj: rdt_gbn.cpp.obj
+rdt_abp.obj: rdt_abp.c.obj
 
-.PHONY : rdt_gbn.obj
+.PHONY : rdt_abp.obj
 
 # target to build an object file
-rdt_gbn.cpp.obj:
-	$(MAKE) -f CMakeFiles\TCP.dir\build.make CMakeFiles/TCP.dir/rdt_gbn.cpp.obj
-.PHONY : rdt_gbn.cpp.obj
+rdt_abp.c.obj:
+	$(MAKE) -f CMakeFiles\TCP.dir\build.make CMakeFiles/TCP.dir/rdt_abp.c.obj
+.PHONY : rdt_abp.c.obj
 
-rdt_gbn.i: rdt_gbn.cpp.i
+rdt_abp.i: rdt_abp.c.i
 
-.PHONY : rdt_gbn.i
+.PHONY : rdt_abp.i
 
 # target to preprocess a source file
-rdt_gbn.cpp.i:
-	$(MAKE) -f CMakeFiles\TCP.dir\build.make CMakeFiles/TCP.dir/rdt_gbn.cpp.i
-.PHONY : rdt_gbn.cpp.i
+rdt_abp.c.i:
+	$(MAKE) -f CMakeFiles\TCP.dir\build.make CMakeFiles/TCP.dir/rdt_abp.c.i
+.PHONY : rdt_abp.c.i
 
-rdt_gbn.s: rdt_gbn.cpp.s
+rdt_abp.s: rdt_abp.c.s
 
-.PHONY : rdt_gbn.s
+.PHONY : rdt_abp.s
 
 # target to generate assembly for a file
-rdt_gbn.cpp.s:
-	$(MAKE) -f CMakeFiles\TCP.dir\build.make CMakeFiles/TCP.dir/rdt_gbn.cpp.s
-.PHONY : rdt_gbn.cpp.s
+rdt_abp.c.s:
+	$(MAKE) -f CMakeFiles\TCP.dir\build.make CMakeFiles/TCP.dir/rdt_abp.c.s
+.PHONY : rdt_abp.c.s
 
 # Help Target
 help:
@@ -158,9 +158,9 @@ help:
 	@echo ... edit_cache
 	@echo ... TCP
 	@echo ... rebuild_cache
-	@echo ... rdt_gbn.obj
-	@echo ... rdt_gbn.i
-	@echo ... rdt_gbn.s
+	@echo ... rdt_abp.obj
+	@echo ... rdt_abp.i
+	@echo ... rdt_abp.s
 .PHONY : help
 
 

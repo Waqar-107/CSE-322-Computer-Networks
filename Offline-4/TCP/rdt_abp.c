@@ -1,12 +1,3 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
-#define pfs(s) printf("%s", s)
-#define SZ 20
-#define dbg printf("in\n")
-#define nl printf("\n")
-
 /* ******************************************************************
  ALTERNATING BIT AND GO-BACK-N NETWORK EMULATOR: SLIGHTLY MODIFIED
  FROM VERSION 1.1 of J.F.Kurose
@@ -21,6 +12,15 @@
    - packets will be delivered in the order in which they were sent
        (although some can be lost).
 **********************************************************************/
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define pfs(s) printf("%s", s)
+#define SZ 20
+#define dbg printf("in\n")
+#define nl printf("\n")
 
 #define BIDIRECTIONAL 0 /* change to 1 if you're doing extra credit */
 /* and write a routine called B_output */
@@ -58,7 +58,7 @@ struct pkt pktA, pktB;
 int lastSent_A, sendFrom_A, expectedACK_A;
 int expectedSeq_B, lastSuccessfull_B;
 char _ACK_[SZ], _NAK_[SZ];
-float time_threshold = 50.0;
+float time_threshold = 20.0;
 
 //=============================================================================
 //utilities
@@ -118,7 +118,7 @@ void B_init(void) {
 void A_output(struct msg message) {
   if (sendFrom_A) {
     pfs("------------------------------------------------------------\n");
-    printf("packet being made in A, attempt to send msg : %d\n", msgNo);
+    //printf("packet being made in A, attempt to send msg : %d\n", msgNo);
 
     //set the params accordingly
     pktA.seqnum = lastSent_A;
@@ -131,8 +131,8 @@ void A_output(struct msg message) {
     //start timer and send
     starttimer(_A_, time_threshold);
 
-    pfs("packet sent to layer-3 from A\npkt detail:\n");
-    printPktDetail(pktA);
+    //pfs("packet sent to layer-3 from A\npkt detail:\n");
+    //printPktDetail(pktA);
 
     //this var will be true after ack is received
     sendFrom_A = 0;
@@ -148,20 +148,20 @@ void A_output(struct msg message) {
 // ACK packet from B to A
 void A_input(struct pkt packet) {
 
-  pfs("pkt arrived in A\n");
-  printf("expected ack: %d | received ack: %d\n", expectedACK_A, packet.acknum);
-  printf("received checksum: %d | calc checksum: %d\n", packet.checksum, getCheckSum(packet));
+  //pfs("pkt arrived in A\n");
+  //printf("expected ack: %d | received ack: %d\n", expectedACK_A, packet.acknum);
+  //printf("received checksum: %d | calc checksum: %d\n", packet.checksum, getCheckSum(packet));
 
   //resend
   if (isCorrupted(packet) || packet.acknum != expectedACK_A) {
-    pfs("pkt is corrupted or ack not matched!!! waiting...\n");
+    //pfs("pkt is corrupted or ack not matched!!! waiting to be timedout...\n");
   } else {
 
     //stop the timer
     stoptimer(_A_);
 
-    printf("%dth message has been transferred successfully\n\n\n", msgNo++);
-    pfs("------------------------------------------------------------\n");
+    printf("%dth message has been transferred successfully\n", msgNo++);
+    pfs("------------------------------------------------------------\n\n\n");
 
     expectedACK_A = 1 - expectedACK_A;
     lastSent_A = 1 - lastSent_A;
@@ -174,7 +174,8 @@ void A_input(struct pkt packet) {
 //=============================================================================
 //called when A's timer goes off
 void A_timerinterrupt(void) {
-  pfs("timeout occurred while sending pkt from A to B, resending...\n");
+  //pfs("timeout occurred while sending pkt from A to B, resending...\npacket details: ");
+  //printPktDetail(pktA);
 
   tolayer3(_A_, pktA);
   starttimer(_A_, time_threshold);
@@ -194,9 +195,9 @@ void B_output(struct msg message) {}
 //called from layer 3, when a packet arrives for layer 4 at B
 void B_input(struct pkt packet) {
 
-  pfs("pkt arrived at B\n");
-  printf("checksum received: %d, checksum calculated: %d\n", packet.checksum, getCheckSum(packet));
-  printf("expected seq: %d | received seq: %d\n", expectedSeq_B, packet.seqnum);
+  //pfs("pkt arrived at B\n");
+  //printf("checksum received: %d, checksum calculated: %d\n", packet.checksum, getCheckSum(packet));
+  //printf("expected seq: %d | received seq: %d\n", expectedSeq_B, packet.seqnum);
 
   if (isCorrupted(packet) || expectedSeq_B != packet.seqnum) {
     //if error occurs send:
@@ -208,7 +209,7 @@ void B_input(struct pkt packet) {
     strncpy(pktB.payload, _NAK_, SZ);
 
     tolayer3(_B_, pktB);
-    pfs("B sent nak\n");
+    //pfs("B sent nak\n");
   } else {
     //sent ack to layer-3 and the data to layer-5
     tolayer5(_B_, packet.payload);
@@ -221,7 +222,7 @@ void B_input(struct pkt packet) {
     expectedSeq_B = 1 - expectedSeq_B;
 
     tolayer3(_B_, pktB);
-    pfs("B sent ack, B sent data\n");
+    //pfs("B sent ack, B sent data\n");
   }
 }
 //=============================================================================
@@ -294,7 +295,7 @@ int main() {
   // edit in the emulator by 1505107 -> taking input from a txt and giving output in a txt
   // after finishing , i will replace the output txt with a doc
   freopen("in.txt", "r", stdin);
-  freopen("output_abp.txt", "w", stdout);
+  freopen("output_abp.doc", "w", stdout);
   //--------------------------------------------------------------------------------------
 
   struct event *eventptr;

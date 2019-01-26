@@ -24,8 +24,8 @@
 #define pfs(s) printf("%s", s)
 #define SZ 20
 #define MOD 8
-#define WINDOW_SZ 5
-#define BUFFER_SZ 5
+#define WINDOW_SZ 7
+#define BUFFER_SZ 50
 
 #define dbg printf("in\n")
 #define nl printf("\n")
@@ -34,8 +34,24 @@
 #define _B_ 1
 //=================================================
 
+//=================================================
+//emulator defines
+#define BIDIRECTIONAL 0   //if the protocol is bidirectional
+
+/* possible events: */
+#define TIMER_INTERRUPT 0
+#define FROM_LAYER5 1
+#define FROM_LAYER3 2
+
+#define OFF 0
+#define ON 1
+#define A 0
+#define B 1
+//=================================================
+
 using namespace std;
 
+//=================================================
 /* a "msg" is the data unit passed from layer 5 (teachers code) to layer
  * 4 (students' code).  It contains the data (characters) to be delivered
  * to layer 5 via the students transport level protocol entities.*/
@@ -52,21 +68,36 @@ struct pkt {
   int checksum;
   char payload[20];
 };
+//=================================================
 
 //=================================================
 //1505107 - global variables
 int msgNo = 1;
-struct pkt pktA, pktB;
+struct pkt pktB;
 int nxtSeqNum_A;
 bool timerRunning;
 int expectedSeq_B, lastSuccessfull_B;
 char _ACK_[SZ], _NAK_[SZ];
-float time_threshold = 10.0;
+float time_threshold = 25.0;
 
 vector<pkt> window;
 queue<pkt> buffer;
+queue<float> timeMaintainer;
 //=================================================
 
+//=================================================
+//emulator global variables
+int TRACE = 1;     /* for my debugging */
+int nsim = 0;      /* number of messages from 5 to 4 so far */
+int nsimmax = 0;   /* number of msgs to generate, then stop */
+float time = 0.000;
+float lossprob;    /* probability that a packet is dropped  */
+float corruptprob; /* probability that one bit is packet is flipped */
+float lambda;      /* arrival rate of messages from layer 5 */
+int ntolayer3;     /* number sent into layer 3 */
+int nlost;         /* number lost in media */
+int ncorrupt;      /* number corrupted by media*/
+//=================================================
 
 //=================================================
 //FUNCTION PROTOTYPES. DEFINED IN THE LATER PART
@@ -111,6 +142,7 @@ bool isCorrupted(struct pkt packet) {
 // the following routine will be called once (only) before any other
 // entity A routines are called. You can use it to do any initialization
 void A_init(void) {
+  printf("\n");
   nxtSeqNum_A = 0;
   timerRunning = false;
 }
@@ -148,14 +180,21 @@ void A_output(struct msg message) {
 
     if (window.size() < WINDOW_SZ) {
       window.push_back(packet);
-      tolayer3(_A_, packet);
 
-      if (window.size() == 1)
+      //start timer
+      if (!timerRunning)
         starttimer(_A_, time_threshold), timerRunning = true;
 
-      printf("pkt pushed in the window, currently %d pkt in the window\n",window.size());
-    } else
-      buffer.push(packet), printf("pkt pushed in the buffer, currently %d pkt in the buffer\n",buffer.size());;
+      //push the time in the queue
+      timeMaintainer.push(time);
+
+      tolayer3(_A_, packet);
+
+      printf("pkt pushed in the window, currently %d pkt in the window\n", window.size());
+    } else {
+      buffer.push(packet);
+      printf("pkt pushed in the buffer, currently %d pkt in the buffer\n", buffer.size());
+    }
   }
 }
 //=================================================
@@ -170,10 +209,6 @@ void A_input(struct pkt packet) {
     return;
   }
 
-  //stop the timer
-  if(timerRunning)
-    stoptimer(_A_), timerRunning = false;
-
   //check if the ack no. is in the window
   int idx = -1;
   for (int i = 0; i < window.size(); i++) {
@@ -187,40 +222,67 @@ void A_input(struct pkt packet) {
   if (idx == -1) {
     printf("duplicate ack found, resending the whole window, currently %d pkts in the window\n", window.size());
 
-    if(timerRunning)
-      stoptimer(_A_), timerRunning = false;
+    if (timerRunning) {
+      stoptimer(_A_); //stop the timers
+      timerRunning = false;
+    }
 
-    for (pkt p : window)
+    //need to set timer for all the packet in the window so we clear up their prev. timings in the queue
+    while (!timeMaintainer.empty())
+      timeMaintainer.pop();
+
+    for (pkt p : window) {
       tolayer3(_A_, p);
+      timeMaintainer.push(time);
+    }
 
-    if(window.size())
-      starttimer(_A_, time_threshold), timerRunning = true;
+    //start the timer
+    starttimer(_A_, time_threshold);
+    timerRunning = true;
 
     return;
+  }
+
+  pfs("non corrupted packet received in A\n");
+
+  //timer stop
+  if (timerRunning) {
+    stoptimer(_A_);
+    timerRunning = false;
   }
 
   //all the pkts upto the acknum is accepted
   //as the receiver accepts pkt sequentially
   for (int i = 0; i <= idx; i++)
-    printf("\n***%dth msg tranmitted successfully***\n", msgNo++);
+    printf("\n***%dth msg transmitted successfully***\n", msgNo++);
 
-  printf("%d packets in the window before erasing\n", window.size());
+  //printf("%d packets in the window before erasing\n", window.size());
   window.erase(window.begin(), window.begin() + idx + 1);
-  printf("%d packets in the window after erasing\n", window.size());
+  for (int i = 0; i <= idx; i++)
+    timeMaintainer.pop();
+
+  //printf("%d packets in the window after erasing\n", window.size());
 
   struct pkt temp;
   while (buffer.size()) {
-    if (window.size() < WINDOW_SZ){
+    if (window.size() < WINDOW_SZ) {
       temp = buffer.front(), window.push_back(temp), buffer.pop();
-      tolayer3(_A_,temp);
-    }
-    else break;
+      tolayer3(_A_, temp);
+
+      //push the time
+      timeMaintainer.push(time);
+    } else break;
   }
 
-  //if any packet in the window then restart time
-  if(window.size())
-    starttimer(_A_, time_threshold), timerRunning = true;
+  //printf("after buff->window | size of buffer : %d | size of window: %d\n", buffer.size(), window.size());
 
+  //start a new timer
+  //time_passed = (current time - time when we pushed the pkt)
+  //time_threshold - time_passed
+  if (timeMaintainer.size()) {
+    starttimer(_A_, max((float) 0, time_threshold - time + timeMaintainer.front()));
+    timerRunning = true;
+  }
 }
 //=================================================
 
@@ -228,12 +290,23 @@ void A_input(struct pkt packet) {
 //=================================================
 //called when A's timer goes off
 void A_timerinterrupt(void) {
-  pfs("timeout occurred while sending pkt from A to B, resending all the packets of the window...\n");
+  printf(
+      "timeout occurred while sending pkt from A to B, resending all the packets of the window..., current window size %d\n",
+      window.size());
+
+  //stop the timer : timer has already been stopped
+  timerRunning = false;
+
+  //the packets will be re-transmitted so erase the prev. saved times
+  while (!timeMaintainer.empty())
+    timeMaintainer.pop();
 
   for (pkt p : window)
-    tolayer3(_A_, p);
+    tolayer3(_A_, p), timeMaintainer.push(time);
 
-  starttimer(_A_, time_threshold), timerRunning = true;
+  //if there are packets then start the timer
+  if (timeMaintainer.size())
+    starttimer(_A_, time_threshold), timerRunning = true;
 }
 //=================================================
 
@@ -319,42 +392,26 @@ struct event {
   struct event *next;
 };
 struct event *evlist = NULL; /* the event list */
+//=================================================
 
-#define BIDIRECTIONAL 0   //if the protocol is bidirectional
 
-/* possible events: */
-#define TIMER_INTERRUPT 0
-#define FROM_LAYER5 1
-#define FROM_LAYER3 2
-
-#define OFF 0
-#define ON 1
-#define A 0
-#define B 1
-
-int TRACE = 1;     /* for my debugging */
-int nsim = 0;      /* number of messages from 5 to 4 so far */
-int nsimmax = 0;   /* number of msgs to generate, then stop */
-float time = 0.000;
-float lossprob;    /* probability that a packet is dropped  */
-float corruptprob; /* probability that one bit is packet is flipped */
-float lambda;      /* arrival rate of messages from layer 5 */
-int ntolayer3;     /* number sent into layer 3 */
-int nlost;         /* number lost in media */
-int ncorrupt;      /* number corrupted by media*/
-
+//=================================================
 void init();
 void generate_next_arrival(void);
 void insertevent(struct event *p);
 
 void B_output(struct msg msg);
+//=================================================
+
+
+//=================================================
 int main() {
 
   //--------------------------------------------------------------------------------------
   // edit in the emulator by 1505107 -> taking input from a txt and giving output in a txt
   // after finishing , i will replace the output txt with a doc
   freopen("in.txt", "r", stdin);
-  freopen("output_gbn.txt", "w", stdout);
+  freopen("output_gbn.doc", "w", stdout);
   //--------------------------------------------------------------------------------------
 
   struct event *eventptr;
@@ -446,7 +503,10 @@ int main() {
       " Simulator terminated at time %f\n after sending %d msgs from layer5\n",
       time, nsim);
 }
+//=================================================
 
+
+//=================================================
 void init() /* initialize the simulator */
 {
   int i;
@@ -484,7 +544,10 @@ void init() /* initialize the simulator */
   time = 0.0;              /* initialize time to 0.0 */
   generate_next_arrival(); /* initialize event list */
 }
+//=================================================
 
+
+//=================================================
 /****************************************************************************/
 /* jimsrand(): return a float in range [0,1].  The routine below is used to */
 /* isolate all random number generation in one location.  We assume that the*/
@@ -569,7 +632,7 @@ void printevlist(void) {
   }
   printf("--------------\n");
 }
-
+//=================================================
 
 //=================================================================================================
 /********************** Student-callable ROUTINES ***********************/
@@ -709,3 +772,14 @@ void tolayer5(int AorB, char datasent[20]) {
 
 //go back n visualization
 //http://www.ccs-labs.org/teaching/rn/animations/gbn_sr/
+/*
+ * algorithm to handle timer for all the packets using a single timer -
+ * if the timer is not running then start timer and push the current time a queue.
+ * if the timer is running then just push the current time in the queue
+ * when we get an ACK we pop the first element
+ * then if there is a packet in the window we start timer for it
+ * but here the time_threshold for the pkt will be 'time_threshold - (current_time - time_when_it_was_pushed)'
+ * now if the above formula gives negative ans then time has been passed for the pkt, so we give time_threshold = 0
+ * in the timer_interrupt we start a timer for the first packet of the window, for the rest we save current time in the queue
+ *
+ * */

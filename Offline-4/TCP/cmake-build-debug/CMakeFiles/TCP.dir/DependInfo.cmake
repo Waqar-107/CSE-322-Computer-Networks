@@ -1,15 +1,15 @@
 # The set of languages for which implicit dependencies are needed:
 set(CMAKE_DEPENDS_LANGUAGES
-  "CXX"
+  "C"
   )
 # The set of files for implicit dependencies of each language:
-set(CMAKE_DEPENDS_CHECK_CXX
-  "C:/programming/CSE-322-Computer-Networks/Offline-4/TCP/rdt_gbn.cpp" "C:/programming/CSE-322-Computer-Networks/Offline-4/TCP/cmake-build-debug/CMakeFiles/TCP.dir/rdt_gbn.cpp.obj"
+set(CMAKE_DEPENDS_CHECK_C
+  "C:/programming/CSE-322-Computer-Networks/Offline-4/TCP/rdt_abp.c" "C:/programming/CSE-322-Computer-Networks/Offline-4/TCP/cmake-build-debug/CMakeFiles/TCP.dir/rdt_abp.c.obj"
   )
-set(CMAKE_CXX_COMPILER_ID "GNU")
+set(CMAKE_C_COMPILER_ID "GNU")
 
 # The include file search paths:
-set(CMAKE_CXX_TARGET_INCLUDE_PATH
+set(CMAKE_C_TARGET_INCLUDE_PATH
   )
 
 # Targets to which this target links.
