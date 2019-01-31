@@ -3,22 +3,10 @@
 #include<bits/stdc++.h>
 #include <windows.h>
 
-typedef long long int ll;
-typedef unsigned long long int ull;
-
 #define dbg printf("in\n");
 #define nl printf("\n");
-#define N 250
 
 #define sf(n) scanf("%d", &n)
-#define sff(n, m) scanf("%d%d",&n,&m)
-#define sfl(n) scanf("%I64d", &n)
-#define sffl(n, m) scanf("%I64d%I64d",&n,&m)
-
-#define pf(n) printf("%d",n)
-#define pff(n, m) printf("%d %d",n,m)
-#define pffl(n, m) printf("%I64d %I64d",n,m)
-#define pfl(n) printf("%I64d",n)
 #define pfs(s) printf("%s",s)
 
 #define pb push_back
@@ -32,9 +20,10 @@ typedef unsigned long long int ull;
 using namespace std;
 
 float probability;
-int m, polynomial, R, C;
-string str;
+int m, R, C;
+string str, polynomial;
 vector<string> dataBlock;
+string columnMajor;
 
 string toBinary(int x) {
   string temp = "";
@@ -68,7 +57,7 @@ void input() {
   scanf("%f", &probability);
 
   pfs("Enter Generator Polynomial:\n");
-  sf(polynomial);
+  cin >> polynomial;
 
   //add extra char
   while (str.length() % m != 0)
@@ -113,39 +102,25 @@ int calcCheckBitQuantity() {
 }
 
 void addCheckBits() {
-  int i, j, k;
+  int i, j, k, l;
   int len, cnt;
   int r = calcCheckBitQuantity();
 
-  string str;
+  string str, tmp;
 
   for (i = 0; i < R; i++) {
     cnt = 0;
     len = dataBlock[i].length();
-
-    //count the number of 1's
-    for (j = 0; j < len; j++) {
-      if (dataBlock[i][j] == '1')cnt++;
-    }
 
     //total len
     str.resize(r + len);
     for (j = 0; j < len + r; j++)
       str[j] = ' ';
 
-    //making a odd parity
-    //if number of 1 is even then checkbits would be one 1, and (r-1) 0's
-    //else there will be r 0's
-    if (cnt % 2 == 0)
-      str[0] = '1';
-    else
-      str[0] = '0';
-
-    //fill r - 1 0's now
-    //check bits will be in position of power of 2, i.e (1 2 4 8 16...)
-    k = 2;
-    for (j = 1; j <= r - 1; j++)
-      str[k - 1] = '0', k *= 2;
+    //mark the parity bits
+    k = 1;
+    for (j = 1; j <= r; j++)
+      str[k - 1] = '#', k *= 2;
 
     //fill the data
     k = 0;
@@ -156,25 +131,125 @@ void addCheckBits() {
       str[k] = dataBlock[i][j];
     }
 
+    //determine the parity
+    len += r;
+    l = 1;
+    for (j = 1; j <= r; j++) {
+      cnt = 0;
+      for (k = j + 1; k <= len; k++) {
+        tmp = toBinary(k);
+        reverse(tmp.begin(), tmp.end());
+
+        if (tmp[j - 1] == '1' && str[k - 1] == '1')cnt++;
+      }
+
+      //go for even parity
+      if (cnt % 2)
+        str[l - 1] = '1';
+      else
+        str[l - 1] = '0';
+
+      l *= 2;
+    }
+
     dataBlock[i] = str;
   }
 
+  //print
+  pfs("Data Block After Adding Check Bits\n");
   len = dataBlock[0].length();
   for (i = 0; i < R; i++) {
     k = 1;
     for (j = 1; j <= len; j++) {
-      if (k == j){
+      if (k == j) {
         SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), GREEN);
-        cout<<dataBlock[i][j];
+        cout << dataBlock[i][j - 1];
         SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), WHITE);
         k *= 2;
-      }
-
-      cout << dataBlock[i][j];
+      } else
+        cout << dataBlock[i][j - 1];
     }
 
     cout << endl;
   }
+
+  nl;
+}
+
+void serializeInColumnMajor() {
+  columnMajor = "";
+  C *= 8;
+  for (int i = 0; i < C; i++) {
+    for (int j = 0; j < R; j++)
+      columnMajor.pb(dataBlock[j][i]);
+  }
+
+  pfs("Data-Bits After Column-Wise Serialization\n");
+  cout << columnMajor << endl << endl;
+}
+
+void calculateCRC() {
+  string tmp, tmp2;
+  string temp = columnMajor;
+
+  int len = polynomial.length();
+
+  //add k-1 0's at the end
+  //k=len of polynomial
+  for (int i = 1; i < len; i++)
+    temp.pb('0');
+
+  //modulo-2 binary division
+  //instead of subtraction we do xor
+  //extract len(polynomial) chars
+  tmp = "";
+  for (int i = 0; i < len; i++)
+    tmp.pb(temp[i]);
+
+  int k = len, idx;
+  while (tmp.length() == len) {
+    //xor
+    for (int i = 0; i < len; i++)
+      tmp[i] = ((polynomial[i] - '0') ^ (tmp[i] - '0')) + '0';
+
+    idx = -1;
+    for (int i = 0; i < len; i++) {
+      if (tmp[i] == '1') {
+        idx = i;
+        break;
+      }
+    }
+
+    //if idx == -1 then the whole thing is 0
+    if (idx != -1) {
+      tmp2 = "";
+      for (int i = idx; i < len; i++)
+        tmp2.pb(tmp[i]);
+
+      tmp = tmp2;
+    } else
+      tmp = "";
+
+    while (k < temp.length() && tmp.length() < len)
+      tmp.pb(temp[k++]);
+  }
+cout<<"rem "<<tmp<<endl;
+  //make the remainder length == n - 1
+  reverse(tmp.begin(), tmp.end());
+  while (tmp.length() < len - 1)
+    tmp.pb('0');
+  reverse(tmp.begin(), tmp.end());
+
+  //now tmp has the remainder that we shall concatenate
+  //first print then concatenate
+  pfs("Data Bits After Appending CRC Checksum <sent frame>\n");
+  cout << columnMajor;
+
+  SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), CYAN);
+  cout << tmp << endl << endl;
+  SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), WHITE);
+
+  columnMajor += tmp;
 }
 
 int main() {
@@ -190,7 +265,15 @@ int main() {
   //add check bits
   addCheckBits();
 
+  //serialize in column-major order
+  serializeInColumnMajor();
+
+  //calculate crc checksum
+  calculateCRC();
+
   return 0;
 }
 
 //http://www.cplusplus.com/forum/beginner/54360/
+//https://www.geeksforgeeks.org/computer-network-hamming-code
+//https://www.youtube.com/watch?v=6gbkoFciryA
