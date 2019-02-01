@@ -1,6 +1,7 @@
 /***from dust i have come, dust i will be***/
 
 #include<bits/stdc++.h>
+#include <random>
 #include <windows.h>
 
 #define dbg printf("in\n");
@@ -13,16 +14,18 @@
 
 #define BLACK 0
 #define GREEN 10
-#define RED 4
-#define CYAN 3
+#define RED 12
+#define CYAN 11
 #define WHITE 15
 
 using namespace std;
 
-float probability;
+double probability;
 int m, R, C;
-string str, polynomial;
+string str, polynomial, recvStr;
 vector<string> dataBlock;
+vector<string> dataBlockReceiver;
+vector<double> randoms;
 string columnMajor;
 
 string toBinary(int x) {
@@ -42,10 +45,22 @@ string toBinary(int x) {
 
 void init() {
   dataBlock.resize(R);
+  dataBlockReceiver.resize(R);
+
   for (int i = 0; i < R; i++)
-    dataBlock[i] = "";
+    dataBlock[i] = "", dataBlockReceiver[i] = "";
 }
 
+int toAscii(string s) {
+  int p = 1, sum = 0;
+  for (int i = s.length() - 1; i >= 0; i--)
+    sum += (s[i] - '0') * p, p *= 2;
+
+  return sum;
+}
+
+//===============================================
+//1
 void input() {
   pfs("Enter Data String:\n");
   getline(cin, str);
@@ -54,7 +69,7 @@ void input() {
   sf(m);
 
   pfs("Enter Probability <p>:\n");
-  scanf("%f", &probability);
+  scanf("%lf", &probability);
 
   pfs("Enter Generator Polynomial:\n");
   cin >> polynomial;
@@ -67,7 +82,11 @@ void input() {
   pfs("Data String After Padding: \n");
   cout << str << endl << endl;
 }
+//===============================================
 
+
+//===============================================
+//2
 void makeDataBlock() {
   R = str.length() / m;
   C = m;
@@ -90,7 +109,11 @@ void makeDataBlock() {
 
   nl;
 }
+//===============================================
 
+
+//===============================================
+//3
 int calcCheckBitQuantity() {
   int p = 1, x = 8 * m + 1;
   for (int i = 0;; i++) {
@@ -99,6 +122,8 @@ int calcCheckBitQuantity() {
 
     p *= 2;
   }
+
+  return -1;
 }
 
 void addCheckBits() {
@@ -175,10 +200,14 @@ void addCheckBits() {
 
   nl;
 }
+//===============================================
 
+
+//===============================================
+//4
 void serializeInColumnMajor() {
   columnMajor = "";
-  C *= 8;
+  C = dataBlock[0].length();
   for (int i = 0; i < C; i++) {
     for (int j = 0; j < R; j++)
       columnMajor.pb(dataBlock[j][i]);
@@ -187,58 +216,71 @@ void serializeInColumnMajor() {
   pfs("Data-Bits After Column-Wise Serialization\n");
   cout << columnMajor << endl << endl;
 }
+//===============================================
 
-void calculateCRC() {
-  string tmp, tmp2;
-  string temp = columnMajor;
 
-  int len = polynomial.length();
+//===============================================
+//5
+//return remainder after module 2 divison
+string modulo2Divison(string dividend, string divisor) {
+  if (divisor.length() > dividend.length())return dividend;
 
-  //add k-1 0's at the end
-  //k=len of polynomial
-  for (int i = 1; i < len; i++)
-    temp.pb('0');
+  int i, j, k;
+  int len = divisor.length();
 
-  //modulo-2 binary division
-  //instead of subtraction we do xor
-  //extract len(polynomial) chars
-  tmp = "";
-  for (int i = 0; i < len; i++)
-    tmp.pb(temp[i]);
+  string rem, tmp;
 
-  int k = len, idx;
-  while (tmp.length() == len) {
+  //first chunk
+  for (i = 0; i < len; i++)
+    rem.pb(dividend[i]);
+
+  //divison
+  k = len;
+  while (rem.length() == divisor.length()) {
     //xor
-    for (int i = 0; i < len; i++)
-      tmp[i] = ((polynomial[i] - '0') ^ (tmp[i] - '0')) + '0';
+    for (i = 0; i < len; i++)
+      rem[i] = ((rem[i] - '0') ^ (divisor[i] - '0')) + '0';
 
-    idx = -1;
-    for (int i = 0; i < len; i++) {
-      if (tmp[i] == '1') {
-        idx = i;
+    //cut-off the leading 0's
+    tmp = "";
+    for (i = 0; i < len; i++) {
+      if (rem[i] == '1') {
+        for (j = i; j < len; j++)
+          tmp.pb(rem[j]);
         break;
       }
     }
 
-    //if idx == -1 then the whole thing is 0
-    if (idx != -1) {
-      tmp2 = "";
-      for (int i = idx; i < len; i++)
-        tmp2.pb(tmp[i]);
+    rem = tmp;
 
-      tmp = tmp2;
-    } else
-      tmp = "";
-
-    while (k < temp.length() && tmp.length() < len)
-      tmp.pb(temp[k++]);
+    //make length(rem) == length(divisor)
+    while (k < dividend.length() && rem.length() < divisor.length())
+      rem.pb(dividend[k++]);
   }
-cout<<"rem "<<tmp<<endl;
+
+  if (rem.length() == 0)rem = "0";
+
+  return rem;
+}
+
+void calculateCRC() {
+  string temp = columnMajor, rem;
+
+  int len = polynomial.length();
+
+  //add k-1 0's at the end
+  //k = len of polynomial
+  for (int i = 1; i < len; i++)
+    temp.pb('0');
+
+  //modulo-2 binary division
+  rem = modulo2Divison(temp, polynomial);
+
   //make the remainder length == n - 1
-  reverse(tmp.begin(), tmp.end());
-  while (tmp.length() < len - 1)
-    tmp.pb('0');
-  reverse(tmp.begin(), tmp.end());
+  reverse(rem.begin(), rem.end());
+  while (rem.length() < len - 1)
+    rem.pb('0');
+  reverse(rem.begin(), rem.end());
 
   //now tmp has the remainder that we shall concatenate
   //first print then concatenate
@@ -246,11 +288,162 @@ cout<<"rem "<<tmp<<endl;
   cout << columnMajor;
 
   SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), CYAN);
-  cout << tmp << endl << endl;
+  cout << rem << endl << endl;
   SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), WHITE);
 
-  columnMajor += tmp;
+  columnMajor += rem;
 }
+//===============================================
+
+
+//===============================================
+//6
+//generate a random uniformly distributed in the range [0-1]
+void generateRandomBits(int n) {
+  // construct a trivial random generator engine from a time-based seed:
+  unsigned seed = chrono::system_clock::now().time_since_epoch().count();
+  default_random_engine generator(seed);
+
+  uniform_real_distribution<double> dist(0.0, 1.0);
+
+  for (int i = 0; i < n; i++)
+    randoms.pb(dist(generator));
+}
+
+void toggleBits() {
+
+  int len = columnMajor.length();
+  generateRandomBits(len);
+
+  pfs("Received Frame\n");
+  for (int i = 0; i < len; i++) {
+    if (randoms[i] <= probability) {
+      SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), RED);
+      columnMajor[i] = (1 - (columnMajor[i] - '0')) + '0';
+      cout << columnMajor[i];
+      SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), WHITE);
+    } else
+      cout << columnMajor[i];
+  }
+
+  pfs("\n\n");
+}
+//===============================================
+
+
+//===============================================
+//7
+//verify the received frame
+void verifyReceivedFrame() {
+  string rem = modulo2Divison(columnMajor, polynomial);
+
+  pfs("Result of CRC Checksum Matching : ");
+  if (rem == "0")pfs(" No Error\n\n");
+  else
+    pfs("Error Detected\n\n");
+}
+//===============================================
+
+
+//===============================================
+//8
+void removeCRC() {
+  //remove the checksum
+  int len = polynomial.length();
+  for (int i = 1; i <= len - 1; i++)
+    columnMajor.pop_back();
+
+  //de-serialize
+  // error to be done marking
+  int k = 0;
+  len = columnMajor.length();
+  for (int i = 0; i < len; i++) {
+    dataBlockReceiver[k++].pb(columnMajor[i]);
+    if (k == R)
+      k = 0;
+  }
+
+  pfs("Data Block After Removing CRC Checksum Bits:\n");
+  for (int i = 0; i < R; i++) {
+    cout << dataBlockReceiver[i] << endl;
+  }
+
+  nl;
+}
+//===============================================
+
+
+//===============================================
+//9
+//eradicate errors and remove check bits
+void removeCheckBits() {
+  int cnt, p, sum;
+  int r = calcCheckBitQuantity();
+  int len = dataBlockReceiver[0].length();
+
+  string tmp;
+
+  for (int i = 0; i < R; i++) {
+    p = 1, sum = 0;
+    for (int j = 1; j <= r; j++) {
+      cnt = 0;
+      for (int k = 1; k <= len; k++) {
+        tmp = toBinary(k);
+        if (tmp[j - 1] == '1' && dataBlockReceiver[i][k - 1] == '1')cnt++;
+      }
+
+      cnt = cnt % 2;
+      sum += p * cnt, p *= 2;
+    }
+
+    //sum'th bit is corrupted where sum > 0
+    if (sum)
+      dataBlockReceiver[i][sum - 1] = !(dataBlockReceiver[i][sum - 1] - '0') + '0';
+
+    //remove the bits where check bits were placed
+    p = 1;
+    tmp.clear();
+    for (int j = 1; j <= len; j++) {
+      if (j == p) {
+        p *= 2;
+        continue;
+      }
+
+      tmp.pb(dataBlockReceiver[i][j-1]);
+    }
+
+    dataBlockReceiver[i] = tmp;
+  }
+
+  pfs("Data Block After Removing Check Bits\n");
+  for (int i = 0; i < R; i++)
+    cout << dataBlockReceiver[i] << endl;
+
+  nl;
+}
+//===============================================
+
+
+//===============================================
+//10
+//decode the real data
+void decodeData() {
+  string tmp;
+  int len = dataBlockReceiver[0].length();
+
+  for (int i = 0; i < R; i++) {
+    for (int j = 0; j < len; j++) {
+      tmp.pb(dataBlockReceiver[i][j]);
+      if (tmp.length() == 8) {
+        recvStr.pb((char) toAscii(tmp)), tmp.clear();
+      }
+    }
+  }
+
+  pfs("Output Frame: ");
+  cout << recvStr << endl;
+}
+//===============================================
 
 int main() {
 
@@ -271,9 +464,34 @@ int main() {
   //calculate crc checksum
   calculateCRC();
 
+  //toggle the bits
+  toggleBits();
+
+  //verify correctness
+  verifyReceivedFrame();
+
+  //remove checksum and deserialize
+  removeCRC();
+
+  //remove the check bits and error
+  removeCheckBits();
+
+  //decode the data
+  decodeData();
+
   return 0;
 }
 
+///color change
 //http://www.cplusplus.com/forum/beginner/54360/
+
+///hamming and parity
 //https://www.geeksforgeeks.org/computer-network-hamming-code
+
+///CRC:
+//https://www.geeksforgeeks.org/modulo-2-binary-division
 //https://www.youtube.com/watch?v=6gbkoFciryA
+
+///random number
+//https://stackoverflow.com/questions/288739/generate-random-numbers-uniformly-over-an-entire-range
+//http://www.cplusplus.com/reference/random/uniform_real_distribution/uniform_real_distribution/
