@@ -27,6 +27,7 @@ vector<string> dataBlock;
 vector<string> dataBlockReceiver;
 vector<double> randoms;
 string columnMajor;
+vector<bool> mark;
 
 string toBinary(int x) {
   string temp = "";
@@ -313,17 +314,20 @@ void generateRandomBits(int n) {
 void toggleBits() {
 
   int len = columnMajor.length();
+  mark.resize(len);
+
   generateRandomBits(len);
 
   pfs("Received Frame\n");
   for (int i = 0; i < len; i++) {
     if (randoms[i] <= probability) {
       SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), RED);
-      columnMajor[i] = (1 - (columnMajor[i] - '0')) + '0';
+      columnMajor[i] = !(columnMajor[i] - '0') + '0';
       cout << columnMajor[i];
       SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), WHITE);
+      mark[i] = true;
     } else
-      cout << columnMajor[i];
+      cout << columnMajor[i], mark[i] = false;
   }
 
   pfs("\n\n");
@@ -354,18 +358,31 @@ void removeCRC() {
     columnMajor.pop_back();
 
   //de-serialize
-  // error to be done marking
-  int k = 0;
+  int k = 0, j = 0;
   len = columnMajor.length();
+
+  vector<bool> mark2[R];
   for (int i = 0; i < len; i++) {
-    dataBlockReceiver[k++].pb(columnMajor[i]);
+    dataBlockReceiver[k].pb(columnMajor[i]);
+    mark2[k++].pb(mark[i]);
+
     if (k == R)
       k = 0;
   }
 
   pfs("Data Block After Removing CRC Checksum Bits:\n");
   for (int i = 0; i < R; i++) {
-    cout << dataBlockReceiver[i] << endl;
+    for (int j = 0; j < C; j++) {
+      if(mark2[i][j])
+      {
+        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), RED);
+        cout<<dataBlockReceiver[i][j];
+        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), WHITE);
+      } else
+        cout<<dataBlockReceiver[i][j];
+    }
+
+    nl;
   }
 
   nl;
@@ -389,6 +406,7 @@ void removeCheckBits() {
       cnt = 0;
       for (int k = 1; k <= len; k++) {
         tmp = toBinary(k);
+        reverse(tmp.begin(), tmp.end());
         if (tmp[j - 1] == '1' && dataBlockReceiver[i][k - 1] == '1')cnt++;
       }
 
@@ -409,7 +427,7 @@ void removeCheckBits() {
         continue;
       }
 
-      tmp.pb(dataBlockReceiver[i][j-1]);
+      tmp.pb(dataBlockReceiver[i][j - 1]);
     }
 
     dataBlockReceiver[i] = tmp;
