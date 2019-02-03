@@ -1,7 +1,6 @@
 /***from dust i have come, dust i will be***/
 
 #include<bits/stdc++.h>
-#include <random>
 #include <windows.h>
 
 #define dbg printf("in\n");
@@ -163,6 +162,8 @@ void addCheckBits() {
     for (j = 1; j <= r; j++) {
       cnt = 0;
       for (k = j + 1; k <= len; k++) {
+        //check except the parity bit position so k = j + 1
+
         tmp = toBinary(k);
         reverse(tmp.begin(), tmp.end());
 
@@ -405,6 +406,7 @@ void removeCheckBits() {
     for (int j = 1; j <= r; j++) {
       cnt = 0;
       for (int k = 1; k <= len; k++) {
+
         tmp = toBinary(k);
         reverse(tmp.begin(), tmp.end());
         if (tmp[j - 1] == '1' && dataBlockReceiver[i][k - 1] == '1')cnt++;
@@ -499,17 +501,3 @@ int main() {
 
   return 0;
 }
-
-///color change
-//http://www.cplusplus.com/forum/beginner/54360/
-
-///hamming and parity
-//https://www.geeksforgeeks.org/computer-network-hamming-code
-
-///CRC:
-//https://www.geeksforgeeks.org/modulo-2-binary-division
-//https://www.youtube.com/watch?v=6gbkoFciryA
-
-///random number
-//https://stackoverflow.com/questions/288739/generate-random-numbers-uniformly-over-an-entire-range
-//http://www.cplusplus.com/reference/random/uniform_real_distribution/uniform_real_distribution/

@@ -1,0 +1,14 @@
+
+///color change
+//http://www.cplusplus.com/forum/beginner/54360/
+
+///hamming and parity
+//https://www.geeksforgeeks.org/computer-network-hamming-code
+
+///CRC:
+//https://www.geeksforgeeks.org/modulo-2-binary-division
+//https://www.youtube.com/watch?v=6gbkoFciryA
+
+///random number
+//https://stackoverflow.com/questions/288739/generate-random-numbers-uniformly-over-an-entire-range
+//http://www.cplusplus.com/reference/random/uniform_real_distribution/uniform_real_distribution/

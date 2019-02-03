@@ -1,4 +1,4 @@
-Hamming Code
-2
-0.05
-10101
+many errors
+4
+0.1
+10001
