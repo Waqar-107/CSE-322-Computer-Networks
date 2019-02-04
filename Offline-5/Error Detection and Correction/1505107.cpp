@@ -117,7 +117,7 @@ void makeDataBlock() {
 int calcCheckBitQuantity() {
   int p = 1, x = 8 * m + 1;
   for (int i = 0;; i++) {
-    if (x <= p)
+    if (x <= p - i)
       return i;
 
     p *= 2;
@@ -405,7 +405,7 @@ void removeCheckBits() {
     p = 1, sum = 0;
     for (int j = 1; j <= r; j++) {
       cnt = 0;
-      for (int k = 1; k <= len; k++) {
+      for (int k = j; k <= len; k++) {
 
         tmp = toBinary(k);
         reverse(tmp.begin(), tmp.end());
